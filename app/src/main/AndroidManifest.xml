@@ -1,0 +1,28 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    coreApp="true"
+    package="com.litekite.systemui"
+    android:sharedUserId="android.uid.systemui">
+
+    <application
+        android:name=".SystemUIApplication"
+        android:allowBackup="true"
+        android:allowClearUserData="false"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:defaultToDeviceProtectedStorage="true"
+        android:directBootAware="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:persistent="true"
+        android:process="com.android.systemui"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SystemUI"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <service android:name=".SystemUIService" />
+
+    </application>
+
+</manifest>
