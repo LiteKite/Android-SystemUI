@@ -1,10 +1,10 @@
-package com.litekite.systemui
+package com.litekite.systemui.base
 
 import android.content.Context
 
 /**
  * The interface for getting core components of SysUI. Exists for Testability
- * since tests don't have SystemUIApplication as their ApplicationContext.
+ * since tests don't have SystemUIApp as their ApplicationContext.
  */
 interface SystemUIServiceProvider {
 

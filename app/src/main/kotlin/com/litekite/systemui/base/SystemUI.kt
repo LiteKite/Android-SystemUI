@@ -1,4 +1,4 @@
-package com.litekite.systemui
+package com.litekite.systemui.base
 
 import android.content.Context
 import android.content.res.Configuration
@@ -9,7 +9,7 @@ import java.io.PrintWriter
 abstract class SystemUI : SystemUIServiceProvider {
 
 	lateinit var context: Context
-	private lateinit var components: MutableMap<Class<*>, Any>
+	lateinit var components: MutableMap<Class<*>, Any>
 
 	abstract fun start()
 

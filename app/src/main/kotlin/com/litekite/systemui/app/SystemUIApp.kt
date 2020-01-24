@@ -1,17 +1,21 @@
-package com.litekite.systemui
+package com.litekite.systemui.app
 
 import android.app.Application
 import android.content.res.Configuration
+import com.litekite.systemui.R
+import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.base.SystemUIServiceProvider
 
-class SystemUIApplication: Application(), SystemUIServiceProvider {
+@Suppress("UNUSED")
+class SystemUIApp : Application(), SystemUIServiceProvider {
 
-	private val tag = "SystemUIApplication"
+	private val tag = this.javaClass.simpleName
 	private var serviceStarted: Boolean = false
 	/**
 	 * Hold a reference on the stuff we start.
 	 */
-	private lateinit var services: ArrayList<SystemUI>
-	private lateinit var components: MutableMap<Class<*>, Any>
+	private var services: ArrayList<SystemUI> = ArrayList()
+	private val components: MutableMap<Class<*>, Any> = HashMap()
 
 	override fun onCreate() {
 		super.onCreate()
@@ -19,7 +23,7 @@ class SystemUIApplication: Application(), SystemUIServiceProvider {
 		// application theme in the manifest does only work for activities. Keep this in sync with
 		// the theme set there.
 		setTheme(R.style.Theme_SystemUI)
-		SystemUI.printLog(tag, "onCreate: SystemUIApplication started successfully")
+		SystemUI.printLog(tag, "onCreate: SystemUIApp started successfully")
 		startServicesIfNeeded()
 	}
 
@@ -34,6 +38,7 @@ class SystemUIApplication: Application(), SystemUIServiceProvider {
 		for (service in serviceComponents) {
 			val systemUIService = Class.forName(service).newInstance() as SystemUI
 			systemUIService.context = this
+			systemUIService.components = components
 			systemUIService.start()
 			services.add(systemUIService)
 		}
