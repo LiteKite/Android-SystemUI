@@ -1,4 +1,4 @@
-package com.litekite.systemui.process
+package com.litekite.systemui.component
 
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI

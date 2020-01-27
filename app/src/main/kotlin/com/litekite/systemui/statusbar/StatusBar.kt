@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.component.Dependency
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -17,7 +18,7 @@ class StatusBar : SystemUI() {
 
 	override fun start() {
 		putComponent(javaClass, this)
-		statusBarWindowManager = StatusBarWindowManager(context)
+		statusBarWindowManager = Dependency.getDependencyGraph().statusBarWindowManager()
 		makeStatusBarView()
 		makeNavigationBarView()
 	}

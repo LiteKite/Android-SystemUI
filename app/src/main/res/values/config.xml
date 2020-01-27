@@ -3,7 +3,8 @@
 
     <!-- SystemUI Services: The classes of the stuff to start. -->
     <string-array name="config_systemUIServiceComponents" translatable="false">
-        <item>com.litekite.systemui.process.SystemBars</item>
+        <item>com.litekite.systemui.component.Dependency</item>
+        <item>com.litekite.systemui.component.SystemBars</item>
     </string-array>
 
     <!-- Component to be used as the status bar service.  Must implement the IStatusBar

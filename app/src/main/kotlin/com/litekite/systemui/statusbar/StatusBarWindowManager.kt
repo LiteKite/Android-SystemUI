@@ -7,11 +7,14 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import com.litekite.systemui.R
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Encapsulates all logic for the status bar window state management.
  */
-class StatusBarWindowManager(private val context: Context) {
+@Singleton
+class StatusBarWindowManager @Inject constructor(private val context: Context) {
 
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams
@@ -33,7 +36,8 @@ class StatusBarWindowManager(private val context: Context) {
 					or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
 					or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
 					or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
-			PixelFormat.TRANSLUCENT)
+			PixelFormat.TRANSLUCENT
+		)
 		lp.token = Binder()
 		lp.gravity = Gravity.TOP
 		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
