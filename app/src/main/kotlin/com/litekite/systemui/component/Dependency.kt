@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 class Dependency : SystemUI() {
 
-	private val tag = this.javaClass.simpleName
+	private val tag = javaClass.simpleName
 
 	override fun start() {
 		printLog(tag, "start")

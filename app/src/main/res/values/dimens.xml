@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Status Bar-->
     <dimen name="status_bar_height">56dp</dimen>
+    <!--Key Button View-->
+    <dimen name="quick_step_touch_slop">24dp</dimen>
 
 </resources>

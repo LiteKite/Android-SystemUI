@@ -8,7 +8,7 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class SystemBars : SystemUI() {
 
-	private val tag = this.javaClass.simpleName
+	private val tag = javaClass.simpleName
 	private lateinit var statusBar: SystemUI
 
 	override fun start() {
