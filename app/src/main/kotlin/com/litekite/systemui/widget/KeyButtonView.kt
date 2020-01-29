@@ -1,8 +1,8 @@
 package com.litekite.systemui.widget
 
-import android.app.Instrumentation
 import android.content.Context
 import android.content.res.Configuration
+import android.hardware.input.InputManager
 import android.media.AudioManager
 import android.os.SystemClock
 import android.util.AttributeSet
@@ -206,9 +206,10 @@ class KeyButtonView @JvmOverloads constructor(
 			flags or KeyEvent.FLAG_FROM_SYSTEM or KeyEvent.FLAG_VIRTUAL_HARD_KEY,
 			InputDevice.SOURCE_KEYBOARD
 		)
-		Instrumentation().sendKeySync(event)
-		// TODO this is an Hidden API. Try to check the above or use reflection or use custom sdk.
-		//InputManager.getInstance().injectInputEvent(ev, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC)
+		InputManager.getInstance().injectInputEvent(
+			event,
+			InputManager.INJECT_INPUT_EVENT_MODE_ASYNC
+		)
 	}
 
 }
