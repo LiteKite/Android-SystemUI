@@ -52,7 +52,6 @@ class Clock @JvmOverloads constructor(
 
 	private val secondsTickRunnable = Runnable {
 		updateClock()
-		postSecondsAtTime()
 	}
 
 	private val screenReceiver = object : BroadcastReceiver() {
@@ -62,10 +61,9 @@ class Clock @JvmOverloads constructor(
 					handler.removeCallbacks(secondsTickRunnable)
 				}
 				Intent.ACTION_SCREEN_ON -> {
-					postSecondsAtTime()
+					handler.post { updateClock() }
 				}
 			}
-			handler.post { updateClock() }
 		}
 	}
 
@@ -83,7 +81,7 @@ class Clock @JvmOverloads constructor(
 			val handler = Handler(handleThread.looper)
 			context.registerReceiverAsUser(
 				receiver,
-				UserHandle.ALL,
+				UserHandle.getUserHandleForUid(UserHandle.myUserId()),
 				filter,
 				null,
 				handler
@@ -116,7 +114,7 @@ class Clock @JvmOverloads constructor(
 		}
 	}
 
-	fun updateClock() {
+	private fun updateClock() {
 		calendar.timeInMillis = System.currentTimeMillis()
 		val is24HourFormat = DateFormat.is24HourFormat(context, UserHandle.myUserId())
 		val format = if (showSeconds) {
@@ -143,18 +141,14 @@ class Clock @JvmOverloads constructor(
 		// Wait until we have a display to start trying to show seconds.
 		if (showSeconds && display != null) {
 			if (display.state == Display.STATE_ON) {
-				postSecondsAtTime()
+				handler.postAtTime(
+					secondsTickRunnable,
+					SystemClock.uptimeMillis() / 1000 * 1000 + 1000
+				)
 			}
 		} else {
 			handler.removeCallbacks(secondsTickRunnable)
 		}
-	}
-
-	private fun postSecondsAtTime() {
-		handler.postAtTime(
-			secondsTickRunnable,
-			SystemClock.uptimeMillis() / 1000 * 1000 + 1000
-		)
 	}
 
 }

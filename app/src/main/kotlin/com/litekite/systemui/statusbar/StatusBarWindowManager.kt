@@ -19,7 +19,7 @@ class StatusBarWindowManager @Inject constructor(private val context: Context) {
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams
 	private lateinit var statusBarView: View
-	private var barHeight: Int? = null
+	private var barHeight: Int = context.resources.getDimensionPixelSize(R.dimen.status_bar_height)
 
 	/**
 	 * Adds the status bar view to the window manager.
@@ -27,7 +27,6 @@ class StatusBarWindowManager @Inject constructor(private val context: Context) {
 	 * @param statusBarView The view to add.
 	 */
 	fun add(statusBarView: View) {
-		val barHeight = context.resources.getDimensionPixelSize(R.dimen.status_bar_height)
 		lp = WindowManager.LayoutParams(
 			WindowManager.LayoutParams.MATCH_PARENT,
 			barHeight,
@@ -44,7 +43,6 @@ class StatusBarWindowManager @Inject constructor(private val context: Context) {
 		lp.title = "StatusBar"
 		lp.packageName = context.packageName
 		this.statusBarView = statusBarView
-		this.barHeight = barHeight
 		windowManager.addView(this.statusBarView, lp)
 	}
 
