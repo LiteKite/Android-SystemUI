@@ -19,8 +19,6 @@ package com.litekite.systemui.base
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
-import java.io.FileDescriptor
-import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -34,15 +32,7 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	abstract fun start()
 
-	open fun onBootCompleted() {
-
-	}
-
 	open fun onConfigurationChanged(newConfig: Configuration) {
-
-	}
-
-	open fun dump(fd: FileDescriptor, pw: PrintWriter, args: Array<String>) {
 
 	}
 

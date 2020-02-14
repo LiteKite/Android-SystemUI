@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.statusbar
+package com.litekite.systemui.systembar.statusbar
 
 import android.content.Context
 import android.graphics.PixelFormat

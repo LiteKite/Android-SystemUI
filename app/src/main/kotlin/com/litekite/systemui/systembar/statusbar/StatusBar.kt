@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.statusbar
+package com.litekite.systemui.systembar.statusbar
 
 import android.content.res.Configuration
 import android.view.View
 import android.widget.FrameLayout
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.component.Dependency
-import java.io.FileDescriptor
-import java.io.PrintWriter
+import com.litekite.systemui.dependency.Dependency
 
 /**
  * @author Vignesh S
@@ -56,15 +54,7 @@ class StatusBar : SystemUI() {
 
 	}
 
-	override fun onBootCompleted() {
-
-	}
-
 	override fun onConfigurationChanged(newConfig: Configuration) {
-
-	}
-
-	override fun dump(fd: FileDescriptor, pw: PrintWriter, args: Array<String>) {
 
 	}
 

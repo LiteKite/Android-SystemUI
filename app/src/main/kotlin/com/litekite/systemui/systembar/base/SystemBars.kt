@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.component
+package com.litekite.systemui.systembar.base
 
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
-import java.io.FileDescriptor
-import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -44,10 +42,6 @@ class SystemBars : SystemUI() {
 		statusBar.components = components
 		statusBar.start()
 		printLog(tag, "started: " + statusBar.javaClass.simpleName)
-	}
-
-	override fun dump(fd: FileDescriptor, pw: PrintWriter, args: Array<String>) {
-		statusBar.dump(fd, pw, args)
 	}
 
 }

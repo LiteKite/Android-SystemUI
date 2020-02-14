@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.component
+package com.litekite.systemui.dependency
 
 import android.content.Context
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.statusbar.StatusBarWindowManager
+import com.litekite.systemui.systembar.statusbar.StatusBarWindowManager
 import dagger.Component
 import dagger.Module
 import dagger.Provides
