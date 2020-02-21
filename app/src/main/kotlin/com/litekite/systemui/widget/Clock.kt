@@ -27,7 +27,7 @@ import android.os.UserHandle
 import android.text.format.DateFormat
 import android.util.AttributeSet
 import android.view.Display
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.litekite.systemui.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,7 +39,7 @@ import java.util.*
  */
 class Clock @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : TextView(context, attrs, defStyleAttr) {
+) : AppCompatTextView(context, attrs, defStyleAttr) {
 
 	private lateinit var calendar: Calendar
 	private lateinit var sdfClock: SimpleDateFormat
