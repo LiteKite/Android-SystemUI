@@ -41,9 +41,8 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 	private val tag = javaClass.simpleName
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
-	private val callbacks: ArrayList<BatteryStateChangeCallback> = ArrayList()
-	private var level: BatteryLevel =
-		BatteryLevel.INVALID
+	private val callbacks: ArrayList<BatteryChangeCallback> = ArrayList()
+	private var level: BatteryLevel = BatteryLevel.INVALID
 
 	/**
 	 * According to the Bluetooth HFP 1.5 specification, battery levels are indicated by a
@@ -86,6 +85,7 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		)
 	}
 
+	// TODO Add Broadcast of Bluetooth ACL connection from BluetoothAdapter to remove icon
 	private fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
@@ -97,11 +97,11 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		context.unregisterReceiver(this)
 	}
 
-	private fun addCallback(cb: BatteryStateChangeCallback) {
+	private fun addCallback(cb: BatteryChangeCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: BatteryStateChangeCallback) {
+	private fun removeCallback(cb: BatteryChangeCallback) {
 		callbacks.remove(cb)
 	}
 
@@ -115,15 +115,12 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 				)
 				val batteryLevel = BatteryLevel.valueOf(extraBatteryLevel.toString())
 				updateBatteryLevel(batteryLevel)
-				if (batteryLevel != BatteryLevel.INVALID) {
-					notifyBatteryStateAvailable()
-				}
 			}
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED -> {
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
 				val oldState = intent.getIntExtra(BluetoothProfile.EXTRA_PREVIOUS_STATE, -1)
 				SystemUI.printLog(
-					tag, "ACTION_CONNECTION_STATE_CHANGED: " + "$oldState -> $newState"
+					tag, "ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
 				)
 				val device: BluetoothDevice? =
 					intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
@@ -142,6 +139,8 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		}
 		level = batteryLevel
 		SystemUI.printLog(tag, "Battery level: $batteryLevel; setting mLevel as: $level")
+		// Valid Battery Level
+		notifyBatteryStateAvailable()
 		notifyBatteryLevelChanged()
 	}
 
@@ -153,7 +152,6 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
 				SystemUI.printLog(tag, "Device Connected!")
-				notifyBatteryStateAvailable()
 				if (bluetoothHeadsetClient == null || device == null) {
 					return
 				}
@@ -195,7 +193,7 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 	 * A listener that will be notified whenever a change in battery level or to add or remove the
 	 * battery view based on its availability or its existence.
 	 */
-	interface BatteryStateChangeCallback {
+	interface BatteryChangeCallback {
 
 		fun onBatteryLevelChanged(level: BatteryLevel)
 
