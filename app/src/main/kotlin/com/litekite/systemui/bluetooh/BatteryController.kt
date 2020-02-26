@@ -41,7 +41,7 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 	private val tag = javaClass.simpleName
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
-	private val callbacks: ArrayList<BatteryChangeCallback> = ArrayList()
+	private val callbacks: ArrayList<BatteryCallback> = ArrayList()
 	private var level: BatteryLevel = BatteryLevel.INVALID
 
 	/**
@@ -85,7 +85,6 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		)
 	}
 
-	// TODO Add Broadcast of Bluetooth ACL connection from BluetoothAdapter to remove icon
 	private fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
@@ -97,11 +96,11 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		context.unregisterReceiver(this)
 	}
 
-	private fun addCallback(cb: BatteryChangeCallback) {
+	private fun addCallback(cb: BatteryCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: BatteryChangeCallback) {
+	private fun removeCallback(cb: BatteryCallback) {
 		callbacks.remove(cb)
 	}
 
@@ -140,7 +139,6 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		level = batteryLevel
 		SystemUI.printLog(tag, "Battery level: $batteryLevel; setting mLevel as: $level")
 		// Valid Battery Level
-		notifyBatteryStateAvailable()
 		notifyBatteryLevelChanged()
 	}
 
@@ -166,7 +164,7 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(tag, "device disconnected!")
-				notifyBatteryStateUnavailable()
+				notifyBatteryLevelUnavailable()
 			}
 		}
 	}
@@ -177,15 +175,9 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 		}
 	}
 
-	private fun notifyBatteryStateAvailable() {
+	private fun notifyBatteryLevelUnavailable() {
 		for (cb in callbacks) {
-			cb.onBatteryStateAvailable()
-		}
-	}
-
-	private fun notifyBatteryStateUnavailable() {
-		for (cb in callbacks) {
-			cb.onBatteryStateUnavailable()
+			cb.onBatteryLevelUnavailable()
 		}
 	}
 
@@ -193,13 +185,11 @@ class BatteryController constructor(val context: Context) : BroadcastReceiver() 
 	 * A listener that will be notified whenever a change in battery level or to add or remove the
 	 * battery view based on its availability or its existence.
 	 */
-	interface BatteryChangeCallback {
+	interface BatteryCallback {
 
 		fun onBatteryLevelChanged(level: BatteryLevel)
 
-		fun onBatteryStateAvailable()
-
-		fun onBatteryStateUnavailable()
+		fun onBatteryLevelUnavailable()
 
 	}
 

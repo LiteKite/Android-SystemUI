@@ -39,7 +39,7 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 	private val tag = javaClass.simpleName
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
-	private val callbacks: ArrayList<SignalChangeCallback> = ArrayList()
+	private val callbacks: ArrayList<SignalCallback> = ArrayList()
 	private var level: SignalLevel = SignalLevel.INVALID
 
 	/**
@@ -101,7 +101,6 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 		)
 	}
 
-	// TODO Add Broadcast of Bluetooth ACL connection from BluetoothAdapter to remove icon
 	private fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
@@ -113,11 +112,11 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 		context.unregisterReceiver(this)
 	}
 
-	private fun addCallback(cb: SignalChangeCallback) {
+	private fun addCallback(cb: SignalCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: SignalChangeCallback) {
+	private fun removeCallback(cb: SignalCallback) {
 		callbacks.remove(cb)
 	}
 
@@ -181,7 +180,6 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 		level = signalLevel
 		SystemUI.printLog(tag, "Signal level: $signalLevel; setting mLevel as: $level")
 		// Valid Signal Level
-		notifySignalStateAvailable()
 		notifySignalLevelChanged()
 	}
 
@@ -207,7 +205,7 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(tag, "device disconnected!")
-				notifySignalStateUnavailable()
+				notifySignalLevelUnavailable()
 			}
 		}
 	}
@@ -218,15 +216,9 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 		}
 	}
 
-	private fun notifySignalStateAvailable() {
+	private fun notifySignalLevelUnavailable() {
 		for (cb in callbacks) {
-			cb.onSignalStateAvailable()
-		}
-	}
-
-	private fun notifySignalStateUnavailable() {
-		for (cb in callbacks) {
-			cb.onSignalStateUnavailable()
+			cb.onSignalLevelUnavailable()
 		}
 	}
 
@@ -246,13 +238,11 @@ class SignalController constructor(val context: Context) : BroadcastReceiver() {
 	 * A listener that will be notified whenever a change in signal level or to add or remove the
 	 * signal view, roaming view based on its availability or its existence.
 	 */
-	interface SignalChangeCallback {
+	interface SignalCallback {
 
 		fun onSignalLevelChanged(level: SignalLevel)
 
-		fun onSignalStateAvailable()
-
-		fun onSignalStateUnavailable()
+		fun onSignalLevelUnavailable()
 
 		fun onRoamingStateAvailable()
 
