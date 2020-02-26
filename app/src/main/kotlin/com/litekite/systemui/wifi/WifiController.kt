@@ -19,6 +19,9 @@ package com.litekite.systemui.wifi
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.net.wifi.WifiManager
+import com.litekite.systemui.base.SystemUI
 
 /**
  * @author Vignesh S
@@ -27,7 +30,41 @@ import android.content.Intent
  */
 class WifiController constructor(val context: Context) : BroadcastReceiver() {
 
+	private val tag = javaClass.simpleName
+	private val callbacks: ArrayList<WifiCallback> = ArrayList()
+
+	private fun startListening() {
+		val filter = IntentFilter()
+		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
+		filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
+		context.registerReceiver(this, filter)
+	}
+
+	private fun stopListening() {
+		context.unregisterReceiver(this)
+	}
+
+	private fun addCallback(cb: WifiCallback) {
+		callbacks.add(cb)
+	}
+
+	private fun removeCallback(cb: WifiCallback) {
+		callbacks.remove(cb)
+	}
+
 	override fun onReceive(context: Context?, intent: Intent?) {
+		SystemUI.printLog(tag, "onReceive - action: ${intent?.action})")
+		when (intent?.action) {
+			WifiManager.WIFI_STATE_CHANGED_ACTION -> {
+
+			}
+			WifiManager.NETWORK_STATE_CHANGED_ACTION -> {
+
+			}
+		}
+	}
+
+	interface WifiCallback {
 
 	}
 
