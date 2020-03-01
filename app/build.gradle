@@ -48,8 +48,8 @@ android {
         enable "Interoperability"
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = kotlin_version
+        targetCompatibility = kotlin_version
     }
 }
 
@@ -58,8 +58,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    api 'com.google.dagger:dagger:2.25.4'
-    kapt 'com.google.dagger:dagger-compiler:2.25.4'
+    api 'com.google.dagger:dagger:2.26'
+    kapt 'com.google.dagger:dagger-compiler:2.26'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
