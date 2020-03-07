@@ -61,7 +61,16 @@ class CarController @Inject constructor(private val context: Context) {
 	}
 
 	fun getManager(serviceName: String): Any? {
-		return car.getCarManager(serviceName)
+		if (!isConnected) {
+			SystemUI.printLog(tag, "getManager: Car is not connected")
+			return null
+		}
+		return try {
+			car.getCarManager(serviceName)
+		} catch (e: IllegalStateException) {
+			SystemUI.printLog(tag, "getManager - IllegalStateException: $e")
+			null
+		}
 	}
 
 	fun addCallback(cb: ConnectionCallback) {

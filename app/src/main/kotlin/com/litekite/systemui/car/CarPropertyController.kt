@@ -17,8 +17,10 @@
 package com.litekite.systemui.car
 
 import android.car.Car
+import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.property.CarPropertyManager
+import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.dependency.Dependency
 
 /**
@@ -26,9 +28,10 @@ import com.litekite.systemui.dependency.Dependency
  * @version 1.0, 05/03/2020
  * @since 1.0
  */
-class CarPropertyController {
+abstract class CarPropertyController {
 
-	private lateinit var carPropertyManager: CarPropertyManager
+	private val tag = javaClass.simpleName
+	private var carPropertyManager: CarPropertyManager? = null
 	private val carController: CarController = Dependency.getDependencyGraph().carController()
 
 	private val carConnectionCallback = object : CarController.ConnectionCallback {
@@ -36,33 +39,72 @@ class CarPropertyController {
 			if (isConnected) {
 				createCarPropertyManager()
 			}
+			onCarPropertyCreated(isConnected)
 		}
 	}
 
 	private val carPropertyCallback = object : CarPropertyManager.CarPropertyEventCallback {
-		override fun onChangeEvent(p0: CarPropertyValue<*>?) {
 
+		override fun onChangeEvent(propertyValue: CarPropertyValue<*>?) {
+			SystemUI.printLog(
+				tag, "carPropertyCallback - onChangeEvent: ${propertyValue?.value}"
+			)
+			onCarPropertyChangeEvent(propertyValue)
 		}
 
-		override fun onErrorEvent(p0: Int, p1: Int) {
-
+		override fun onErrorEvent(propertyId: Int, areaId: Int) {
+			SystemUI.printLog(
+				tag, "carPropertyCallback - onErrorEvent: Property Id: $propertyId Area Id: $areaId"
+			)
 		}
+
+		fun onGetEvent(propertyValue: CarPropertyValue<Any>?) {
+			SystemUI.printLog(
+				tag, "carPropertyCallback - onGetEvent: ${propertyValue?.value}"
+			)
+			onCarPropertyGetEvent(propertyValue)
+		}
+
 	}
 
 	init {
 		carController.addCallback(carConnectionCallback)
-		if (carController.isConnected) {
-			createCarPropertyManager()
-		}
+		createCarPropertyManager()
 	}
 
 	private fun createCarPropertyManager() {
-		carPropertyManager = carController.getManager(Car.PROPERTY_SERVICE) as CarPropertyManager
+		carPropertyManager = carController.getManager(Car.PROPERTY_SERVICE) as CarPropertyManager?
+	}
+
+	fun getCarProperty(properties: IntArray) {
+		if (!carController.isConnected) {
+			SystemUI.printLog(tag, "getCarProperty: Car is not connected")
+			return
+		}
+		properties.forEach {
+			try {
+				val propertyValue = carPropertyManager?.getProperty<Any>(
+					it,
+					VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+				)
+				carPropertyCallback.onGetEvent(propertyValue)
+			} catch (e: RuntimeException) {
+				SystemUI.printLog(tag, "getCarProperty - RuntimeException: $e")
+			}
+		}
+	}
+
+	fun setCarProperty() {
+
 	}
 
 	fun registerCarPropertyCallback(properties: IntArray) {
+		if (!carController.isConnected) {
+			SystemUI.printLog(tag, "registerCarPropertyCallback: Car is not connected")
+			return
+		}
 		properties.forEach {
-			carPropertyManager.registerCallback(
+			carPropertyManager?.registerCallback(
 				carPropertyCallback,
 				it,
 				CarPropertyManager.SENSOR_RATE_ONCHANGE
@@ -71,12 +113,22 @@ class CarPropertyController {
 	}
 
 	fun unregisterCarPropertyCallback(properties: IntArray) {
+		if (!carController.isConnected) {
+			SystemUI.printLog(tag, "unregisterCarPropertyCallback: Car is not connected")
+			return
+		}
 		properties.forEach {
-			carPropertyManager.unregisterCallback(
+			carPropertyManager?.unregisterCallback(
 				carPropertyCallback,
 				it
 			)
 		}
 	}
+
+	protected abstract fun onCarPropertyCreated(isConnected: Boolean)
+
+	protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<Any>?)
+
+	protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
 
 }
