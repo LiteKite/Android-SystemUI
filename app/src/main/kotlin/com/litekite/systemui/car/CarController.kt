@@ -20,20 +20,27 @@ import android.car.Car
 import android.content.Context
 import android.os.Handler
 import com.litekite.systemui.base.SystemUI
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
  * @version 1.0, 03/03/2020
  * @since 1.0
  */
-class CarController constructor(private val context: Context) {
+@Singleton
+class CarController @Inject constructor(private val context: Context) {
 
 	private val tag = javaClass.simpleName
 	private val handler: Handler = Handler()
 	private lateinit var car: Car
+	var isConnected: Boolean = false
+	private var callbacks: ArrayList<ConnectionCallback> = ArrayList()
 
 	private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->
 		SystemUI.printLog(tag, "onLifecycleChanged: $isConnected Car: $car")
+		this.isConnected = isConnected
+		notifyConnectionState(isConnected)
 		if (!isConnected) {
 			car.disconnect()
 			startCar()
@@ -51,6 +58,30 @@ class CarController constructor(private val context: Context) {
 			Car.CAR_WAIT_TIMEOUT_WAIT_FOREVER,
 			carServiceLifecycleListener
 		)
+	}
+
+	fun getManager(serviceName: String): Any? {
+		return car.getCarManager(serviceName)
+	}
+
+	fun addCallback(cb: ConnectionCallback) {
+		callbacks.add(cb)
+	}
+
+	fun removeCallback(cb: ConnectionCallback) {
+		callbacks.add(cb)
+	}
+
+	private fun notifyConnectionState(isConnected: Boolean) {
+		for (cb in callbacks) {
+			cb.onConnectionChanged(isConnected)
+		}
+	}
+
+	interface ConnectionCallback {
+
+		fun onConnectionChanged(isConnected: Boolean)
+
 	}
 
 }

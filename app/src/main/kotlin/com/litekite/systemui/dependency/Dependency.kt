@@ -18,6 +18,7 @@ package com.litekite.systemui.dependency
 
 import android.content.Context
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.car.CarController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowManager
 import dagger.Component
 import dagger.Module
@@ -54,6 +55,10 @@ class Dependency : SystemUI() {
 		fun provideStatusBarWindowManager(context: Context): StatusBarWindowManager =
 			StatusBarWindowManager(context)
 
+		@Provides
+		@Singleton
+		fun provideCarController(context: Context): CarController = CarController(context)
+
 	}
 
 	@Singleton
@@ -61,6 +66,8 @@ class Dependency : SystemUI() {
 	interface DependencyGraph {
 
 		fun statusBarWindowManager(): StatusBarWindowManager
+
+		fun carController(): CarController
 
 	}
 
