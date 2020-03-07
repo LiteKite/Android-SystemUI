@@ -16,7 +16,10 @@
 
 package com.litekite.systemui.car
 
+import android.car.Car
 import android.content.Context
+import android.os.Handler
+import com.litekite.systemui.base.SystemUI
 
 /**
  * @author Vignesh S
@@ -25,5 +28,29 @@ import android.content.Context
  */
 class CarController constructor(private val context: Context) {
 
+	private val tag = javaClass.simpleName
+	private val handler: Handler = Handler()
+	private lateinit var car: Car
+
+	private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->
+		SystemUI.printLog(tag, "onLifecycleChanged: $isConnected Car: $car")
+		if (!isConnected) {
+			car.disconnect()
+			startCar()
+		}
+	}
+
+	init {
+		startCar()
+	}
+
+	private fun startCar() {
+		car = Car.createCar(
+			context,
+			handler,
+			Car.CAR_WAIT_TIMEOUT_WAIT_FOREVER,
+			carServiceLifecycleListener
+		)
+	}
 
 }
