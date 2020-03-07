@@ -100,7 +100,7 @@ class Power : SystemUI() {
 	 * Thermal event received from vendor thermal management subsystem
 	 */
 	private inner class ThermalEventListener : IThermalEventListener.Stub() {
-		override fun notifyThrottling(isThrottling: Boolean, temperature: Temperature?) {
+		override fun notifyThrottling(temperature: Temperature?) {
 			// Trigger an update of the temperature warning.  Only one
 			// callback can be enabled at a time, so remove any existing
 			// callback; updateTemperatureWarning will schedule another one.

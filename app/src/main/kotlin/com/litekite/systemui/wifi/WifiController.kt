@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.litekite.systemui.wifi
 
 import android.content.BroadcastReceiver
@@ -105,6 +107,9 @@ class WifiController constructor(val context: Context) : BroadcastReceiver() {
 	private fun getValidSsid(wifiInfo: WifiInfo?): String? {
 		if (wifiInfo == null) {
 			return null
+		}
+		if (wifiInfo.isPasspointAp || wifiInfo.isOsuAp) {
+			return wifiInfo.passpointProviderFriendlyName
 		}
 		if (wifiInfo.ssid != null && WifiSsid.NONE != wifiInfo.ssid) {
 			return wifiInfo.ssid

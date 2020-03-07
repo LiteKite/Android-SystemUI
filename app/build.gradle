@@ -48,8 +48,8 @@ android {
         enable "Interoperability"
     }
     compileOptions {
-        sourceCompatibility = kotlin_version
-        targetCompatibility = kotlin_version
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
     }
 }
 
