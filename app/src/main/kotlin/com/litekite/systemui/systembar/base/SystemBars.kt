@@ -18,6 +18,8 @@ package com.litekite.systemui.systembar.base
 
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -33,6 +35,11 @@ class SystemBars : SystemUI() {
 	override fun start() {
 		printLog(tag, "start")
 		createStatusBarFromConfig()
+	}
+
+	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+		super.dump(fd, pw, args)
+		statusBar.dump(fd, pw, args)
 	}
 
 	private fun createStatusBarFromConfig() {

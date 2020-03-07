@@ -19,6 +19,9 @@ package com.litekite.systemui.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.litekite.systemui.app.SystemUIApp
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -27,8 +30,33 @@ import android.os.IBinder
  */
 class SystemUIService : Service() {
 
+	override fun onCreate() {
+		super.onCreate()
+		(application as SystemUIApp).startServicesIfNeeded()
+	}
+
+	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+		return START_STICKY
+	}
+
 	override fun onBind(intent: Intent?): IBinder? {
-		TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+		return null
+	}
+
+	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+		val services = (application as SystemUIApp).services
+		if (args == null || args.isEmpty()) {
+			services.forEach {
+				pw?.println("dumping service: " + it.javaClass.name)
+				it.dump(fd, pw, args)
+			}
+		} else {
+			val svc = args[0]
+			services.forEach {
+				val name = it.javaClass.name
+				if (name.endsWith(svc)) it.dump(fd, pw, args)
+			}
+		}
 	}
 
 }

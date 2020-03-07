@@ -34,7 +34,7 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 25/02/2020
  * @since 1.0
  */
-class SignalController constructor(val context: Context) : BroadcastReceiver() {
+class SignalController constructor(private val context: Context) : BroadcastReceiver() {
 
 	private val tag = javaClass.simpleName
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()

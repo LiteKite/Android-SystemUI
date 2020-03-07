@@ -31,7 +31,7 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 26/02/2020
  * @since 1.0
  */
-class BluetoothController constructor(val context: Context) : BroadcastReceiver() {
+class BluetoothController constructor(private val context: Context) : BroadcastReceiver() {
 
 	private val tag = javaClass.simpleName
 	private val callbacks: ArrayList<BluetoothCallback> = ArrayList()

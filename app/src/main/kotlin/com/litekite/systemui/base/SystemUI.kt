@@ -19,6 +19,8 @@ package com.litekite.systemui.base
 import android.content.Context
 import android.content.res.Configuration
 import android.util.Log
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -32,9 +34,9 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	abstract fun start()
 
-	open fun onConfigurationChanged(newConfig: Configuration) {
+	open fun onConfigurationChanged(newConfig: Configuration) {}
 
-	}
+	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
 
 	@Suppress("UNCHECKED_CAST")
 	override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T

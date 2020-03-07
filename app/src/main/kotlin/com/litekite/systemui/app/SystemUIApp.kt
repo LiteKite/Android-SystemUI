@@ -37,7 +37,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	/**
 	 * Hold a reference on the stuff we start.
 	 */
-	private var services: ArrayList<SystemUI> = ArrayList()
+	internal var services: ArrayList<SystemUI> = ArrayList()
 	private val components: MutableMap<Class<*>, Any> = HashMap()
 
 	override fun onCreate() {
@@ -56,7 +56,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 * the main process.
 	 * <p>This method must only be called from the main thread.</p>
 	 */
-	private fun startServicesIfNeeded() {
+	internal fun startServicesIfNeeded() {
 		if  (serviceStarted) {
 			SystemUI.printLog(tag, "startServicesIfNeeded: already started. Skipping...")
 			return

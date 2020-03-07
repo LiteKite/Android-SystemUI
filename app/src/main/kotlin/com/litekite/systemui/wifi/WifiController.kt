@@ -34,7 +34,7 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 26/02/2020
  * @since 1.0
  */
-class WifiController constructor(val context: Context) : BroadcastReceiver() {
+class WifiController constructor(private val context: Context) : BroadcastReceiver() {
 
 	private val tag = javaClass.simpleName
 	private val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager

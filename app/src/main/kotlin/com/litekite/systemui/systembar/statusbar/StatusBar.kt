@@ -22,6 +22,8 @@ import android.widget.FrameLayout
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.dependency.Dependency
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -56,6 +58,11 @@ class StatusBar : SystemUI() {
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
 
+	}
+
+	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+		super.dump(fd, pw, args)
+		pw?.println("statusBarView: $statusBarView")
 	}
 
 }
