@@ -31,15 +31,14 @@ import com.litekite.systemui.dependency.Dependency
 abstract class CarPropertyController {
 
 	private val tag = javaClass.simpleName
-	private var carPropertyManager: CarPropertyManager? = null
 	private val carController: CarController = Dependency.getDependencyGraph().carController()
+	private var carPropertyManager: CarPropertyManager? = null
 
 	private val carConnectionCallback = object : CarController.ConnectionCallback {
 		override fun onConnectionChanged(isConnected: Boolean) {
 			if (isConnected) {
 				createCarPropertyManager()
 			}
-			onCarPropertyCreated(isConnected)
 		}
 	}
 
@@ -74,6 +73,9 @@ abstract class CarPropertyController {
 
 	private fun createCarPropertyManager() {
 		carPropertyManager = carController.getManager(Car.PROPERTY_SERVICE) as CarPropertyManager?
+		if (carPropertyManager != null) {
+			onCarPropertyManagerCreated()
+		}
 	}
 
 	fun getCarProperty(properties: IntArray) {
@@ -94,8 +96,21 @@ abstract class CarPropertyController {
 		}
 	}
 
-	fun setCarProperty() {
-
+	fun setCarProperty(propertyId: Int, value: Any) {
+		if (!carController.isConnected) {
+			SystemUI.printLog(tag, "setCarProperty: Car is not connected")
+			return
+		}
+		try {
+			carPropertyManager?.setProperty(
+				Any::class.java,
+				propertyId,
+				VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL,
+				value
+			)
+		} catch (e: RuntimeException) {
+			SystemUI.printLog(tag, "setCarProperty - RuntimeException: $e")
+		}
 	}
 
 	fun registerCarPropertyCallback(properties: IntArray) {
@@ -125,7 +140,7 @@ abstract class CarPropertyController {
 		}
 	}
 
-	protected abstract fun onCarPropertyCreated(isConnected: Boolean)
+	protected abstract fun onCarPropertyManagerCreated()
 
 	protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<Any>?)
 
