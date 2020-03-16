@@ -48,7 +48,9 @@ abstract class CarPropertyController {
 			SystemUI.printLog(
 				tag, "carPropertyCallback - onChangeEvent: ${propertyValue?.value}"
 			)
-			onCarPropertyChangeEvent(propertyValue)
+			if (isCarPropertyValueAvailable(propertyValue)) {
+				onCarPropertyChangeEvent(propertyValue)
+			}
 		}
 
 		override fun onErrorEvent(propertyId: Int, areaId: Int) {
@@ -57,11 +59,13 @@ abstract class CarPropertyController {
 			)
 		}
 
-		fun onGetEvent(propertyValue: CarPropertyValue<Any>?) {
+		fun onGetEvent(propertyValue: CarPropertyValue<*>?) {
 			SystemUI.printLog(
 				tag, "carPropertyCallback - onGetEvent: ${propertyValue?.value}"
 			)
-			onCarPropertyGetEvent(propertyValue)
+			if (isCarPropertyValueAvailable(propertyValue)) {
+				onCarPropertyGetEvent(propertyValue)
+			}
 		}
 
 	}
@@ -76,6 +80,22 @@ abstract class CarPropertyController {
 		if (carPropertyManager != null) {
 			onCarPropertyManagerCreated()
 		}
+	}
+
+	fun isCarPropertyValueAvailable(propertyValue: CarPropertyValue<*>?): Boolean {
+		if (propertyValue == null) {
+			SystemUI.printLog(tag, "isCarPropertyValueAvailable: propertyValue is null")
+			return false
+		}
+		if (propertyValue.status != CarPropertyValue.STATUS_AVAILABLE) {
+			SystemUI.printLog(
+				tag,
+				"isCarPropertyValueAvailable: not available for Property Id:"
+						+ " ${propertyValue.propertyId} Status: ${propertyValue.status}"
+			)
+			return false
+		}
+		return true
 	}
 
 	fun getCarProperty(properties: IntArray) {
@@ -142,7 +162,7 @@ abstract class CarPropertyController {
 
 	protected abstract fun onCarPropertyManagerCreated()
 
-	protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<Any>?)
+	protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<*>?)
 
 	protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
 
