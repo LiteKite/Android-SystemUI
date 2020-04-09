@@ -34,7 +34,7 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class StatusBarWindowManager @Inject constructor(private val context: Context) {
+class StatusBarWindowController @Inject constructor(private val context: Context) {
 
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams

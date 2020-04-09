@@ -18,6 +18,8 @@ package com.litekite.systemui.preference
 
 import android.content.Context
 import android.content.SharedPreferences
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
@@ -25,7 +27,8 @@ import android.content.SharedPreferences
  * @since 1.0
  */
 @Suppress("UNUSED")
-class PreferenceController constructor(private val context: Context) {
+@Singleton
+class PreferenceController @Inject constructor(private val context: Context) {
 
 	fun getBooleanPreference(preferenceName: String, key: String): Boolean {
 		return getSharedPreference(preferenceName).getBoolean(key, false)

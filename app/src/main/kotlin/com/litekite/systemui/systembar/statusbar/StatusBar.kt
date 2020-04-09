@@ -33,13 +33,13 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class StatusBar : SystemUI() {
 
-	private lateinit var statusBarWindowManager: StatusBarWindowManager
+	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
 
 	override fun start() {
 		putComponent(javaClass, this)
-		statusBarWindowManager = Dependency.getDependencyGraph().statusBarWindowManager()
+		statusBarWindowController = Dependency.getDependencyGraph().statusBarWindowController()
 		makeStatusBarView()
 		makeNavigationBarView()
 	}
@@ -49,7 +49,7 @@ class StatusBar : SystemUI() {
 			View.inflate(context, R.layout.super_status_bar, null) as FrameLayout
 		statusBarView =
 			View.inflate(context, R.layout.status_bar, statusBarWindow)
-		statusBarWindowManager.add(statusBarWindow)
+		statusBarWindowController.add(statusBarWindow)
 	}
 
 	private fun makeNavigationBarView() {
