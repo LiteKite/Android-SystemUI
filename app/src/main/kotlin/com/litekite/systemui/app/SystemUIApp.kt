@@ -56,6 +56,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 * the main process.
 	 * <p>This method must only be called from the main thread.</p>
 	 */
+	@Synchronized
 	internal fun startServicesIfNeeded() {
 		if  (serviceStarted) {
 			SystemUI.printLog(tag, "startServicesIfNeeded: already started. Skipping...")

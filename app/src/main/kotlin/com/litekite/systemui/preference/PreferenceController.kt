@@ -30,42 +30,62 @@ import javax.inject.Singleton
 @Singleton
 class PreferenceController @Inject constructor(private val context: Context) {
 
-	fun getBooleanPreference(preferenceName: String, key: String): Boolean {
-		return getSharedPreference(preferenceName).getBoolean(key, false)
+	companion object {
+		const val PREFERENCES_SYSTEM_UI = "preferences_system_ui"
 	}
 
-	fun getIntPreference(preferenceName: String, key: String): Int {
-		return getSharedPreference(preferenceName).getInt(key, 0)
+	fun getBoolean(key: String): Boolean {
+		return getPreference().getBoolean(key, false)
 	}
 
-	private fun getDoublePreference(preferenceName: String, key: String): Double {
+	fun getInt(key: String): Int {
+		return getPreference().getInt(key, 0)
+	}
+
+	fun getFloat(key: String): Float {
+		return getPreference().getFloat(key, 0F)
+	}
+
+	fun getDouble(key: String): Double {
 		return java.lang.Double.longBitsToDouble(
-			getSharedPreference(preferenceName).getLong(key, 0)
+			getPreference().getLong(key, 0)
 		)
 	}
 
-	fun storePreference(preferenceName: String, key: String, value: Boolean) {
-		getPreferenceEditor(preferenceName).putBoolean(key, value).apply()
+	fun getString(key: String): String {
+		return getPreference().getString(key, "") ?: ""
 	}
 
-	fun storePreference(preferenceName: String, key: String, value: Int) {
-		getPreferenceEditor(preferenceName).putInt(key, value).apply()
+	fun store(key: String, value: Boolean) {
+		getEditor().putBoolean(key, value).apply()
 	}
 
-	fun storePreference(preferenceName: String, key: String, value: Double) {
-		getPreferenceEditor(preferenceName).putLong(
+	fun store(key: String, value: Int) {
+		getEditor().putInt(key, value).apply()
+	}
+
+	fun store(key: String, value: Float) {
+		getEditor().putFloat(key, value).apply()
+	}
+
+	fun store(key: String, value: Double) {
+		getEditor().putLong(
 			key,
 			java.lang.Double.doubleToRawLongBits((value))
 		).apply()
 	}
 
-	private fun getPreferenceEditor(preferenceName: String): SharedPreferences.Editor {
-		return getSharedPreference(preferenceName).edit()
+	fun store(key: String, value: String) {
+		getEditor().putString(key, value).apply()
 	}
 
-	private fun getSharedPreference(preferenceName: String): SharedPreferences {
+	private fun getEditor(): SharedPreferences.Editor {
+		return getPreference().edit()
+	}
+
+	private fun getPreference(): SharedPreferences {
 		return context.createDeviceProtectedStorageContext().getSharedPreferences(
-			preferenceName,
+			PREFERENCES_SYSTEM_UI,
 			Context.MODE_PRIVATE
 		)
 	}
