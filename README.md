@@ -1,10 +1,12 @@
 # Android-SystemUI
 
+<br>
+
 <img src="https://github.com/svignesh93/Android-SystemUI/blob/master/app/src/main/ic_launcher-web.png" alt="App Icon" width="150px" />
 
 ##
 
-### A custom SystemUI Android Application that has screen decoration windows like Status Bar, Navigation Bar, etc. 
+### A custom SystemUI Android Application that has screen decoration windows like Status Bar, Navigation Bar, etc.
 
 ## License
 
