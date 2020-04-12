@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2020 LiteKite Startup. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="108dp"
+    android:height="108dp"
+    android:tint="#FFFFFF"
+    android:viewportWidth="478.26086"
+    android:viewportHeight="478.26086">
+    <group
+        android:translateX="129.13043"
+        android:translateY="144.1734">
+        <group android:translateY="150.89062">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M75.515625,-25.109375Q75.515625,-34.6875,68.453125,-40.421875Q61.390625,-46.15625,43.953125,-50.90625Q26.4375,-55.59375,18.320312,-61.578125Q10.203125,-67.5625,10.203125,-79.03125Q10.203125,-90.4375,19.765625,-97.21875Q29.328125,-104,44.15625,-104Q59.140625,-104,68.63281,-95.63281Q78.125,-87.265625,77.84375,-74.125L77.703125,-73.703125L74.46875,-73.703125Q74.46875,-85.078125,66.03125,-92.53906Q57.59375,-100,44.15625,-100Q30.234375,-100,22.117188,-93.8125Q14,-87.625,14,-78.953125Q14,-70.28125,20.710938,-64.53906Q27.421875,-58.796875,45,-54.328125Q62.015625,-49.84375,70.703125,-43.375Q79.390625,-36.90625,79.390625,-25.015625Q79.390625,-12.921875,69.47656,-5.9609375Q59.5625,1,44.65625,1Q29.25,1,18.140625,-6.203125Q7.03125,-13.40625,7.390625,-28.859375L7.53125,-29.3125L10.6875,-29.3125Q10.6875,-15.5,20.953125,-9.25Q31.21875,-3,44.65625,-3Q58.15625,-3,66.83594,-9.15625Q75.515625,-15.3125,75.515625,-25.109375Z"
+                tools:ignore="VectorPath" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M168.96875,-103L168.96875,-33.5Q168.96875,-16.75,159.26562,-7.875Q149.5625,1,134.03125,1Q118.34375,1,108.67969,-7.90625Q99.015625,-16.8125,99.015625,-33.5L99.015625,-103L102.8125,-103L102.8125,-33.640625Q102.8125,-19.234375,111.53125,-11.1171875Q120.25,-3,134.03125,-3Q147.73438,-3,156.45312,-11.1171875Q165.17188,-19.234375,165.17188,-33.640625L165.17188,-103L168.96875,-103Z" />
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M202.67188,0L198.875,0L198.875,-103L202.67188,-103L202.67188,0Z" />
+        </group>
+    </group>
+</vector>
