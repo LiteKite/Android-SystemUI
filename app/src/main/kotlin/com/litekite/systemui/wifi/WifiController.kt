@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-@file:Suppress("DEPRECATION")
-
 package com.litekite.systemui.wifi
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.NetworkInfo
-import android.net.wifi.WifiConfiguration
+import android.net.*
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
-import android.net.wifi.WifiSsid
 import com.litekite.systemui.base.SystemUI
 
 /**
@@ -38,10 +34,12 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 
 	private val tag = javaClass.simpleName
 	private val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
+	private val connectivityManager =
+		context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 	private val callbacks: ArrayList<WifiCallback> = ArrayList()
 	private var ssid: String? = null
 
-	enum class WifiLevel(val rssiLevel: Int) {
+	enum class WifiLevel(val level: Int) {
 		EMPTY(0),
 		ONE(1),
 		TWO(2),
@@ -49,16 +47,52 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		FOUR(4)
 	}
 
+	private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+		override fun onAvailable(
+			network: Network?,
+			networkCapabilities: NetworkCapabilities?,
+			linkProperties: LinkProperties?,
+			blocked: Boolean
+		) {
+			super.onAvailable(network, networkCapabilities, linkProperties, blocked)
+			ssid = networkCapabilities?.ssid
+			updateWifiState()
+		}
+
+		override fun onCapabilitiesChanged(
+			network: Network?,
+			networkCapabilities: NetworkCapabilities?
+		) {
+			super.onCapabilitiesChanged(network, networkCapabilities)
+			ssid = networkCapabilities?.ssid
+			updateWifiState()
+		}
+
+		override fun onLost(network: Network?) {
+			super.onLost(network)
+			ssid = connectivityManager.getNetworkCapabilities(network).ssid
+			updateWifiState()
+		}
+
+	}
+
 	private fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
-		filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
 		filter.addAction(WifiManager.RSSI_CHANGED_ACTION)
 		context.registerReceiver(this, filter)
+		// just receive notifications for scanned networks without switching network
+		connectivityManager.registerNetworkCallback(getNetworkRequest(), networkCallback)
 	}
+
+	private fun getNetworkRequest(): NetworkRequest = NetworkRequest.Builder()
+		.addCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)
+		.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+		.build()
 
 	private fun stopListening() {
 		context.unregisterReceiver(this)
+		connectivityManager.unregisterNetworkCallback(networkCallback)
 	}
 
 	private fun addCallback(cb: WifiCallback) {
@@ -74,15 +108,6 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		when (intent?.action) {
 			WifiManager.WIFI_STATE_CHANGED_ACTION,
 			WifiManager.RSSI_CHANGED_ACTION -> {
-				updateWifiState()
-			}
-			WifiManager.NETWORK_STATE_CHANGED_ACTION -> {
-				val networkInfo: NetworkInfo? =
-					intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO)
-				if (networkInfo != null && networkInfo.isConnected) {
-					val wifiInfo: WifiInfo? = wifiManager.connectionInfo
-					ssid = getValidSsid(wifiInfo)
-				}
 				updateWifiState()
 			}
 		}
@@ -102,22 +127,6 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		val level = WifiManager.calculateSignalLevel(wifiInfo.rssi, WifiManager.RSSI_LEVELS)
 		val wifiLevel = WifiLevel.valueOf(level.toString())
 		notifyWifiLevelChanged(wifiLevel)
-	}
-
-	private fun getValidSsid(wifiInfo: WifiInfo?): String? {
-		if (wifiInfo == null) {
-			return null
-		}
-		if (wifiInfo.isPasspointAp || wifiInfo.isOsuAp) {
-			return wifiInfo.passpointProviderFriendlyName
-		}
-		if (wifiInfo.ssid != null && WifiSsid.NONE != wifiInfo.ssid) {
-			return wifiInfo.ssid
-		}
-		//Ok, it's not in the connection info; we have to go hunting for it.
-		val networks: List<WifiConfiguration> = wifiManager.configuredNetworks
-		networks.forEach { if (it.networkId == wifiInfo.networkId) return it.SSID }
-		return null
 	}
 
 	private fun notifyWifiDisabled() {

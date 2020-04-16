@@ -1,49 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<issues format="5" by="lint 3.6.1" client="gradle" variant="debug" version="3.6.1">
-
-    <issue
-        id="MissingPermission"
-        message="Missing permissions required by WifiManager.getConfiguredNetworks: android.permission.ACCESS_FINE_LOCATION"
-        errorLine1="  val networks: List&lt;WifiConfiguration> = wifiManager.configuredNetworks"
-        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/litekite/systemui/wifi/WifiController.kt"
-            line="118"
-            column="43"/>
-    </issue>
-
-    <issue
-        id="NewApi"
-        message="Call requires API level Q (current min is 28): `android.net.wifi.WifiInfo#getPasspointProviderFriendlyName`"
-        errorLine1="   return wifiInfo.passpointProviderFriendlyName"
-        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/kotlin/com/litekite/systemui/wifi/WifiController.kt"
-            line="112"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        message="A newer version of com.google.dagger:dagger than 2.26 is available: 2.27"
-        errorLine1="    api &apos;com.google.dagger:dagger:2.26&apos;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="build.gradle"
-            line="65"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="SpUsage"
-        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
-        errorLine1="        android:textSize=&quot;20dp&quot;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="src/main/res/layout/status_bar.xml"
-            line="27"
-            column="9"/>
-    </issue>
+<issues format="5" by="lint 3.6.2" client="gradle" variant="debug" version="3.6.2">
 
     <issue
         id="AllowBackup"
@@ -54,20 +10,6 @@
             file="src/main/AndroidManifest.xml"
             line="417"
             column="6"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `drawable`.">
-        <location
-            file="src/main/res/drawable-v24"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 28. Merge all the resources in this folder into `mipmap-anydpi`.">
-        <location
-            file="src/main/res/mipmap-anydpi-v26"/>
     </issue>
 
     <issue
