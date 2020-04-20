@@ -34,56 +34,59 @@ class PreferenceController @Inject constructor(private val context: Context) {
 		const val PREFERENCES_SYSTEM_UI = "preferences_system_ui"
 	}
 
+	private val preferences = getPreferences()
+	private val editor = getEditor()
+
 	fun getBoolean(key: String): Boolean {
-		return getPreference().getBoolean(key, false)
+		return preferences.getBoolean(key, false)
 	}
 
 	fun getInt(key: String): Int {
-		return getPreference().getInt(key, 0)
+		return preferences.getInt(key, 0)
 	}
 
 	fun getFloat(key: String): Float {
-		return getPreference().getFloat(key, 0F)
+		return preferences.getFloat(key, 0F)
 	}
 
 	fun getDouble(key: String): Double {
 		return java.lang.Double.longBitsToDouble(
-			getPreference().getLong(key, 0)
+			preferences.getLong(key, 0)
 		)
 	}
 
 	fun getString(key: String): String {
-		return getPreference().getString(key, "") ?: ""
+		return preferences.getString(key, "") ?: ""
 	}
 
 	fun store(key: String, value: Boolean) {
-		getEditor().putBoolean(key, value).apply()
+		editor.putBoolean(key, value).apply()
 	}
 
 	fun store(key: String, value: Int) {
-		getEditor().putInt(key, value).apply()
+		editor.putInt(key, value).apply()
 	}
 
 	fun store(key: String, value: Float) {
-		getEditor().putFloat(key, value).apply()
+		editor.putFloat(key, value).apply()
 	}
 
 	fun store(key: String, value: Double) {
-		getEditor().putLong(
+		editor.putLong(
 			key,
 			java.lang.Double.doubleToRawLongBits((value))
 		).apply()
 	}
 
 	fun store(key: String, value: String) {
-		getEditor().putString(key, value).apply()
+		editor.putString(key, value).apply()
 	}
 
 	private fun getEditor(): SharedPreferences.Editor {
-		return getPreference().edit()
+		return preferences.edit()
 	}
 
-	private fun getPreference(): SharedPreferences {
+	private fun getPreferences(): SharedPreferences {
 		return context.createDeviceProtectedStorageContext().getSharedPreferences(
 			PREFERENCES_SYSTEM_UI,
 			Context.MODE_PRIVATE
