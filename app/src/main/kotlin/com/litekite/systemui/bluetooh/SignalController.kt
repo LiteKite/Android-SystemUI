@@ -190,8 +190,9 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	private fun updateSignalState(device: BluetoothDevice?, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
-				SystemUI.printLog(tag, "Device Connected!")
-				if (bluetoothHeadsetClient == null || device == null) {
+				SystemUI.printLog(tag, "updateSignalState - profile Connected!")
+				if (device == null) {
+					SystemUI.printLog(tag, "device is null. returning...")
 					return
 				}
 				// Check if signal information is available and immediately update.
@@ -204,7 +205,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 				updateSignalLevel(SignalLevel.valueOf(signalLevel.toString()))
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
-				SystemUI.printLog(tag, "device disconnected!")
+				SystemUI.printLog(tag, "updateSignalState - profile disconnected!")
 				notifySignalLevelUnavailable()
 			}
 		}

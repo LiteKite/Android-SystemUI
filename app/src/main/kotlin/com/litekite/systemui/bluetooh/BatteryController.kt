@@ -149,8 +149,9 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	private fun updateBatteryState(device: BluetoothDevice?, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
-				SystemUI.printLog(tag, "Device Connected!")
-				if (bluetoothHeadsetClient == null || device == null) {
+				SystemUI.printLog(tag, "updateBatteryState - profile Connected!")
+				if (device == null) {
+					SystemUI.printLog(tag, "device is null. returning...")
 					return
 				}
 				// Check if battery information is available and immediately update.
@@ -163,7 +164,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 				updateBatteryLevel(BatteryLevel.valueOf(batteryLevel.toString()))
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
-				SystemUI.printLog(tag, "device disconnected!")
+				SystemUI.printLog(tag, "updateBatteryState - profile disconnected!")
 				notifyBatteryLevelUnavailable()
 			}
 		}

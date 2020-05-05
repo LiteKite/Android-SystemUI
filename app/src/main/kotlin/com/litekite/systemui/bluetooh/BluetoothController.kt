@@ -16,10 +16,7 @@
 
 package com.litekite.systemui.bluetooh
 
-import android.bluetooth.BluetoothA2dpSink
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothHeadsetClient
-import android.bluetooth.BluetoothProfile
+import android.bluetooth.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -34,7 +31,47 @@ import com.litekite.systemui.base.SystemUI
 class BluetoothController constructor(private val context: Context) : BroadcastReceiver() {
 
 	private val tag = javaClass.simpleName
+	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
+	private var bluetoothA2dpSink: BluetoothA2dpSink? = null
 	private val callbacks: ArrayList<BluetoothCallback> = ArrayList()
+
+	private val serviceListener = object : BluetoothProfile.ServiceListener {
+
+		override fun onServiceDisconnected(profile: Int) {
+			if (profile == BluetoothProfile.HEADSET_CLIENT) {
+				bluetoothHeadsetClient = null
+			}
+			if (profile == BluetoothProfile.A2DP_SINK) {
+				bluetoothA2dpSink = null
+			}
+		}
+
+		override fun onServiceConnected(profile: Int, proxy: BluetoothProfile?) {
+			if (profile == BluetoothProfile.HEADSET_CLIENT) {
+				bluetoothHeadsetClient = proxy as BluetoothHeadsetClient
+			}
+			if (profile == BluetoothProfile.A2DP_SINK) {
+				bluetoothA2dpSink = proxy as BluetoothA2dpSink
+			}
+		}
+
+	}
+
+	init {
+		// HEADSET_CLIENT service listener
+		bluetoothAdapter?.getProfileProxy(
+			context,
+			serviceListener,
+			BluetoothProfile.HEADSET_CLIENT
+		)
+		// A2DP_SINK service listener
+		bluetoothAdapter?.getProfileProxy(
+			context,
+			serviceListener,
+			BluetoothProfile.A2DP_SINK
+		)
+	}
 
 	private fun startListening() {
 		val filter = IntentFilter()
@@ -62,21 +99,36 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 			BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED -> {
 				val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 				if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+					SystemUI.printLog(tag, "bluetooth is disabled. returning...")
 					notifyBluetoothDisconnected()
 					return
 				}
-				val headsetClientState =
-					bluetoothAdapter.getProfileConnectionState(BluetoothProfile.HEADSET_CLIENT)
-				val a2dpSinkState =
-					bluetoothAdapter.getProfileConnectionState(BluetoothProfile.A2DP_SINK)
-				if (headsetClientState == BluetoothHeadsetClient.STATE_CONNECTED
-					|| a2dpSinkState == BluetoothA2dpSink.STATE_CONNECTED
+				// Checks whether HEADSET_CLIENT connected
+				val headsetClientDevices: List<BluetoothDevice> =
+					bluetoothHeadsetClient?.connectedDevices ?: ArrayList()
+				val headsetClientState = getProfileConnectionState(headsetClientDevices)
+				// Checks whether A2DP_SINK connected
+				val a2dpSinkDevices: List<BluetoothDevice> =
+					bluetoothA2dpSink?.connectedDevices ?: ArrayList()
+				val a2dpSinkState = getProfileConnectionState(a2dpSinkDevices)
+				SystemUI.printLog(tag, "headsetClientState: $headsetClientState")
+				SystemUI.printLog(tag, "a2dpSinkState: $a2dpSinkState")
+				if (headsetClientState == BluetoothProfile.STATE_CONNECTED
+					|| a2dpSinkState == BluetoothProfile.STATE_CONNECTED
 				) {
 					notifyBluetoothConnected()
 				} else {
 					notifyBluetoothDisconnected()
 				}
 			}
+		}
+	}
+
+	private fun getProfileConnectionState(devices: List<BluetoothDevice>): Int {
+		return if (devices.isNotEmpty()) {
+			BluetoothProfile.STATE_CONNECTED
+		} else {
+			BluetoothProfile.STATE_DISCONNECTED
 		}
 	}
 
