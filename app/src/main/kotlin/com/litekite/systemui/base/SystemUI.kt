@@ -36,6 +36,8 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	open fun onConfigurationChanged(newConfig: Configuration) {}
 
+	open fun onOverlayChanged() {}
+
 	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
 
 	@Suppress("UNCHECKED_CAST")

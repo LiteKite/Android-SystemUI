@@ -17,6 +17,7 @@
 package com.litekite.systemui.app
 
 import android.app.Application
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
@@ -39,6 +40,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 */
 	internal var services: ArrayList<SystemUI> = ArrayList()
 	private val components: MutableMap<Class<*>, Any> = HashMap()
+	private val lastConfig = Configuration()
 
 	override fun onCreate() {
 		super.onCreate()
@@ -63,8 +65,8 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 			return
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)
-		for (service in serviceComponents) {
-			val systemUIService = Class.forName(service).newInstance() as SystemUI
+		serviceComponents.forEach {
+			val systemUIService = Class.forName(it).newInstance() as SystemUI
 			systemUIService.context = this
 			systemUIService.components = components
 			systemUIService.start()
@@ -75,9 +77,10 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		if (serviceStarted) {
-			for (service in services) {
-				service.onConfigurationChanged(newConfig)
-			}
+			services.forEach { it.onConfigurationChanged(newConfig) }
+		}
+		if (lastConfig.updateFrom(newConfig) and ActivityInfo.CONFIG_ASSETS_PATHS != 0) {
+			services.forEach { it.onOverlayChanged() }
 		}
 		super.onConfigurationChanged(newConfig)
 	}

@@ -16,6 +16,7 @@
 
 package com.litekite.systemui.systembar.base
 
+import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import java.io.FileDescriptor
@@ -35,6 +36,16 @@ class SystemBars : SystemUI() {
 	override fun start() {
 		printLog(tag, "start")
 		createStatusBarFromConfig()
+	}
+
+	override fun onConfigurationChanged(newConfig: Configuration) {
+		super.onConfigurationChanged(newConfig)
+		statusBar.onConfigurationChanged(newConfig)
+	}
+
+	override fun onOverlayChanged() {
+		super.onOverlayChanged()
+		statusBar.onOverlayChanged()
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {

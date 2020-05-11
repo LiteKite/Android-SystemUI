@@ -33,6 +33,7 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class StatusBar : SystemUI() {
 
+	private val tag = javaClass.simpleName
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
@@ -57,7 +58,13 @@ class StatusBar : SystemUI() {
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
+		super.onConfigurationChanged(newConfig)
+		printLog(tag, "onConfigurationChanged:")
+	}
 
+	override fun onOverlayChanged() {
+		super.onOverlayChanged()
+		printLog(tag, "onOverlayChanged:")
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
