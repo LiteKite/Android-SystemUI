@@ -20,6 +20,7 @@ import android.content.Context
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.car.CarController
 import com.litekite.systemui.preference.PreferenceController
+import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
 import dagger.Component
 import dagger.Module
@@ -65,6 +66,11 @@ class Dependency : SystemUI() {
 		@Singleton
 		fun provideCarController(context: Context): CarController = CarController(context)
 
+		@Provides
+		@Singleton
+		fun provideStatusBarServiceController(context: Context): StatusBarServiceController =
+			StatusBarServiceController(context)
+
 	}
 
 	@Singleton
@@ -76,6 +82,8 @@ class Dependency : SystemUI() {
 		fun statusBarWindowController(): StatusBarWindowController
 
 		fun carController(): CarController
+
+		fun statusBarServiceController(): StatusBarServiceController
 
 	}
 

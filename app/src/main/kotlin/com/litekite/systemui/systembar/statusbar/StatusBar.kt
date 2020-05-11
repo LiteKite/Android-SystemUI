@@ -31,17 +31,24 @@ import java.io.PrintWriter
  * @since 1.0
  */
 @Suppress("UNUSED")
-class StatusBar : SystemUI() {
+class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 
 	private val tag = javaClass.simpleName
+	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
 
 	override fun start() {
 		putComponent(javaClass, this)
+		// Connect in to the status bar manager service
+		statusBarServiceController = Dependency.getDependencyGraph().statusBarServiceController()
+		statusBarServiceController.addCallback(this)
+		// Status bar window manager
 		statusBarWindowController = Dependency.getDependencyGraph().statusBarWindowController()
+		// Creates Status bar view
 		makeStatusBarView()
+		// Creates Navigation bar view
 		makeNavigationBarView()
 	}
 
