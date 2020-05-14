@@ -30,7 +30,10 @@ import com.litekite.systemui.base.SystemUI
  */
 class BluetoothController constructor(private val context: Context) : BroadcastReceiver() {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = BluetoothController::class.java.simpleName
+	}
+
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	private var bluetoothA2dpSink: BluetoothA2dpSink? = null
@@ -93,13 +96,13 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		SystemUI.printLog(tag, "onReceive - action: ${intent?.action})")
+		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
 		when (intent?.action) {
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED,
 			BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED -> {
 				val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 				if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-					SystemUI.printLog(tag, "bluetooth is disabled. returning...")
+					SystemUI.printLog(TAG, "bluetooth is disabled. returning...")
 					notifyBluetoothDisconnected()
 					return
 				}
@@ -111,8 +114,8 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 				val a2dpSinkDevices: List<BluetoothDevice> =
 					bluetoothA2dpSink?.connectedDevices ?: ArrayList()
 				val a2dpSinkState = getProfileConnectionState(a2dpSinkDevices)
-				SystemUI.printLog(tag, "headsetClientState: $headsetClientState")
-				SystemUI.printLog(tag, "a2dpSinkState: $a2dpSinkState")
+				SystemUI.printLog(TAG, "headsetClientState: $headsetClientState")
+				SystemUI.printLog(TAG, "a2dpSinkState: $a2dpSinkState")
 				if (headsetClientState == BluetoothProfile.STATE_CONNECTED
 					|| a2dpSinkState == BluetoothProfile.STATE_CONNECTED
 				) {

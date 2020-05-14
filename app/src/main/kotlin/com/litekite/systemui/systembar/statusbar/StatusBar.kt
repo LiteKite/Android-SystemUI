@@ -17,6 +17,7 @@
 package com.litekite.systemui.systembar.statusbar
 
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.view.View
 import android.widget.FrameLayout
 import com.litekite.systemui.R
@@ -33,7 +34,10 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = StatusBar::class.java.simpleName
+	}
+
 	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
@@ -66,12 +70,29 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
-		printLog(tag, "onConfigurationChanged:")
+		printLog(TAG, "onConfigurationChanged:")
 	}
 
 	override fun onOverlayChanged() {
 		super.onOverlayChanged()
-		printLog(tag, "onOverlayChanged:")
+		printLog(TAG, "onOverlayChanged:")
+	}
+
+	override fun setWindowState(displayId: Int, window: Int, state: Int) {
+		printLog(TAG, "setWindowState:")
+	}
+
+	override fun setSystemUiVisibility(
+		displayId: Int,
+		vis: Int,
+		fullscreenStackVis: Int,
+		dockedStackVis: Int,
+		mask: Int,
+		fullscreenBounds: Rect?,
+		dockedBounds: Rect?,
+		navBarColorManagedByIme: Boolean
+	) {
+		printLog(TAG, "setSystemUiVisibility:")
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {

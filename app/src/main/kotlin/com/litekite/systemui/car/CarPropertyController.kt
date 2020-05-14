@@ -30,7 +30,10 @@ import com.litekite.systemui.dependency.Dependency
  */
 abstract class CarPropertyController {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = CarPropertyController::class.java.simpleName
+	}
+
 	private val carController: CarController = Dependency.getDependencyGraph().carController()
 	private var carPropertyManager: CarPropertyManager? = null
 
@@ -46,7 +49,7 @@ abstract class CarPropertyController {
 
 		override fun onChangeEvent(propertyValue: CarPropertyValue<*>?) {
 			SystemUI.printLog(
-				tag, "carPropertyCallback - onChangeEvent: ${propertyValue?.value}"
+				TAG, "carPropertyCallback - onChangeEvent: ${propertyValue?.value}"
 			)
 			if (isCarPropertyValueAvailable(propertyValue)) {
 				onCarPropertyChangeEvent(propertyValue)
@@ -55,13 +58,13 @@ abstract class CarPropertyController {
 
 		override fun onErrorEvent(propertyId: Int, areaId: Int) {
 			SystemUI.printLog(
-				tag, "carPropertyCallback - onErrorEvent: Property Id: $propertyId Area Id: $areaId"
+				TAG, "carPropertyCallback - onErrorEvent: Property Id: $propertyId Area Id: $areaId"
 			)
 		}
 
 		fun onGetEvent(propertyValue: CarPropertyValue<*>?) {
 			SystemUI.printLog(
-				tag, "carPropertyCallback - onGetEvent: ${propertyValue?.value}"
+				TAG, "carPropertyCallback - onGetEvent: ${propertyValue?.value}"
 			)
 			if (isCarPropertyValueAvailable(propertyValue)) {
 				onCarPropertyGetEvent(propertyValue)
@@ -84,12 +87,12 @@ abstract class CarPropertyController {
 
 	fun isCarPropertyValueAvailable(propertyValue: CarPropertyValue<*>?): Boolean {
 		if (propertyValue == null) {
-			SystemUI.printLog(tag, "isCarPropertyValueAvailable: propertyValue is null")
+			SystemUI.printLog(TAG, "isCarPropertyValueAvailable: propertyValue is null")
 			return false
 		}
 		if (propertyValue.status != CarPropertyValue.STATUS_AVAILABLE) {
 			SystemUI.printLog(
-				tag,
+				TAG,
 				"isCarPropertyValueAvailable: not available for Property Id:"
 						+ " ${propertyValue.propertyId} Status: ${propertyValue.status}"
 			)
@@ -100,7 +103,7 @@ abstract class CarPropertyController {
 
 	fun getCarProperty(properties: IntArray) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "getCarProperty: Car is not connected")
+			SystemUI.printLog(TAG, "getCarProperty: Car is not connected")
 			return
 		}
 		properties.forEach {
@@ -111,14 +114,14 @@ abstract class CarPropertyController {
 				)
 				carPropertyCallback.onGetEvent(propertyValue)
 			} catch (e: RuntimeException) {
-				SystemUI.printLog(tag, "getCarProperty - RuntimeException: $e")
+				SystemUI.printLog(TAG, "getCarProperty - RuntimeException: $e")
 			}
 		}
 	}
 
 	fun setCarProperty(propertyId: Int, value: Any) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "setCarProperty: Car is not connected")
+			SystemUI.printLog(TAG, "setCarProperty: Car is not connected")
 			return
 		}
 		try {
@@ -129,13 +132,13 @@ abstract class CarPropertyController {
 				value
 			)
 		} catch (e: RuntimeException) {
-			SystemUI.printLog(tag, "setCarProperty - RuntimeException: $e")
+			SystemUI.printLog(TAG, "setCarProperty - RuntimeException: $e")
 		}
 	}
 
 	fun registerCarPropertyCallback(properties: IntArray) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "registerCarPropertyCallback: Car is not connected")
+			SystemUI.printLog(TAG, "registerCarPropertyCallback: Car is not connected")
 			return
 		}
 		properties.forEach {
@@ -149,7 +152,7 @@ abstract class CarPropertyController {
 
 	fun unregisterCarPropertyCallback(properties: IntArray) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "unregisterCarPropertyCallback: Car is not connected")
+			SystemUI.printLog(TAG, "unregisterCarPropertyCallback: Car is not connected")
 			return
 		}
 		properties.forEach {

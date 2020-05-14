@@ -36,7 +36,10 @@ import com.litekite.systemui.base.SystemUI
  */
 class SignalController constructor(private val context: Context) : BroadcastReceiver() {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = SignalController::class.java.simpleName
+	}
+
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	private val callbacks: ArrayList<SignalCallback> = ArrayList()
@@ -121,7 +124,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		SystemUI.printLog(tag, "onReceive - action: ${intent?.action})")
+		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
 		when (intent?.action) {
 			BluetoothHeadsetClient.ACTION_AG_EVENT -> {
 				// Network State
@@ -130,7 +133,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 					NetworkState.INVALID.state
 				)
 				if (extraNetworkState != NetworkState.INVALID.state) {
-					SystemUI.printLog(tag, "EXTRA_NETWORK_STATUS:  $extraNetworkState")
+					SystemUI.printLog(TAG, "EXTRA_NETWORK_STATUS:  $extraNetworkState")
 					if (extraNetworkState == NetworkState.UNAVAILABLE.state) {
 						updateSignalLevel(SignalLevel.EMPTY)
 					}
@@ -148,7 +151,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 					RoamingState.INVALID.state
 				)
 				if (extraRoamingState != RoamingState.INVALID.state) {
-					SystemUI.printLog(tag, "EXTRA_NETWORK_ROAMING:  $extraRoamingState")
+					SystemUI.printLog(TAG, "EXTRA_NETWORK_ROAMING:  $extraRoamingState")
 					if (extraRoamingState == RoamingState.ACTIVE_ROAMING.state) {
 						notifyRoamingStateAvailable()
 					} else if (extraRoamingState == RoamingState.NO_ROAMING.state) {
@@ -160,7 +163,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
 				val oldState = intent.getIntExtra(BluetoothProfile.EXTRA_PREVIOUS_STATE, -1)
 				SystemUI.printLog(
-					tag, "ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
+					TAG, "ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
 				)
 				val device: BluetoothDevice? =
 					intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
@@ -174,11 +177,11 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	 */
 	private fun updateSignalLevel(signalLevel: SignalLevel) {
 		if (signalLevel == SignalLevel.INVALID) {
-			SystemUI.printLog(tag, "updateSignalLevel: Invalid signal level. IGNORING...")
+			SystemUI.printLog(TAG, "updateSignalLevel: Invalid signal level. IGNORING...")
 			return
 		}
 		level = signalLevel
-		SystemUI.printLog(tag, "Signal level: $signalLevel; setting mLevel as: $level")
+		SystemUI.printLog(TAG, "Signal level: $signalLevel; setting mLevel as: $level")
 		// Valid Signal Level
 		notifySignalLevelChanged()
 	}
@@ -190,9 +193,9 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	private fun updateSignalState(device: BluetoothDevice?, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
-				SystemUI.printLog(tag, "updateSignalState - profile Connected!")
+				SystemUI.printLog(TAG, "updateSignalState - profile Connected!")
 				if (device == null) {
-					SystemUI.printLog(tag, "device is null. returning...")
+					SystemUI.printLog(TAG, "device is null. returning...")
 					return
 				}
 				// Check if signal information is available and immediately update.
@@ -205,7 +208,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 				updateSignalLevel(SignalLevel.valueOf(signalLevel.toString()))
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
-				SystemUI.printLog(tag, "updateSignalState - profile disconnected!")
+				SystemUI.printLog(TAG, "updateSignalState - profile disconnected!")
 				notifySignalLevelUnavailable()
 			}
 		}

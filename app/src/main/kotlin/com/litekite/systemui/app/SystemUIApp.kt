@@ -33,7 +33,10 @@ import com.litekite.systemui.base.SystemUIServiceProvider
 @Suppress("UNUSED")
 class SystemUIApp : Application(), SystemUIServiceProvider {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = SystemUIApp::class.java.simpleName
+	}
+
 	private var serviceStarted: Boolean = false
 	/**
 	 * Hold a reference on the stuff we start.
@@ -48,7 +51,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 		// application theme in the manifest does only work for activities. Keep this in sync with
 		// the theme set there.
 		setTheme(R.style.Theme_SystemUI)
-		SystemUI.printLog(tag, "onCreate: SystemUIApp started successfully")
+		SystemUI.printLog(TAG, "onCreate: SystemUIApp started successfully")
 		startServicesIfNeeded()
 	}
 
@@ -61,7 +64,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	@Synchronized
 	internal fun startServicesIfNeeded() {
 		if  (serviceStarted) {
-			SystemUI.printLog(tag, "startServicesIfNeeded: already started. Skipping...")
+			SystemUI.printLog(TAG, "startServicesIfNeeded: already started. Skipping...")
 			return
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)

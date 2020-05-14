@@ -43,7 +43,10 @@ class KeyButtonView @JvmOverloads constructor(
 	defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr) {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = KeyButtonView::class.java.simpleName
+	}
+
 	private var touchDownX: Int = 0
 	private var touchDownY: Int = 0
 	private var longClicked: Boolean = false
@@ -195,7 +198,7 @@ class KeyButtonView @JvmOverloads constructor(
 	}
 
 	override fun performClick(): Boolean {
-		SystemUI.printLog(tag, "key button performed click. code: $code")
+		SystemUI.printLog(TAG, "key button performed click. code: $code")
 		return super.performClick()
 	}
 

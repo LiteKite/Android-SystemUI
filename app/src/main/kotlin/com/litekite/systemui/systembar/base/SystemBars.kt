@@ -30,11 +30,14 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class SystemBars : SystemUI() {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = SystemBars::class.java.simpleName
+	}
+
 	private lateinit var statusBar: SystemUI
 
 	override fun start() {
-		printLog(tag, "start")
+		printLog(TAG, "start")
 		createStatusBarFromConfig()
 	}
 
@@ -59,7 +62,7 @@ class SystemBars : SystemUI() {
 		statusBar.context = context
 		statusBar.components = components
 		statusBar.start()
-		printLog(tag, "started: " + statusBar.javaClass.simpleName)
+		printLog(TAG, "started: " + statusBar.javaClass.simpleName)
 	}
 
 }

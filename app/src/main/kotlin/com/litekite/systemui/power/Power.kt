@@ -31,7 +31,14 @@ import com.litekite.systemui.base.SystemUI
 @Suppress("UNUSED")
 class Power : SystemUI() {
 
-	private val tag = javaClass.simpleName
+	companion object {
+
+		val TAG = Power::class.java.simpleName
+
+		const val TEMPERATURE_INTERVAL = 1 * DateUtils.SECOND_IN_MILLIS
+
+	}
+
 	private val handler = Handler()
 	private val lastConfiguration = Configuration()
 	private lateinit var hardwarePropertiesManager: HardwarePropertiesManager
@@ -63,7 +70,7 @@ class Power : SystemUI() {
 				// Should never happen.
 			}
 		} else {
-			printLog(tag, "cannot find thermalservice, no throttling push notifications")
+			printLog(TAG, "cannot find thermalservice, no throttling push notifications")
 		}
 	}
 
@@ -87,13 +94,9 @@ class Power : SystemUI() {
 		)
 		if (temps.isNotEmpty()) {
 			val temp: Float = temps[0]
-			printLog(tag, "temperature: $temp")
+			printLog(TAG, "temperature: $temp")
 		}
 		handler.postDelayed(updateTempCallback, TEMPERATURE_INTERVAL)
-	}
-
-	companion object {
-		const val TEMPERATURE_INTERVAL = 1 * DateUtils.SECOND_IN_MILLIS
 	}
 
 	/**

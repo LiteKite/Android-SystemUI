@@ -29,7 +29,10 @@ import com.litekite.systemui.dependency.Dependency
  */
 class CarAudioController {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = CarAudioController::class.java.simpleName
+	}
+
 	private val carController: CarController = Dependency.getDependencyGraph().carController()
 	private var carAudioManager: CarAudioManager? = null
 	private var callbacks: ArrayList<CarAudioControllerCallback> = ArrayList()
@@ -68,55 +71,55 @@ class CarAudioController {
 
 	fun setGroupVolume(groupId: Int, volumeLevel: Int, flags: Int) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "setGroupVolume: Car is not connected")
+			SystemUI.printLog(TAG, "setGroupVolume: Car is not connected")
 			return
 		}
 		try {
 			carAudioManager?.setGroupVolume(groupId, volumeLevel, flags)
 		} catch (e: RuntimeException) {
-			SystemUI.printLog(tag, "setGroupVolume - RuntimeException: $e")
+			SystemUI.printLog(TAG, "setGroupVolume - RuntimeException: $e")
 		}
 	}
 
 	fun getGroupVolume(groupId: Int) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "getGroupVolume: Car is not connected")
+			SystemUI.printLog(TAG, "getGroupVolume: Car is not connected")
 			return
 		}
 		try {
 			carAudioManager?.getGroupVolume(groupId)
 		} catch (e: RuntimeException) {
-			SystemUI.printLog(tag, "getGroupVolume - RuntimeException: $e")
+			SystemUI.printLog(TAG, "getGroupVolume - RuntimeException: $e")
 		}
 	}
 
 	fun getGroupMaxVolume(groupId: Int) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "getGroupMaxVolume: Car is not connected")
+			SystemUI.printLog(TAG, "getGroupMaxVolume: Car is not connected")
 			return
 		}
 		try {
 			carAudioManager?.getGroupMaxVolume(groupId)
 		} catch (e: RemoteException) {
-			SystemUI.printLog(tag, "getGroupMaxVolume - RuntimeException: $e")
+			SystemUI.printLog(TAG, "getGroupMaxVolume - RuntimeException: $e")
 		}
 	}
 
 	fun getGroupMinVolume(groupId: Int) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "getGroupMinVolume: Car is not connected")
+			SystemUI.printLog(TAG, "getGroupMinVolume: Car is not connected")
 			return
 		}
 		try {
 			carAudioManager?.getGroupMinVolume(groupId)
 		} catch (e: RuntimeException) {
-			SystemUI.printLog(tag, "getGroupMinVolume - RuntimeException: $e")
+			SystemUI.printLog(TAG, "getGroupMinVolume - RuntimeException: $e")
 		}
 	}
 
 	private fun registerCarVolumeCallback() {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "registerCarVolumeCallback: Car is not connected")
+			SystemUI.printLog(TAG, "registerCarVolumeCallback: Car is not connected")
 			return
 		}
 		carAudioManager?.registerCarVolumeCallback(carVolumeCallback)
@@ -124,7 +127,7 @@ class CarAudioController {
 
 	private fun unregisterCarVolumeCallback() {
 		if (!carController.isConnected) {
-			SystemUI.printLog(tag, "unregisterCarVolumeCallback: Car is not connected")
+			SystemUI.printLog(TAG, "unregisterCarVolumeCallback: Car is not connected")
 			return
 		}
 		carAudioManager?.unregisterCarVolumeCallback(carVolumeCallback)

@@ -32,7 +32,10 @@ import com.litekite.systemui.base.SystemUI
  */
 class WifiController constructor(private val context: Context) : BroadcastReceiver() {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = WifiController::class.java.simpleName
+	}
+
 	private val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
 	private val connectivityManager =
 		context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -104,7 +107,7 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		SystemUI.printLog(tag, "onReceive - action: ${intent?.action})")
+		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
 		when (intent?.action) {
 			WifiManager.WIFI_STATE_CHANGED_ACTION,
 			WifiManager.RSSI_CHANGED_ACTION -> {

@@ -34,10 +34,8 @@ import javax.inject.Singleton
  */
 class Dependency : SystemUI() {
 
-	private val tag = javaClass.simpleName
-
 	override fun start() {
-		printLog(tag, "start")
+		printLog(TAG, "start")
 		createDependencies()
 	}
 
@@ -88,6 +86,8 @@ class Dependency : SystemUI() {
 	}
 
 	companion object {
+
+		val TAG = Dependency::class.java.simpleName
 
 		private lateinit var dependencyGraph: DependencyGraph
 

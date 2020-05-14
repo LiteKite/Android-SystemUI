@@ -31,14 +31,17 @@ import javax.inject.Singleton
 @Singleton
 class CarController @Inject constructor(private val context: Context) {
 
-	private val tag = javaClass.simpleName
+	companion object {
+		val TAG = CarController::class.java.simpleName
+	}
+
 	private val handler: Handler = Handler()
 	private lateinit var car: Car
 	var isConnected: Boolean = false
 	private var callbacks: ArrayList<ConnectionCallback> = ArrayList()
 
 	private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->
-		SystemUI.printLog(tag, "onLifecycleChanged: $isConnected Car: $car")
+		SystemUI.printLog(TAG, "onLifecycleChanged: $isConnected Car: $car")
 		this.isConnected = isConnected
 		notifyConnectionState(isConnected)
 		if (!isConnected) {
@@ -62,13 +65,13 @@ class CarController @Inject constructor(private val context: Context) {
 
 	fun getManager(serviceName: String): Any? {
 		if (!isConnected) {
-			SystemUI.printLog(tag, "getManager: Car is not connected")
+			SystemUI.printLog(TAG, "getManager: Car is not connected")
 			return null
 		}
 		return try {
 			car.getCarManager(serviceName)
 		} catch (e: IllegalStateException) {
-			SystemUI.printLog(tag, "getManager - IllegalStateException: $e")
+			SystemUI.printLog(TAG, "getManager - IllegalStateException: $e")
 			null
 		}
 	}
