@@ -16,10 +16,13 @@
 
 package com.litekite.systemui.systembar.statusbar
 
+import android.app.WindowConfiguration
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.view.View
 import android.widget.FrameLayout
+import com.android.systemui.shared.system.ActivityManagerWrapper
+import com.android.systemui.shared.system.TaskStackChangeListener
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.dependency.Dependency
@@ -38,10 +41,26 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		val TAG = StatusBar::class.java.simpleName
 	}
 
+	private val activityManagerWrapper = ActivityManagerWrapper.getInstance()
 	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
+
+	private val taskStackChangeListener = object : TaskStackChangeListener() {
+
+		override fun onTaskStackChanged() {
+			super.onTaskStackChanged()
+			printLog(TAG, "onTaskStackChanged:")
+			val topActivity = activityManagerWrapper.runningTask
+			printLog(TAG, "topActivity: $topActivity")
+			val activityType = WindowConfiguration.activityTypeToString(
+				topActivity.configuration.windowConfiguration.activityType
+			)
+			printLog(TAG, "activityType: $activityType")
+		}
+
+	}
 
 	override fun start() {
 		putComponent(javaClass, this)
@@ -50,10 +69,12 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		statusBarServiceController.addCallback(this)
 		// Status bar window manager
 		statusBarWindowController = Dependency.getDependencyGraph().statusBarWindowController()
-		// Creates Status bar view
+		// Creates status bar view
 		makeStatusBarView()
-		// Creates Navigation bar view
+		// Creates navigation bar view
 		makeNavigationBarView()
+		// Listens for app task stack changes
+		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
 	}
 
 	private fun makeStatusBarView() {

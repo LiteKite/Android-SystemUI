@@ -48,6 +48,7 @@ class CarAudioController {
 	private val carVolumeCallback = object : CarAudioManager.CarVolumeCallback() {
 		override fun onMasterMuteChanged(zoneId: Int, flags: Int) {
 			super.onMasterMuteChanged(zoneId, flags)
+			SystemUI.printLog(TAG, "onMasterMuteChanged:")
 		}
 
 		override fun onGroupVolumeChanged(zoneId: Int, groupId: Int, flags: Int) {

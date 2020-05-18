@@ -49,30 +49,15 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class StatusBarServiceController @Inject constructor(private val context: Context) :
-	IStatusBar.Stub(),
-	CoroutineScope {
+class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), CoroutineScope {
 
 	companion object {
 		val TAG = StatusBarServiceController::class.java.simpleName
 	}
 
-	private enum class SystemKey(private val key: Int) {
-		KEYCODE_SYSTEM_NAVIGATION_UP(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_UP),
-		KEYCODE_SYSTEM_NAVIGATION_DOWN(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN),
-		KEYCODE_SYSTEM_NAVIGATION_LEFT(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT),
-		KEYCODE_SYSTEM_NAVIGATION_RIGHT(KeyEvent.KEYCODE_SYSTEM_NAVIGATION_RIGHT)
-	}
-
 	private enum class WindowType(@StatusBarManager.WindowType private val window: Int) {
 		WINDOW_STATUS_BAR(StatusBarManager.WINDOW_STATUS_BAR),
 		WINDOW_NAVIGATION_BAR(StatusBarManager.WINDOW_NAVIGATION_BAR)
-	}
-
-	private enum class WindowState(@WindowVisibleState private val state: Int) {
-		WINDOW_STATE_HIDING(StatusBarManager.WINDOW_STATE_HIDING),
-		WINDOW_STATE_HIDDEN(StatusBarManager.WINDOW_STATE_HIDDEN),
-		WINDOW_STATE_SHOWING(StatusBarManager.WINDOW_STATE_SHOWING)
 	}
 
 	private val callbacks: ArrayList<Callback> = ArrayList()
@@ -102,10 +87,10 @@ class StatusBarServiceController @Inject constructor(private val context: Contex
 		callbacks.remove(cb)
 	}
 
-	private fun getSystemKeyString(key: Int) = SystemKey.valueOf(key.toString())
+	private fun getSystemKeyString(key: Int) = KeyEvent.keyCodeToString(key)
 
 	private fun getWindowStateString(@WindowVisibleState state: Int) =
-		WindowState.valueOf(state.toString())
+		StatusBarManager.windowStateToString(state)
 
 	private fun getWindowTypeString(@StatusBarManager.WindowType window: Int) =
 		WindowType.valueOf(window.toString())
@@ -258,14 +243,14 @@ class StatusBarServiceController @Inject constructor(private val context: Contex
 		dockedBounds: Rect?,
 		navBarColorManagedByIme: Boolean
 	) {
-		SystemUI.printLog(
-			TAG,
-			"setSystemUiVisibility displayId=$displayId vis=${Integer.toHexString(vis)} "
-					+ "mask=${Integer.toHexString(mask)} "
-					+ "fullscreenBounds=${fullscreenBounds.toString()} "
-					+ "dockedBounds=${dockedBounds.toString()} "
-					+ "navBarColorManagedByIme=$navBarColorManagedByIme"
-		)
+		SystemUI.printLog(TAG, buildString {
+			append("setSystemUiVisibility ")
+			append("displayId=$displayId vis=${Integer.toHexString(vis)} ")
+			append("mask=${Integer.toHexString(mask)} ")
+			append("fullscreenBounds=${fullscreenBounds.toString()} ")
+			append("dockedBounds=${dockedBounds.toString()} ")
+			append("navBarColorManagedByIme=$navBarColorManagedByIme ")
+		})
 		launch {
 			callbacks.forEach {
 				it.setSystemUiVisibility(

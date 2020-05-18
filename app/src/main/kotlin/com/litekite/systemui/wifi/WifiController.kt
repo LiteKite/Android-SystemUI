@@ -51,6 +51,7 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 	}
 
 	private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+
 		override fun onAvailable(
 			network: Network?,
 			networkCapabilities: NetworkCapabilities?,

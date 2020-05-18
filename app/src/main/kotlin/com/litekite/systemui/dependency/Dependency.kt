@@ -64,11 +64,6 @@ class Dependency : SystemUI() {
 		@Singleton
 		fun provideCarController(context: Context): CarController = CarController(context)
 
-		@Provides
-		@Singleton
-		fun provideStatusBarServiceController(context: Context): StatusBarServiceController =
-			StatusBarServiceController(context)
-
 	}
 
 	@Singleton
