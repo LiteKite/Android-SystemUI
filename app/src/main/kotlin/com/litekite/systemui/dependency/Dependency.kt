@@ -16,6 +16,7 @@
 
 package com.litekite.systemui.dependency
 
+import android.car.userlib.CarUserManagerHelper
 import android.content.Context
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.car.CarController
@@ -64,19 +65,31 @@ class Dependency : SystemUI() {
 		@Singleton
 		fun provideCarController(context: Context): CarController = CarController(context)
 
+		@Provides
+		@Singleton
+		fun provideUserController(context: Context): CarUserManagerHelper =
+			CarUserManagerHelper(context)
+
 	}
 
 	@Singleton
 	@Component(modules = [DependencyModule::class])
 	interface DependencyGraph {
 
+		@Singleton
 		fun preferenceController(): PreferenceController
 
+		@Singleton
 		fun statusBarWindowController(): StatusBarWindowController
 
+		@Singleton
 		fun carController(): CarController
 
+		@Singleton
 		fun statusBarServiceController(): StatusBarServiceController
+
+		@Singleton
+		fun userController(): CarUserManagerHelper
 
 	}
 
@@ -84,9 +97,7 @@ class Dependency : SystemUI() {
 
 		val TAG = Dependency::class.java.simpleName
 
-		private lateinit var dependencyGraph: DependencyGraph
-
-		fun getDependencyGraph() = dependencyGraph
+		lateinit var dependencyGraph: DependencyGraph
 
 	}
 

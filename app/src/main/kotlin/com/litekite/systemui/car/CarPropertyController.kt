@@ -34,7 +34,7 @@ abstract class CarPropertyController {
 		val TAG = CarPropertyController::class.java.simpleName
 	}
 
-	private val carController: CarController = Dependency.getDependencyGraph().carController()
+	private val carController: CarController = Dependency.dependencyGraph.carController()
 	private var carPropertyManager: CarPropertyManager? = null
 
 	private val carConnectionCallback = object : CarController.ConnectionCallback {

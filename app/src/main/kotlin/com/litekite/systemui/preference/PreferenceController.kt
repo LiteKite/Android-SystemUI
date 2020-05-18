@@ -19,7 +19,6 @@ package com.litekite.systemui.preference
 import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * @author Vignesh S
@@ -27,7 +26,6 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Suppress("UNUSED")
-@Singleton
 class PreferenceController @Inject constructor(private val context: Context) {
 
 	companion object {

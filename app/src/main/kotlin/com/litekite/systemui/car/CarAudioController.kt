@@ -33,7 +33,7 @@ class CarAudioController {
 		val TAG = CarAudioController::class.java.simpleName
 	}
 
-	private val carController: CarController = Dependency.getDependencyGraph().carController()
+	private val carController: CarController = Dependency.dependencyGraph.carController()
 	private var carAudioManager: CarAudioManager? = null
 	private var callbacks: ArrayList<CarAudioControllerCallback> = ArrayList()
 

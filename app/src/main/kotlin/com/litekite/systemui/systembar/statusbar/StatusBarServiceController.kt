@@ -35,7 +35,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * This class takes the functions from IStatusBar that come in on
@@ -48,7 +47,6 @@ import javax.inject.Singleton
  * @version 1.0, 11/05/2020
  * @since 1.0
  */
-@Singleton
 class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), CoroutineScope {
 
 	companion object {

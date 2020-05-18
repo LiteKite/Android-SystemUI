@@ -65,10 +65,10 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 	override fun start() {
 		putComponent(javaClass, this)
 		// Connect in to the status bar manager service
-		statusBarServiceController = Dependency.getDependencyGraph().statusBarServiceController()
+		statusBarServiceController = Dependency.dependencyGraph.statusBarServiceController()
 		statusBarServiceController.addCallback(this)
 		// Status bar window manager
-		statusBarWindowController = Dependency.getDependencyGraph().statusBarWindowController()
+		statusBarWindowController = Dependency.dependencyGraph.statusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
 		// Creates navigation bar view
