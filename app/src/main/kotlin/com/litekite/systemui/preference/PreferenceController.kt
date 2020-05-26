@@ -21,6 +21,11 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 
 /**
+ * A Controller for Device Protected Shared Preferences that can be accessed even if the device
+ * was in locked state.
+ *
+ * These preferences are stored in /data/user[release-version] or in /data/user-de[debug-version]
+ *
  * @author Vignesh S
  * @version 1.0, 09/04/2020
  * @since 1.0
