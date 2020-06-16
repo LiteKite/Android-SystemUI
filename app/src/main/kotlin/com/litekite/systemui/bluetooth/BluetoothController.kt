@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.bluetooh
+package com.litekite.systemui.bluetooth
 
 import android.bluetooth.*
 import android.content.BroadcastReceiver
@@ -76,22 +76,22 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 		)
 	}
 
-	private fun startListening() {
+	fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
 		filter.addAction(BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED)
 		context.registerReceiver(this, filter)
 	}
 
-	private fun stopListening() {
+	fun stopListening() {
 		context.unregisterReceiver(this)
 	}
 
-	private fun addCallback(cb: BluetoothCallback) {
+	fun addCallback(cb: BluetoothCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: BluetoothCallback) {
+	fun removeCallback(cb: BluetoothCallback) {
 		callbacks.remove(cb)
 	}
 

@@ -1,0 +1,29 @@
+<!--
+   Copyright 2020 LiteKite Startup. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/status_bar_container_icon_width"
+    android:height="@dimen/status_bar_container_icon_height"
+    android:autoMirrored="true"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillAlpha="0"
+        android:pathData="M24,0l-0,24l-24,0l-0,-24z"
+        android:strokeAlpha="0" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M13.63,12l4,-3.79a1.14,1.14 0,0 0,-0.13 -1.77l-4.67,-3.23a1.17,1.17 0,0 0,-1.21 -0.08,1.15 1.15,0 0,0 -0.62,1v6.2l-3.19,-4a1,1 0,0 0,-1.56 1.3L9.72,12l-3.5,4.43a1,1 0,0 0,0.16 1.4A1,1 0,0 0,7 18a1,1 0,0 0,0.78 -0.38L11,13.56v6.29A1.16,1.16 0,0 0,12.16 21a1.16,1.16 0,0 0,0.67 -0.21l4.64,-3.18a1.17,1.17 0,0 0,0.49 -0.85,1.15 1.15,0 0,0 -0.34,-0.91zM13,5.76l2.5,1.73L13,9.85zM13,18.25v-4.07l2.47,2.38z" />
+</vector>

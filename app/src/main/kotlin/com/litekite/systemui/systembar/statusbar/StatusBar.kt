@@ -26,6 +26,7 @@ import com.android.systemui.shared.system.TaskStackChangeListener
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.dependency.Dependency
+import kotlinx.android.synthetic.main.status_bar.view.*
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -80,8 +81,7 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 	private fun makeStatusBarView() {
 		statusBarWindow =
 			View.inflate(context, R.layout.super_status_bar, null) as FrameLayout
-		statusBarView =
-			View.inflate(context, R.layout.status_bar, statusBarWindow)
+		statusBarView = statusBarWindow.status_bar_container
 		statusBarWindowController.add(statusBarWindow)
 	}
 

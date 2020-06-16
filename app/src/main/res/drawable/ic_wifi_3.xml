@@ -1,0 +1,39 @@
+<!--
+   Copyright 2020 LiteKite Startup. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/status_bar_container_icon_width"
+    android:height="@dimen/status_bar_container_icon_height"
+    android:autoMirrored="true"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillAlpha="0"
+        android:pathData="M0,0h24v24h-24z"
+        android:strokeAlpha="0" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M12,19m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M12,14a5,5 0,0 0,-3.47 1.4,1 1,0 1,0 1.39,1.44 3.08,3.08 0,0 1,4.16 0,1 1,0 1,0 1.39,-1.44A5,5 0,0 0,12 14z" />
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M12,9a9,9 0,0 0,-6.47 2.75A1,1 0,0 0,7 13.14a7,7 0,0 1,10.08 0,1 1,0 0,0 0.71,0.3 1,1 0,0 0,0.72 -1.69A9,9 0,0 0,12 9z" />
+    <path
+        android:fillColor="@color/white"
+        android:fillAlpha="100"
+        android:pathData="M21.72,7.93a14,14 0,0 0,-19.44 0,1 1,0 0,0 1.38,1.44 12,12 0,0 1,16.68 0,1 1,0 0,0 0.69,0.28 1,1 0,0 0,0.72 -0.31,1 1,0 0,0 -0.03,-1.41z" />
+</vector>

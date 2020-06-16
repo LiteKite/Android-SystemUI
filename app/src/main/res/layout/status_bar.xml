@@ -14,18 +14,51 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/status_bar_container"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/status_bar_height"
     android:background="@android:color/black"
-    android:layout_height="@dimen/status_bar_height">
+    android:orientation="vertical">
 
-    <TextView
+    <com.litekite.systemui.widget.KeyButtonView
+        android:id="@+id/back"
+        style="@style/KeyButtonView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:text="Custom Status Bar" />
+        android:paddingStart="@dimen/back_key_button_padding_start"
+        android:paddingEnd="@dimen/back_key_button_padding_end"
+        android:src="@drawable/ic_back"
+        app:keyCode="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+    <com.litekite.systemui.widget.Clock
+        android:id="@+id/clock"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/TextAppearance.StatusBar.Clock"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.litekite.systemui.systembar.statusbar.StatusBarIconContainer
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/status_bar_container_margin_end"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--Inflating Wifi Icon here statically, because it will be visible always-->
+        <include
+            android:id="@+id/iv_wifi_icon"
+            layout="@layout/widget_status_bar_container_icon" />
+
+    </com.litekite.systemui.systembar.statusbar.StatusBarIconContainer>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

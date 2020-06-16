@@ -17,8 +17,21 @@
 <resources>
 
     <!--Status Bar-->
-    <dimen name="status_bar_height">56dp</dimen>
+    <dimen name="status_bar_height">76dp</dimen>
+
     <!--Key Button View-->
     <dimen name="quick_step_touch_slop">24dp</dimen>
+
+    <!--Back Key Button View-->
+    <dimen name="back_key_button_view_width">48dp</dimen>
+    <dimen name="back_key_button_view_height">48dp</dimen>
+    <dimen name="back_key_button_padding_start">30dp</dimen>
+    <dimen name="back_key_button_padding_end">10dp</dimen>
+
+    <!--Status Bar Container Icons-->
+    <dimen name="status_bar_container_margin_end">20dp</dimen>
+    <dimen name="status_bar_container_icon_width">42dp</dimen>
+    <dimen name="status_bar_container_icon_height">42dp</dimen>
+    <dimen name="status_bar_container_icon_margin_end">10dp</dimen>
 
 </resources>

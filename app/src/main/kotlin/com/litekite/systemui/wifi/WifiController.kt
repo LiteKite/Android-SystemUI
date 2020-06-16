@@ -36,9 +36,10 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		val TAG = WifiController::class.java.simpleName
 	}
 
-	private val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-	private val connectivityManager =
-		context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+	private val wifiManager: WifiManager? =
+		context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
+	private val connectivityManager: ConnectivityManager? =
+		context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 	private val callbacks: ArrayList<WifiCallback> = ArrayList()
 	private var ssid: String? = null
 
@@ -74,19 +75,19 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 
 		override fun onLost(network: Network?) {
 			super.onLost(network)
-			ssid = connectivityManager.getNetworkCapabilities(network).ssid
+			ssid = connectivityManager?.getNetworkCapabilities(network)?.ssid
 			updateWifiState()
 		}
 
 	}
 
-	private fun startListening() {
+	fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
 		filter.addAction(WifiManager.RSSI_CHANGED_ACTION)
 		context.registerReceiver(this, filter)
 		// just receive notifications for scanned networks without switching network
-		connectivityManager.registerNetworkCallback(getNetworkRequest(), networkCallback)
+		connectivityManager?.registerNetworkCallback(getNetworkRequest(), networkCallback)
 	}
 
 	private fun getNetworkRequest(): NetworkRequest = NetworkRequest.Builder()
@@ -94,16 +95,16 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
 		.build()
 
-	private fun stopListening() {
+	fun stopListening() {
 		context.unregisterReceiver(this)
-		connectivityManager.unregisterNetworkCallback(networkCallback)
+		connectivityManager?.unregisterNetworkCallback(networkCallback)
 	}
 
-	private fun addCallback(cb: WifiCallback) {
+	fun addCallback(cb: WifiCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: WifiCallback) {
+	fun removeCallback(cb: WifiCallback) {
 		callbacks.remove(cb)
 	}
 
@@ -118,19 +119,21 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 	}
 
 	private fun updateWifiState() {
-		if (!wifiManager.isWifiEnabled) {
-			ssid = null
-			notifyWifiDisabled()
-			return
+		wifiManager?.let {
+			if (!wifiManager.isWifiEnabled) {
+				ssid = null
+				notifyWifiDisabled()
+				return
+			}
+			if (ssid == null) {
+				notifyWifiNotConnected()
+				return
+			}
+			val wifiInfo: WifiInfo = wifiManager.connectionInfo ?: return
+			val level = WifiManager.calculateSignalLevel(wifiInfo.rssi, WifiManager.RSSI_LEVELS)
+			val wifiLevel = WifiLevel.valueOf(level.toString())
+			notifyWifiLevelChanged(wifiLevel)
 		}
-		if (ssid == null) {
-			notifyWifiNotConnected()
-			return
-		}
-		val wifiInfo: WifiInfo = wifiManager.connectionInfo ?: return
-		val level = WifiManager.calculateSignalLevel(wifiInfo.rssi, WifiManager.RSSI_LEVELS)
-		val wifiLevel = WifiLevel.valueOf(level.toString())
-		notifyWifiLevelChanged(wifiLevel)
 	}
 
 	private fun notifyWifiDisabled() {

@@ -16,16 +16,32 @@
 -->
 <resources>
 
-    <!-- SystemUI Services: The classes of the stuff to start. -->
+    <!--SystemUI Services: The classes of the stuff to start.-->
     <string-array name="config_systemUIServiceComponents" translatable="false">
         <item>com.litekite.systemui.dependency.Dependency</item>
-        <item>com.litekite.systemui.systembar.base.SystemBars</item>
         <item>com.litekite.systemui.power.Power</item>
+        <item>com.litekite.systemui.systembar.base.SystemBars</item>
     </string-array>
 
-    <!-- Component to be used as the status bar service.  Must implement the IStatusBar
-     interface.  This name is in the ComponentName flattened format (package/class)  -->
+    <!--Component to be used as the status bar service.  Must implement the IStatusBar
+     interface.  This name is in the ComponentName flattened format (package/class)-->
     <string name="config_statusBarComponent" translatable="false">
         com.litekite.systemui.systembar.statusbar.StatusBar</string>
+
+    <!--StatusBar Container: Ordered Status Bar Icons-->
+    <integer-array name="config_status_bar_ordered_icons">
+        <item>@id/iv_wifi_icon</item>
+        <item>@id/iv_bt_icon</item>
+        <item>@id/iv_signal_icon</item>
+        <item>@id/iv_battery_icon</item>
+    </integer-array>
+
+    <integer-array name="config_status_bar_wifi_icons">
+        <item>@drawable/ic_wifi_0</item>
+        <item>@drawable/ic_wifi_1</item>
+        <item>@drawable/ic_wifi_2</item>
+        <item>@drawable/ic_wifi_3</item>
+        <item>@drawable/ic_wifi_4</item>
+    </integer-array>
 
 </resources>

@@ -19,7 +19,6 @@ package com.litekite.systemui.widget
 import android.content.Context
 import android.content.res.Configuration
 import android.hardware.input.InputManager
-import android.media.AudioManager
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -52,7 +51,6 @@ class KeyButtonView @JvmOverloads constructor(
 	private var longClicked: Boolean = false
 	private var downTime: Long = 0
 	private var onClickListener: OnClickListener? = null
-	private val audioManager: AudioManager
 	private val code: Int
 	private val supportsLongPress: Boolean
 	private val playSounds: Boolean
@@ -74,7 +72,6 @@ class KeyButtonView @JvmOverloads constructor(
 		}
 		ta.recycle()
 		isClickable = true
-		audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 		forceHasOverlappingRendering(false)
 	}
 

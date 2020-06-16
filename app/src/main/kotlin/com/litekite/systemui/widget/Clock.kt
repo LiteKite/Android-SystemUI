@@ -99,6 +99,7 @@ class Clock @JvmOverloads constructor(
 			filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
 			filter.addAction(Intent.ACTION_USER_SWITCHED)
 			val handleThread = HandlerThread("TimeTick")
+			handleThread.start()
 			val handler = Handler(handleThread.looper)
 			context.registerReceiverAsUser(
 				receiver,
@@ -124,8 +125,8 @@ class Clock @JvmOverloads constructor(
 		updateClock()
 	}
 
-	override fun onDetachedFromWindowInternal() {
-		super.onDetachedFromWindowInternal()
+	override fun onDetachedFromWindow() {
+		super.onDetachedFromWindow()
 		if (attached) {
 			context.unregisterReceiver(receiver)
 			if (showSeconds) {

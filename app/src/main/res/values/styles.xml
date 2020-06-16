@@ -22,4 +22,16 @@
         <item name="*android:isLightTheme">false</item>
     </style>
 
+    <style name="KeyButtonView">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="TextAppearance.StatusBar.Clock" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="singleLine">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

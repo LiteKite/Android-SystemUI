@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.bluetooh
+package com.litekite.systemui.bluetooth
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -88,22 +88,22 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 		)
 	}
 
-	private fun startListening() {
+	fun startListening() {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
 		filter.addAction(BluetoothHeadsetClient.ACTION_AG_EVENT)
 		context.registerReceiver(this, filter)
 	}
 
-	private fun stopListening() {
+	fun stopListening() {
 		context.unregisterReceiver(this)
 	}
 
-	private fun addCallback(cb: BatteryCallback) {
+	fun addCallback(cb: BatteryCallback) {
 		callbacks.add(cb)
 	}
 
-	private fun removeCallback(cb: BatteryCallback) {
+	fun removeCallback(cb: BatteryCallback) {
 		callbacks.remove(cb)
 	}
 
