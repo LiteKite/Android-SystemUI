@@ -244,7 +244,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	 */
 	interface SignalCallback {
 
-		fun onSignalLevelChanged(level: SignalLevel)
+		fun onSignalLevelChanged(signalLevel: SignalLevel)
 
 		fun onSignalLevelUnavailable()
 

@@ -28,7 +28,6 @@ import com.litekite.systemui.bluetooth.BatteryController
 import com.litekite.systemui.bluetooth.BluetoothController
 import com.litekite.systemui.bluetooth.SignalController
 import com.litekite.systemui.wifi.WifiController
-import kotlinx.android.synthetic.main.status_bar.view.*
 
 /**
  * @author Vignesh S
@@ -45,21 +44,23 @@ class StatusBarIconContainer @JvmOverloads constructor(
 	private val batteryController = BatteryController(context)
 	private val sbOrderedIconsArray = resources.getIntArray(R.array.config_status_bar_ordered_icons)
 	private val sbWifiIconsArray = resources.getIntArray(R.array.config_status_bar_wifi_icons)
+	private val sbSignalIconsArray = resources.getIntArray(R.array.config_status_bar_signal_icons)
+	private val sbBatteryIconsArray = resources.getIntArray(R.array.config_status_bar_battery_icons)
+
 	private var attached: Boolean = false
-	private lateinit var ivWifiIcon: AppCompatImageView
 
 	private val wifiCallback = object : WifiController.WifiCallback {
 
 		override fun onWifiLevelChanged(wifiLevel: WifiController.WifiLevel) {
-			ivWifiIcon.setImageResource(sbWifiIconsArray[wifiLevel.level])
+			updateStatusBarIconIV(R.id.iv_wifi_icon, sbWifiIconsArray[wifiLevel.level])
 		}
 
 		override fun onWifiNotConnected() {
-			ivWifiIcon.setImageResource(R.drawable.ic_wifi_not_connected)
+			updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_not_connected)
 		}
 
 		override fun onWifiDisabled() {
-			ivWifiIcon.setImageResource(R.drawable.ic_wifi_disabled)
+			updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_disabled)
 		}
 
 	}
@@ -78,41 +79,40 @@ class StatusBarIconContainer @JvmOverloads constructor(
 
 	private val signalCallback = object : SignalController.SignalCallback {
 
-		override fun onSignalLevelChanged(level: SignalController.SignalLevel) {
-			TODO("Not yet implemented")
+		override fun onSignalLevelChanged(signalLevel: SignalController.SignalLevel) {
+			updateStatusBarIconIV(R.id.iv_signal_icon, sbSignalIconsArray[signalLevel.level])
 		}
 
 		override fun onSignalLevelUnavailable() {
-			TODO("Not yet implemented")
+			removeStatusBarIconIV(R.id.iv_signal_icon)
 		}
 
 		override fun onRoamingStateAvailable() {
-			TODO("Not yet implemented")
+			updateStatusBarIconIV(R.id.iv_roaming_icon, R.drawable.ic_roaming_indicator)
 		}
 
 		override fun onRoamingStateUnavailable() {
-			TODO("Not yet implemented")
+			removeStatusBarIconIV(R.id.iv_roaming_icon)
 		}
 
 	}
 
 	private val batteryCallback = object : BatteryController.BatteryCallback {
 
-		override fun onBatteryLevelChanged(level: BatteryController.BatteryLevel) {
-			TODO("Not yet implemented")
+		override fun onBatteryLevelChanged(batteryLevel: BatteryController.BatteryLevel) {
+			updateStatusBarIconIV(R.id.iv_battery_icon, sbBatteryIconsArray[batteryLevel.level])
 		}
 
 		override fun onBatteryLevelUnavailable() {
-			TODO("Not yet implemented")
+			removeStatusBarIconIV(R.id.iv_battery_icon)
 		}
 
 	}
 
 	override fun onFinishInflate() {
 		super.onFinishInflate()
-		// Setting Default Wifi Icon - Always visible and shown all the time...
-		ivWifiIcon = iv_wifi_icon as AppCompatImageView
-		ivWifiIcon.setImageResource(R.drawable.ic_wifi_disabled)
+		// Default Wifi Icon - Always visible and shown all the time...
+		updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_disabled)
 	}
 
 	override fun onAttachedToWindow() {

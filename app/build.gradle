@@ -47,9 +47,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
-    }
+    buildFeatures.dataBinding = true
     lintOptions {
         baseline file("lint-baseline.xml")
         warningsAsErrors true
@@ -80,7 +78,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.2.5'
     // Dagger
     api 'com.google.dagger:dagger:2.28'
-    kapt 'com.google.dagger:dagger-compiler:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.28'
     // Test helpers for LiveData
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     // Test helpers for Room

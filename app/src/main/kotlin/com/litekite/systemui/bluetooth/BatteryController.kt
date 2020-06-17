@@ -50,8 +50,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	/**
 	 * According to the Bluetooth HFP 1.5 specification, battery levels are indicated by a
 	 * value from 1-5, where these values represent the following:
-	 * 0%% - 0, 1-25%% - 1 (12%%), 26-50%% - 2 (28%%), 51-75%% - 3 (63%%), 76-99%% - 4 (87%%),
-	 * 100%% - 5 (100%%)
+	 * 0%% - 0, 1-25%% - 1, 26-50%% - 2, 51-75%% - 3, 76-99%% - 4, 100%% - 5
 	 * As a result, set the level as the average within that range.
 	 */
 	enum class BatteryLevel(val level: Int) {
@@ -191,7 +190,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	 */
 	interface BatteryCallback {
 
-		fun onBatteryLevelChanged(level: BatteryLevel)
+		fun onBatteryLevelChanged(batteryLevel: BatteryLevel)
 
 		fun onBatteryLevelUnavailable()
 

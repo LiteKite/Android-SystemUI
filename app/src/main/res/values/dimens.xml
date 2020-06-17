@@ -29,9 +29,13 @@
     <dimen name="back_key_button_padding_end">10dp</dimen>
 
     <!--Status Bar Container Icons-->
-    <dimen name="status_bar_container_margin_end">20dp</dimen>
+    <dimen name="status_bar_container_padding_end">20dp</dimen>
     <dimen name="status_bar_container_icon_width">42dp</dimen>
     <dimen name="status_bar_container_icon_height">42dp</dimen>
     <dimen name="status_bar_container_icon_margin_end">10dp</dimen>
+
+    <!--Status Bar Container Roaming Icon-->
+    <dimen name="status_bar_container_roaming_icon_width">24dp</dimen>
+    <dimen name="status_bar_container_roaming_icon_height">24dp</dimen>
 
 </resources>
