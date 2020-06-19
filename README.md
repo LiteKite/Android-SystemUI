@@ -2,7 +2,7 @@
 
 <br>
 
-<img src="https://github.com/svignesh93/Android-SystemUI/blob/master/app/src/main/ic_launcher-web.png" alt="App Icon" width="150px" />
+<img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="150px" />
 
 ##
 
