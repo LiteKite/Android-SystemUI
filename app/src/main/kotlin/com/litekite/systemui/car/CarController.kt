@@ -21,12 +21,14 @@ import android.content.Context
 import android.os.Handler
 import com.litekite.systemui.base.SystemUI
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
  * @version 1.0, 03/03/2020
  * @since 1.0
  */
+@Singleton
 class CarController @Inject constructor(private val context: Context) {
 
 	companion object {
@@ -80,6 +82,10 @@ class CarController @Inject constructor(private val context: Context) {
 
 	fun removeCallback(cb: ConnectionCallback) {
 		callbacks.add(cb)
+	}
+
+	fun destroy() {
+		if (isConnected) car.disconnect()
 	}
 
 	private fun notifyConnectionState(isConnected: Boolean) {

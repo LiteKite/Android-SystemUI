@@ -19,8 +19,11 @@ package com.litekite.systemui.systembar.base
 import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import dagger.hilt.android.EntryPointAccessors
 import java.io.FileDescriptor
 import java.io.PrintWriter
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
@@ -28,7 +31,8 @@ import java.io.PrintWriter
  * @since 1.0
  */
 @Suppress("UNUSED")
-class SystemBars : SystemUI() {
+@Singleton
+class SystemBars @Inject constructor() : SystemUI() {
 
 	companion object {
 		val TAG = SystemBars::class.java.simpleName
@@ -58,9 +62,11 @@ class SystemBars : SystemUI() {
 
 	private fun createStatusBarFromConfig() {
 		val serviceComponent = context.resources.getString(R.string.config_statusBarComponent)
-		statusBar = Class.forName(serviceComponent).newInstance() as SystemUI
+		statusBar = EntryPointAccessors.fromApplication(
+			context,
+			Class.forName(serviceComponent)
+		) as SystemUI
 		statusBar.context = context
-		statusBar.components = components
 		statusBar.start()
 		printLog(TAG, "started: " + statusBar.javaClass.simpleName)
 	}

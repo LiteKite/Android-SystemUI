@@ -27,10 +27,9 @@ import java.io.PrintWriter
  * @version 1.0, 23/01/2020
  * @since 1.0
  */
-abstract class SystemUI : SystemUIServiceProvider {
+abstract class SystemUI {
 
 	lateinit var context: Context
-	lateinit var components: MutableMap<Class<*>, Any>
 
 	abstract fun start()
 
@@ -39,13 +38,6 @@ abstract class SystemUI : SystemUIServiceProvider {
 	open fun onOverlayChanged() {}
 
 	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
-
-	@Suppress("UNCHECKED_CAST")
-	override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T
-
-	fun <T, C : T> putComponent(interfaceType: Class<T>, component: C) {
-		components[interfaceType] = component as Any
-	}
 
 	companion object {
 

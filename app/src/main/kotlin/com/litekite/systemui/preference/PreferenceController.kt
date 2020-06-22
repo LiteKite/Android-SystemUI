@@ -19,6 +19,7 @@ package com.litekite.systemui.preference
 import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * A Controller for Device Protected Shared Preferences that can be accessed even if the device
@@ -31,6 +32,7 @@ import javax.inject.Inject
  * @since 1.0
  */
 @Suppress("UNUSED")
+@Singleton
 class PreferenceController @Inject constructor(private val context: Context) {
 
 	companion object {

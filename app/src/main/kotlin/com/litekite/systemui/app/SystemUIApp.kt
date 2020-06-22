@@ -21,7 +21,8 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.base.SystemUIServiceProvider
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.HiltAndroidApp
 
 /**
  * Application class.
@@ -30,19 +31,19 @@ import com.litekite.systemui.base.SystemUIServiceProvider
  * @version 1.0, 22/01/2020
  * @since 1.0
  */
-@Suppress("UNUSED")
-class SystemUIApp : Application(), SystemUIServiceProvider {
+@HiltAndroidApp
+class SystemUIApp : Application() {
 
 	companion object {
 		val TAG = SystemUIApp::class.java.simpleName
 	}
 
 	private var serviceStarted: Boolean = false
+
 	/**
 	 * Hold a reference on the stuff we start.
 	 */
 	internal var services: ArrayList<SystemUI> = ArrayList()
-	private val components: MutableMap<Class<*>, Any> = HashMap()
 	private val lastConfig = Configuration()
 
 	override fun onCreate() {
@@ -63,15 +64,15 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 */
 	@Synchronized
 	internal fun startServicesIfNeeded() {
-		if  (serviceStarted) {
+		if (serviceStarted) {
 			SystemUI.printLog(TAG, "startServicesIfNeeded: already started. Skipping...")
 			return
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)
 		serviceComponents.forEach {
-			val systemUIService = Class.forName(it).newInstance() as SystemUI
+			val systemUIService =
+				EntryPointAccessors.fromApplication(this, Class.forName(it)) as SystemUI
 			systemUIService.context = this
-			systemUIService.components = components
 			systemUIService.start()
 			services.add(systemUIService)
 		}
@@ -87,9 +88,5 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 		}
 		super.onConfigurationChanged(newConfig)
 	}
-
-	@Suppress("UNCHECKED_CAST")
-	override fun <T> getComponent(interfaceType: Class<T>): T =
-		components[interfaceType] as T
 
 }

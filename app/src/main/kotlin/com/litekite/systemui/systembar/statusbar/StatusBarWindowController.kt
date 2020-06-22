@@ -24,6 +24,7 @@ import android.view.View
 import android.view.WindowManager
 import com.litekite.systemui.R
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Encapsulates all logic for the status bar window state management.
@@ -32,6 +33,7 @@ import javax.inject.Inject
  * @version 1.0, 24/01/2020
  * @since 1.0
  */
+@Singleton
 class StatusBarWindowController @Inject constructor(private val context: Context) {
 
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

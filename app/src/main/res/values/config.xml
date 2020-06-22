@@ -18,7 +18,6 @@
 
     <!--SystemUI Services: The classes of the stuff to start.-->
     <string-array name="config_systemUIServiceComponents" translatable="false">
-        <item>com.litekite.systemui.dependency.Dependency</item>
         <item>com.litekite.systemui.power.Power</item>
         <item>com.litekite.systemui.systembar.base.SystemBars</item>
     </string-array>

@@ -21,20 +21,18 @@ import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.property.CarPropertyManager
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.dependency.Dependency
 
 /**
  * @author Vignesh S
  * @version 1.0, 05/03/2020
  * @since 1.0
  */
-abstract class CarPropertyController {
+abstract class CarPropertyController constructor(private val carController: CarController) {
 
 	companion object {
 		val TAG = CarPropertyController::class.java.simpleName
 	}
 
-	private val carController: CarController = Dependency.dependencyGraph.carController()
 	private var carPropertyManager: CarPropertyManager? = null
 
 	private val carConnectionCallback = object : CarController.ConnectionCallback {
@@ -75,12 +73,14 @@ abstract class CarPropertyController {
 
 	init {
 		carController.addCallback(carConnectionCallback)
-		createCarPropertyManager()
+		if (carController.isConnected) {
+			createCarPropertyManager()
+		}
 	}
 
 	private fun createCarPropertyManager() {
 		carPropertyManager = carController.getManager(Car.PROPERTY_SERVICE) as CarPropertyManager?
-		if (carPropertyManager != null) {
+		carPropertyManager?.let {
 			onCarPropertyManagerCreated()
 		}
 	}
@@ -168,5 +168,7 @@ abstract class CarPropertyController {
 	protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<*>?)
 
 	protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
+
+	protected abstract fun destroy()
 
 }

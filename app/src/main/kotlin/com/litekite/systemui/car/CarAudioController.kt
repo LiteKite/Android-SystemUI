@@ -20,20 +20,22 @@ import android.car.Car
 import android.car.media.CarAudioManager
 import android.os.RemoteException
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.dependency.Dependency
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
  * @version 1.0, 05/03/2020
  * @since 1.0
  */
-class CarAudioController {
+@Singleton
+class CarAudioController @Inject constructor() {
 
 	companion object {
 		val TAG = CarAudioController::class.java.simpleName
 	}
 
-	private val carController: CarController = Dependency.dependencyGraph.carController()
+	@Inject lateinit var carController: CarController
 	private var carAudioManager: CarAudioManager? = null
 	private var callbacks: ArrayList<CarAudioControllerCallback> = ArrayList()
 
@@ -59,15 +61,17 @@ class CarAudioController {
 
 	init {
 		carController.addCallback(carConnectionCallback)
-		createCarAudioManager()
+		if (carController.isConnected) {
+			createCarAudioManager()
+		}
 	}
 
 	private fun createCarAudioManager() {
 		carAudioManager = carController.getManager(Car.AUDIO_SERVICE) as CarAudioManager?
-		if (carAudioManager != null) {
+		carAudioManager?.let {
 			notifyCarAudioManagerCreated()
+			registerCarVolumeCallback()
 		}
-		registerCarVolumeCallback()
 	}
 
 	fun setGroupVolume(groupId: Int, volumeLevel: Int, flags: Int) {
@@ -139,7 +143,11 @@ class CarAudioController {
 	}
 
 	fun removeCallback(cb: CarAudioControllerCallback) {
-		callbacks.add(cb)
+		callbacks.remove(cb)
+	}
+
+	fun destroy() {
+		unregisterCarVolumeCallback()
 	}
 
 	private fun notifyCarAudioManagerCreated() {

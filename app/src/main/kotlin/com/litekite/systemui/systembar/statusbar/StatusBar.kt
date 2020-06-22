@@ -25,10 +25,11 @@ import com.android.systemui.shared.system.ActivityManagerWrapper
 import com.android.systemui.shared.system.TaskStackChangeListener
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.dependency.Dependency
 import kotlinx.android.synthetic.main.status_bar.view.*
 import java.io.FileDescriptor
 import java.io.PrintWriter
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author Vignesh S
@@ -36,15 +37,16 @@ import java.io.PrintWriter
  * @since 1.0
  */
 @Suppress("UNUSED")
-class StatusBar : SystemUI(), StatusBarServiceController.Callback {
+@Singleton
+class StatusBar @Inject constructor(): SystemUI(), StatusBarServiceController.Callback {
 
 	companion object {
 		val TAG = StatusBar::class.java.simpleName
 	}
 
 	private val activityManagerWrapper = ActivityManagerWrapper.getInstance()
-	private lateinit var statusBarServiceController: StatusBarServiceController
-	private lateinit var statusBarWindowController: StatusBarWindowController
+	@Inject lateinit var statusBarServiceController: StatusBarServiceController
+	@Inject lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
 
@@ -64,12 +66,8 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 	}
 
 	override fun start() {
-		putComponent(javaClass, this)
 		// Connect in to the status bar manager service
-		statusBarServiceController = Dependency.dependencyGraph.statusBarServiceController()
 		statusBarServiceController.addCallback(this)
-		// Status bar window manager
-		statusBarWindowController = Dependency.dependencyGraph.statusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
 		// Creates navigation bar view
