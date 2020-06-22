@@ -1,8 +1,18 @@
-# Android-SystemUI
+<p align="center">
+
+<img src="https://github.githubassets.com/images/icons/emoji/tada.png" width="100px">
+
+</p>
+
+<h1 align="center">Android-SystemUI</h1>
 
 <br>
 
-<img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="150px" />
+<p align="center">
+
+<img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="175px" />
+
+</p>
 
 ##
 
