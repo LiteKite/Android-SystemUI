@@ -21,7 +21,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
-import dagger.hilt.android.EntryPointAccessors
+import com.litekite.systemui.base.SystemUIServiceProvider
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -32,7 +32,7 @@ import dagger.hilt.android.HiltAndroidApp
  * @since 1.0
  */
 @HiltAndroidApp
-class SystemUIApp : Application() {
+class SystemUIApp : Application(), SystemUIServiceProvider {
 
 	companion object {
 		val TAG = SystemUIApp::class.java.simpleName
@@ -44,6 +44,7 @@ class SystemUIApp : Application() {
 	 * Hold a reference on the stuff we start.
 	 */
 	internal var services: ArrayList<SystemUI> = ArrayList()
+	private val components: MutableMap<Class<*>, Any> = HashMap()
 	private val lastConfig = Configuration()
 
 	override fun onCreate() {
@@ -70,9 +71,9 @@ class SystemUIApp : Application() {
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)
 		serviceComponents.forEach {
-			val systemUIService =
-				EntryPointAccessors.fromApplication(this, Class.forName(it)) as SystemUI
+			val systemUIService = Class.forName(it).newInstance() as SystemUI
 			systemUIService.context = this
+			systemUIService.components = components
 			systemUIService.start()
 			services.add(systemUIService)
 		}
@@ -88,5 +89,9 @@ class SystemUIApp : Application() {
 		}
 		super.onConfigurationChanged(newConfig)
 	}
+
+	@Suppress("UNCHECKED_CAST")
+	override fun <T> getComponent(interfaceType: Class<T>): T =
+		components[interfaceType] as T
 
 }

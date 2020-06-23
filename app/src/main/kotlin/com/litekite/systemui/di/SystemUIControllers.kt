@@ -18,6 +18,7 @@ package com.litekite.systemui.di
 
 import android.car.userlib.CarUserManagerHelper
 import android.content.Context
+import com.android.systemui.shared.system.ActivityManagerWrapper
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.car.CarController
 import com.litekite.systemui.preference.PreferenceController
@@ -40,17 +41,8 @@ object SystemUIControllers {
 
 	@Provides
 	@Singleton
-	fun providePreferenceController(@ApplicationContext context: Context) =
-		PreferenceController(context)
-
-	@Provides
-	@Singleton
-	fun provideStatusBarWindowController(@ApplicationContext context: Context) =
-		StatusBarWindowController(context)
-
-	@Provides
-	@Singleton
-	fun provideCarController(@ApplicationContext context: Context) = CarController(context)
+	fun provideActivityManagerWrapper(): ActivityManagerWrapper =
+		ActivityManagerWrapper.getInstance()
 
 	@Provides
 	@Singleton
@@ -58,6 +50,20 @@ object SystemUIControllers {
 
 	@Provides
 	@Singleton
+	fun provideCarController(@ApplicationContext context: Context) = CarController(context)
+
+	@Provides
+	@Singleton
 	fun provideUserController(@ApplicationContext context: Context) = CarUserManagerHelper(context)
+
+	@Provides
+	@Singleton
+	fun providePreferenceController(@ApplicationContext context: Context) =
+		PreferenceController(context)
+
+	@Provides
+	@Singleton
+	fun provideStatusBarWindowController(@ApplicationContext context: Context) =
+		StatusBarWindowController(context)
 
 }

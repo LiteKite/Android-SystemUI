@@ -25,28 +25,40 @@ import com.android.systemui.shared.system.ActivityManagerWrapper
 import com.android.systemui.shared.system.TaskStackChangeListener
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.android.synthetic.main.status_bar.view.*
 import java.io.FileDescriptor
 import java.io.PrintWriter
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * @author Vignesh S
  * @version 1.0, 23/01/2020
  * @since 1.0
  */
-@Suppress("UNUSED")
-@Singleton
-class StatusBar @Inject constructor(): SystemUI(), StatusBarServiceController.Callback {
+class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 
 	companion object {
 		val TAG = StatusBar::class.java.simpleName
 	}
 
-	private val activityManagerWrapper = ActivityManagerWrapper.getInstance()
-	@Inject lateinit var statusBarServiceController: StatusBarServiceController
-	@Inject lateinit var statusBarWindowController: StatusBarWindowController
+	@EntryPoint
+	@InstallIn(ApplicationComponent::class)
+	interface StatusBarEntryPoint {
+
+		fun getStatusBarServiceController(): StatusBarServiceController
+
+		fun getStatusBarWindowController(): StatusBarWindowController
+
+		fun getActivityManagerWrapper(): ActivityManagerWrapper
+
+	}
+
+	private lateinit var activityManagerWrapper: ActivityManagerWrapper
+	private lateinit var statusBarServiceController: StatusBarServiceController
+	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: View
 
@@ -66,13 +78,24 @@ class StatusBar @Inject constructor(): SystemUI(), StatusBarServiceController.Ca
 	}
 
 	override fun start() {
-		// Connect in to the status bar manager service
+		putComponent(StatusBar::class.java, this)
+		// Hilt Dependency Entry Point
+		val entryPointAccessors = EntryPointAccessors.fromApplication(
+			context,
+			StatusBarEntryPoint::class.java
+		)
+		// Initiates the status bar manager service
+		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
+		// Attaching the status bar manager service
 		statusBarServiceController.addCallback(this)
+		// Initiates the status bar manager service
+		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
 		// Creates navigation bar view
 		makeNavigationBarView()
 		// Listens for app task stack changes
+		activityManagerWrapper = entryPointAccessors.getActivityManagerWrapper()
 		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
 	}
 

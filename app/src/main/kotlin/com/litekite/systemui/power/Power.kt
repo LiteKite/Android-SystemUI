@@ -22,17 +22,13 @@ import android.content.res.Configuration
 import android.os.*
 import android.text.format.DateUtils
 import com.litekite.systemui.base.SystemUI
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * @author Vignesh S
  * @version 1.0, 14/02/2020
  * @since 1.0
  */
-@Suppress("UNUSED")
-@Singleton
-class Power @Inject constructor(): SystemUI() {
+class Power : SystemUI() {
 
 	companion object {
 
@@ -52,6 +48,7 @@ class Power @Inject constructor(): SystemUI() {
 	private val updateTempCallback = Runnable { updateTemperatureWarning() }
 
 	override fun start() {
+		putComponent(Power::class.java, this)
 		hardwarePropertiesManager = context.getSystemService(Context.HARDWARE_PROPERTIES_SERVICE)
 				as HardwarePropertiesManager
 		lastConfiguration.setTo(context.resources.configuration)
