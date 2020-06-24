@@ -1,7 +1,9 @@
 <p align="center">
-
-<img src="https://github.githubassets.com/images/icons/emoji/tada.png" width="100px">
-
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="100px" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum Emoji" width="70px" hspace="20px" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/partying-face.png" alt="Partying Face Emoji" width="100px" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum Emoji" width="70px" hspace="20px" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="100px" />
 </p>
 
 <h1 align="center">Android-SystemUI</h1>
@@ -9,9 +11,7 @@
 <br>
 
 <p align="center">
-
-<img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="175px" />
-
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="175px" />
 </p>
 
 ##
