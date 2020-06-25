@@ -17,6 +17,7 @@
 package com.litekite.systemui.base
 
 import android.content.Context
+import com.litekite.systemui.app.SystemUIApp
 
 /**
  * The interface for getting core components of SysUI. Exists for Testability
@@ -32,6 +33,12 @@ interface SystemUIServiceProvider {
 
 		fun <T> getComponent(context: Context, interfaceType: Class<T>): T =
 			(context.applicationContext as SystemUIServiceProvider).getComponent(interfaceType)
+
+		fun startSystemUIServices(context: Context) =
+			(context.applicationContext as SystemUIApp).startSystemUIServices()
+
+		fun getSystemUIServices(context: Context): List<SystemUI> =
+			(context.applicationContext as SystemUIApp).services
 
 	}
 

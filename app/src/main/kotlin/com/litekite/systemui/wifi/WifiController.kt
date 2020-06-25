@@ -44,11 +44,17 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 	private var ssid: String? = null
 
 	enum class WifiLevel(val level: Int) {
+
 		EMPTY(0),
 		ONE(1),
 		TWO(2),
 		THREE(3),
-		FOUR(4)
+		FOUR(4);
+
+		companion object {
+			fun valueOf(level: Int) = values().first { it.level == level }
+		}
+
 	}
 
 	private val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -131,7 +137,8 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 			}
 			val wifiInfo: WifiInfo = wifiManager.connectionInfo ?: return
 			val level = WifiManager.calculateSignalLevel(wifiInfo.rssi, WifiManager.RSSI_LEVELS)
-			val wifiLevel = WifiLevel.valueOf(level.toString())
+			val wifiLevel = WifiLevel.valueOf(level)
+			SystemUI.printLog(TAG, "Wifi level: ${wifiLevel.level}")
 			notifyWifiLevelChanged(wifiLevel)
 		}
 	}

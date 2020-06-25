@@ -45,7 +45,6 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	private val callbacks: ArrayList<BatteryCallback> = ArrayList()
-	private var level: BatteryLevel = BatteryLevel.INVALID
 
 	/**
 	 * According to the Bluetooth HFP 1.5 specification, battery levels are indicated by a
@@ -54,13 +53,19 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	 * As a result, set the level as the average within that range.
 	 */
 	enum class BatteryLevel(val level: Int) {
+
 		INVALID(-1),
 		EMPTY(0),
 		ONE(1),
 		TWO(2),
 		THREE(3),
 		FOUR(4),
-		FULL(5)
+		FULL(5);
+
+		companion object {
+			fun valueOf(level: Int) = values().first { it.level == level }
+		}
+
 	}
 
 	private val hfpServiceListener = object : BluetoothProfile.ServiceListener {
@@ -114,8 +119,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 					BluetoothHeadsetClient.EXTRA_BATTERY_LEVEL,
 					BatteryLevel.INVALID.level
 				)
-				val batteryLevel = BatteryLevel.valueOf(extraBatteryLevel.toString())
-				updateBatteryLevel(batteryLevel)
+				updateBatteryLevel(extraBatteryLevel)
 			}
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED -> {
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
@@ -133,15 +137,15 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	/**
 	 * Notifies battery level states if it was a valid battery level
 	 */
-	private fun updateBatteryLevel(batteryLevel: BatteryLevel) {
+	private fun updateBatteryLevel(level: Int) {
+		val batteryLevel = BatteryLevel.valueOf(level)
 		if (batteryLevel == BatteryLevel.INVALID) {
 			SystemUI.printLog(TAG, "updateBatteryLevel: Invalid battery level. IGNORING...")
 			return
 		}
-		level = batteryLevel
-		SystemUI.printLog(TAG, "Battery level: $batteryLevel; setting mLevel as: $level")
+		SystemUI.printLog(TAG, "Battery level: ${batteryLevel.level}")
 		// Valid Battery Level
-		notifyBatteryLevelChanged()
+		notifyBatteryLevelChanged(batteryLevel)
 	}
 
 	/**
@@ -163,7 +167,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 					BluetoothHeadsetClient.EXTRA_BATTERY_LEVEL,
 					BatteryLevel.INVALID.level
 				)
-				updateBatteryLevel(BatteryLevel.valueOf(batteryLevel.toString()))
+				updateBatteryLevel(batteryLevel)
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(TAG, "updateBatteryState - profile disconnected!")
@@ -172,9 +176,9 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 		}
 	}
 
-	private fun notifyBatteryLevelChanged() {
+	private fun notifyBatteryLevelChanged(batteryLevel: BatteryLevel) {
 		for (cb in callbacks) {
-			cb.onBatteryLevelChanged(level)
+			cb.onBatteryLevelChanged(batteryLevel)
 		}
 	}
 

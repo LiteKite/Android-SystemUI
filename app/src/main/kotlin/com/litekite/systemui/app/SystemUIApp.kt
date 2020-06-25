@@ -54,7 +54,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 		// the theme set there.
 		setTheme(R.style.Theme_SystemUI)
 		SystemUI.printLog(TAG, "onCreate: SystemUIApp started successfully")
-		startServicesIfNeeded()
+		startSystemUIServices()
 	}
 
 	/**
@@ -64,7 +64,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 * <p>This method must only be called from the main thread.</p>
 	 */
 	@Synchronized
-	internal fun startServicesIfNeeded() {
+	internal fun startSystemUIServices() {
 		if (serviceStarted) {
 			SystemUI.printLog(TAG, "startServicesIfNeeded: already started. Skipping...")
 			return

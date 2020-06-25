@@ -56,8 +56,19 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), Coro
 	}
 
 	private enum class WindowType(@StatusBarManager.WindowType private val window: Int) {
+
 		WINDOW_STATUS_BAR(StatusBarManager.WINDOW_STATUS_BAR),
-		WINDOW_NAVIGATION_BAR(StatusBarManager.WINDOW_NAVIGATION_BAR)
+		WINDOW_NAVIGATION_BAR(StatusBarManager.WINDOW_NAVIGATION_BAR);
+
+		companion object {
+
+			fun valueOf(@StatusBarManager.WindowType window: Int) =
+				values().first { it.window == window }
+
+			fun windowTypeString(@StatusBarManager.WindowType window: Int) = valueOf(window).name
+
+		}
+
 	}
 
 	private val callbacks: ArrayList<Callback> = ArrayList()
@@ -93,7 +104,7 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), Coro
 		StatusBarManager.windowStateToString(state)
 
 	private fun getWindowTypeString(@StatusBarManager.WindowType window: Int) =
-		WindowType.valueOf(window.toString())
+		WindowType.windowTypeString(window)
 
 	override fun hideRecentApps(triggeredFromAltTab: Boolean, triggeredFromHomeKey: Boolean) {}
 

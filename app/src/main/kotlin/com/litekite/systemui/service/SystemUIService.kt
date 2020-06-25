@@ -19,7 +19,7 @@ package com.litekite.systemui.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.litekite.systemui.app.SystemUIApp
+import com.litekite.systemui.base.SystemUIServiceProvider
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -32,7 +32,7 @@ class SystemUIService : Service() {
 
 	override fun onCreate() {
 		super.onCreate()
-		(application as SystemUIApp).startServicesIfNeeded()
+		SystemUIServiceProvider.startSystemUIServices(applicationContext)
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -44,7 +44,7 @@ class SystemUIService : Service() {
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		val services = (application as SystemUIApp).services
+		val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
 		if (args == null || args.isEmpty()) {
 			services.forEach {
 				pw?.println("dumping service: " + it.javaClass.name)

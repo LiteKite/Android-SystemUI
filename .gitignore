@@ -57,6 +57,7 @@ freeline_project_description.json
 # Android Studio Configurations
 .DS_Store
 /local.properties
+/keystore.properties
 /.idea
 /build
 /captures

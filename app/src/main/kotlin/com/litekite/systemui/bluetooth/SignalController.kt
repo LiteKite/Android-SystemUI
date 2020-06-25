@@ -43,7 +43,6 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	private val callbacks: ArrayList<SignalCallback> = ArrayList()
-	private var level: SignalLevel = SignalLevel.INVALID
 
 	/**
 	 * All possible signal strength icons. According to the Bluetooth HFP 1.5 specification,
@@ -55,13 +54,19 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	 * Note that the icon is the same for 0 and 1.
 	 */
 	enum class SignalLevel(val level: Int) {
+
 		INVALID(-1),
 		EMPTY(0),
 		ONE(1),
 		TWO(2),
 		THREE(3),
 		FOUR(4),
-		FULL(5)
+		FULL(5);
+
+		companion object {
+			fun valueOf(level: Int) = values().first { it.level == level }
+		}
+
 	}
 
 	/**
@@ -143,7 +148,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 					BluetoothHeadsetClient.EXTRA_NETWORK_SIGNAL_STRENGTH,
 					SignalLevel.INVALID.level
 				)
-				val signalLevel = SignalLevel.valueOf(extraSignalLevel.toString())
+				val signalLevel = SignalLevel.valueOf(extraSignalLevel)
 				updateSignalLevel(signalLevel)
 				// Roaming State
 				val extraRoamingState = intent.getIntExtra(
@@ -180,10 +185,9 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 			SystemUI.printLog(TAG, "updateSignalLevel: Invalid signal level. IGNORING...")
 			return
 		}
-		level = signalLevel
-		SystemUI.printLog(TAG, "Signal level: $signalLevel; setting mLevel as: $level")
+		SystemUI.printLog(TAG, "Signal level: ${signalLevel.level}")
 		// Valid Signal Level
-		notifySignalLevelChanged()
+		notifySignalLevelChanged(signalLevel)
 	}
 
 	/**
@@ -205,7 +209,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 					BluetoothHeadsetClient.EXTRA_NETWORK_SIGNAL_STRENGTH,
 					SignalLevel.INVALID.level
 				)
-				updateSignalLevel(SignalLevel.valueOf(signalLevel.toString()))
+				updateSignalLevel(SignalLevel.valueOf(signalLevel))
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(TAG, "updateSignalState - profile disconnected!")
@@ -214,9 +218,9 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 		}
 	}
 
-	private fun notifySignalLevelChanged() {
+	private fun notifySignalLevelChanged(signalLevel: SignalLevel) {
 		for (cb in callbacks) {
-			cb.onSignalLevelChanged(level)
+			cb.onSignalLevelChanged(signalLevel)
 		}
 	}
 
