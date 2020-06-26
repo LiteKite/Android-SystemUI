@@ -28,40 +28,40 @@
         com.litekite.systemui.systembar.statusbar.StatusBar</string>
 
     <!--StatusBar Container: Ordered Status Bar Icons-->
-    <integer-array name="config_status_bar_ordered_icons">
+    <array name="config_status_bar_ordered_icons">
         <item>@id/iv_wifi_icon</item>
         <item>@id/iv_bt_icon</item>
         <item>@id/iv_signal_icon</item>
         <item>@id/iv_battery_icon</item>
-    </integer-array>
+    </array>
 
     <!--StatusBar Container: Status Bar Wifi Icons-->
-    <integer-array name="config_status_bar_wifi_icons">
+    <array name="config_status_bar_wifi_icons">
         <item>@drawable/ic_wifi_0</item>
         <item>@drawable/ic_wifi_1</item>
         <item>@drawable/ic_wifi_2</item>
         <item>@drawable/ic_wifi_3</item>
         <item>@drawable/ic_wifi_4</item>
-    </integer-array>
+    </array>
 
     <!--StatusBar Container: Status Bar Battery Icons-->
-    <integer-array name="config_status_bar_battery_icons">
+    <array name="config_status_bar_battery_icons">
         <item>@drawable/ic_battery_0</item>
         <item>@drawable/ic_battery_1</item>
         <item>@drawable/ic_battery_2</item>
         <item>@drawable/ic_battery_3</item>
         <item>@drawable/ic_battery_4</item>
         <item>@drawable/ic_battery_5</item>
-    </integer-array>
+    </array>
 
     <!--StatusBar Container: Status Bar Signal Icons-->
-    <integer-array name="config_status_bar_signal_icons">
+    <array name="config_status_bar_signal_icons">
         <item>@drawable/ic_signal_0</item>
         <item>@drawable/ic_signal_1</item>
         <item>@drawable/ic_signal_2</item>
         <item>@drawable/ic_signal_3</item>
         <item>@drawable/ic_signal_4</item>
         <item>@drawable/ic_signal_5</item>
-    </integer-array>
+    </array>
 
 </resources>

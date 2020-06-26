@@ -27,7 +27,12 @@ import com.litekite.systemui.R
 import com.litekite.systemui.bluetooth.BatteryController
 import com.litekite.systemui.bluetooth.BluetoothController
 import com.litekite.systemui.bluetooth.SignalController
+import com.litekite.systemui.util.getResourceId
+import com.litekite.systemui.util.indexOf
 import com.litekite.systemui.wifi.WifiController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * @author Vignesh S
@@ -36,31 +41,41 @@ import com.litekite.systemui.wifi.WifiController
  */
 class StatusBarIconContainer @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayoutCompat(context, attrs, defStyleAttr) {
+) : LinearLayoutCompat(context, attrs, defStyleAttr), CoroutineScope {
 
 	private val wifiController = WifiController(context)
 	private val bluetoothController = BluetoothController(context)
 	private val signalController = SignalController(context)
 	private val batteryController = BatteryController(context)
-	private val sbOrderedIconsArray = resources.getIntArray(R.array.config_status_bar_ordered_icons)
-	private val sbWifiIconsArray = resources.getIntArray(R.array.config_status_bar_wifi_icons)
-	private val sbSignalIconsArray = resources.getIntArray(R.array.config_status_bar_signal_icons)
-	private val sbBatteryIconsArray = resources.getIntArray(R.array.config_status_bar_battery_icons)
-
+	private val sbOrderedIconsArray =
+		resources.obtainTypedArray(R.array.config_status_bar_ordered_icons)
+	private val sbWifiIconsArray =
+		resources.obtainTypedArray(R.array.config_status_bar_wifi_icons)
+	private val sbSignalIconsArray =
+		resources.obtainTypedArray(R.array.config_status_bar_signal_icons)
+	private val sbBatteryIconsArray =
+		resources.obtainTypedArray(R.array.config_status_bar_battery_icons)
 	private var attached: Boolean = false
+
+	override val coroutineContext = Dispatchers.Main
 
 	private val wifiCallback = object : WifiController.WifiCallback {
 
 		override fun onWifiLevelChanged(wifiLevel: WifiController.WifiLevel) {
-			updateStatusBarIconIV(R.id.iv_wifi_icon, sbWifiIconsArray[wifiLevel.level])
+			launch {
+				updateStatusBarIconIV(
+					R.id.iv_wifi_icon,
+					sbWifiIconsArray.getResourceId(wifiLevel.level)
+				)
+			}
 		}
 
 		override fun onWifiNotConnected() {
-			updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_not_connected)
+			launch { updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_not_connected) }
 		}
 
 		override fun onWifiDisabled() {
-			updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_disabled)
+			launch { updateStatusBarIconIV(R.id.iv_wifi_icon, R.drawable.ic_wifi_disabled) }
 		}
 
 	}
@@ -68,11 +83,11 @@ class StatusBarIconContainer @JvmOverloads constructor(
 	private val bluetoothCallback = object : BluetoothController.BluetoothCallback {
 
 		override fun onBluetoothConnected() {
-			updateStatusBarIconIV(R.id.iv_bt_icon, R.drawable.ic_bluetooth_connected)
+			launch { updateStatusBarIconIV(R.id.iv_bt_icon, R.drawable.ic_bluetooth_connected) }
 		}
 
 		override fun onBluetoothDisconnected() {
-			removeStatusBarIconIV(R.id.iv_bt_icon)
+			launch { removeStatusBarIconIV(R.id.iv_bt_icon) }
 		}
 
 	}
@@ -80,19 +95,24 @@ class StatusBarIconContainer @JvmOverloads constructor(
 	private val signalCallback = object : SignalController.SignalCallback {
 
 		override fun onSignalLevelChanged(signalLevel: SignalController.SignalLevel) {
-			updateStatusBarIconIV(R.id.iv_signal_icon, sbSignalIconsArray[signalLevel.level])
+			launch {
+				updateStatusBarIconIV(
+					R.id.iv_signal_icon,
+					sbSignalIconsArray.getResourceId(signalLevel.level)
+				)
+			}
 		}
 
 		override fun onSignalLevelUnavailable() {
-			removeStatusBarIconIV(R.id.iv_signal_icon)
+			launch { removeStatusBarIconIV(R.id.iv_signal_icon) }
 		}
 
 		override fun onRoamingStateAvailable() {
-			updateStatusBarIconIV(R.id.iv_roaming_icon, R.drawable.ic_roaming_indicator)
+			launch { updateStatusBarIconIV(R.id.iv_roaming_icon, R.drawable.ic_roaming_indicator) }
 		}
 
 		override fun onRoamingStateUnavailable() {
-			removeStatusBarIconIV(R.id.iv_roaming_icon)
+			launch { removeStatusBarIconIV(R.id.iv_roaming_icon) }
 		}
 
 	}
@@ -100,11 +120,16 @@ class StatusBarIconContainer @JvmOverloads constructor(
 	private val batteryCallback = object : BatteryController.BatteryCallback {
 
 		override fun onBatteryLevelChanged(batteryLevel: BatteryController.BatteryLevel) {
-			updateStatusBarIconIV(R.id.iv_battery_icon, sbBatteryIconsArray[batteryLevel.level])
+			launch {
+				updateStatusBarIconIV(
+					R.id.iv_battery_icon,
+					sbBatteryIconsArray.getResourceId(batteryLevel.level)
+				)
+			}
 		}
 
 		override fun onBatteryLevelUnavailable() {
-			removeStatusBarIconIV(R.id.iv_battery_icon)
+			launch { removeStatusBarIconIV(R.id.iv_battery_icon) }
 		}
 
 	}
@@ -148,7 +173,7 @@ class StatusBarIconContainer @JvmOverloads constructor(
 		ivIcon.layoutParams = lp
 		ivIcon.id = id
 		ivIcon.setImageResource(drawableRes)
-		val iconIndex = sbOrderedIconsArray.indexOfFirst { it == id }
+		val iconIndex = sbOrderedIconsArray.indexOf(id)
 		if (iconIndex < childCount) {
 			addView(ivIcon, iconIndex)
 		} else {
@@ -188,6 +213,11 @@ class StatusBarIconContainer @JvmOverloads constructor(
 			// Clears Battery Change Listener
 			batteryController.stopListening()
 			batteryController.removeCallback(batteryCallback)
+			// Recycle all typed arrays
+			sbOrderedIconsArray.recycle()
+			sbWifiIconsArray.recycle()
+			sbSignalIconsArray.recycle()
+			sbBatteryIconsArray.recycle()
 			attached = false
 		}
 	}
