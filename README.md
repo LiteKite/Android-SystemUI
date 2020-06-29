@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="7%" />
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum moji" width="5%" hspace="2%" />
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/partying-face.png" alt="Partying Face Emoji" width="7%" />
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum Emoji" width="5%" hspace="2%" />
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="7%" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="55" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum moji" width="40" hspace="12" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/partying-face.png" alt="Partying Face Emoji" width="55" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum Emoji" width="40" hspace="12" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="55" />
 </p>
 
 <h1 align="center">Android-SystemUI</h1>
@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="15%" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="130" />
 </p>
 
 ##
