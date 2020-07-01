@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui
+package com.litekite.systemui.systembar.navbar
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import android.view.View
+import android.widget.FrameLayout
+import com.litekite.systemui.R
+import com.litekite.systemui.base.SystemUI
 
 /**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- *
  * @author Vignesh S
- * @version 1.0, 22/01/2020
+ * @version 1.0, 01/07/2020
  * @since 1.0
  */
-class ExampleUnitTest {
-	@Test
-	fun addition_isCorrect() {
-		assertEquals(4, 2 + 2)
+class BottomNavBar : SystemUI() {
+
+	companion object {
+		val TAG = BottomNavBar::class.java.simpleName
 	}
+
+	private lateinit var bottomNavBarView: View
+
+	override fun start() {
+		putComponent(BottomNavBar::class.java, this)
+		makeBottomNavBar()
+	}
+
+	private fun makeBottomNavBar() {
+		bottomNavBarView = View.inflate(context, R.layout.super_bottom_nav_bar, null)
+				as FrameLayout
+	}
+
 }

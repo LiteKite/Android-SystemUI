@@ -27,6 +27,10 @@
     <string name="config_statusBarComponent" translatable="false">
         com.litekite.systemui.systembar.statusbar.StatusBar</string>
 
+    <string-array name="config_navBarComponents">
+        <item>com.litekite.systemui.systembar.navbar.BottomNavBar</item>
+    </string-array>
+
     <!--StatusBar Container: Ordered Status Bar Icons-->
     <array name="config_status_bar_ordered_icons">
         <item>@id/iv_wifi_icon</item>

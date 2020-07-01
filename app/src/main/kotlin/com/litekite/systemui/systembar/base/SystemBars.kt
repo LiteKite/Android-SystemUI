@@ -35,20 +35,28 @@ class SystemBars : SystemUI() {
 	}
 
 	private lateinit var statusBar: SystemUI
+	private var navBarComponents: ArrayList<SystemUI> = ArrayList()
 
 	override fun start() {
 		printLog(TAG, "start")
 		createStatusBarFromConfig()
+		createNavBarsFromConfig()
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
+		// Notifying status bar about config change
 		statusBar.onConfigurationChanged(newConfig)
+		// Notifying nav bars about config change
+		navBarComponents.forEach { it.onConfigurationChanged(newConfig) }
 	}
 
 	override fun onOverlayChanged() {
 		super.onOverlayChanged()
+		// Notifying status bar about overlay change
 		statusBar.onOverlayChanged()
+		// Notifying nav bars about overlay change
+		navBarComponents.forEach { it.onOverlayChanged() }
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
@@ -63,6 +71,19 @@ class SystemBars : SystemUI() {
 		statusBar.components = components
 		statusBar.start()
 		printLog(TAG, "started: " + statusBar.javaClass.simpleName)
+	}
+
+	private fun createNavBarsFromConfig() {
+		printLog(TAG, "createNavBarsFromConfig: staring nav bars...")
+		val serviceComponents = context.resources.getStringArray(R.array.config_navBarComponents)
+		serviceComponents.forEach {
+			val navBar = Class.forName(it).newInstance() as SystemUI
+			navBar.context = context
+			navBar.context = context
+			navBar.components = components
+			navBar.start()
+			navBarComponents.add(navBar)
+		}
 	}
 
 }

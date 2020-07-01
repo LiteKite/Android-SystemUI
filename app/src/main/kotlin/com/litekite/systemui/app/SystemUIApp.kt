@@ -19,6 +19,8 @@ package com.litekite.systemui.app
 import android.app.Application
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.os.Process
+import android.os.UserHandle
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.base.SystemUIServiceProvider
@@ -65,8 +67,11 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 */
 	@Synchronized
 	internal fun startSystemUIServices() {
-		if (serviceStarted) {
-			SystemUI.printLog(TAG, "startServicesIfNeeded: already started. Skipping...")
+		if (serviceStarted || Process.myUserHandle() != UserHandle.SYSTEM) {
+			SystemUI.printLog(
+				TAG,
+				"startServicesIfNeeded: already started or not a system user. Skipping..."
+			)
 			return
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)

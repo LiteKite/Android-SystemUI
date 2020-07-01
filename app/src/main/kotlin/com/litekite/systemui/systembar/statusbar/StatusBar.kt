@@ -92,8 +92,6 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
-		// Creates navigation bar view
-		makeNavigationBarView()
 		// Listens for app task stack changes
 		activityManagerWrapper = entryPointAccessors.getActivityManagerWrapper()
 		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
@@ -104,10 +102,6 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 			View.inflate(context, R.layout.super_status_bar, null) as FrameLayout
 		statusBarView = statusBarWindow.status_bar_container
 		statusBarWindowController.add(statusBarWindow)
-	}
-
-	private fun makeNavigationBarView() {
-
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
