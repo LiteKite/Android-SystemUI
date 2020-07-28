@@ -18,7 +18,7 @@
 
     <!-- Base application theme. -->
     <style name="Theme.SystemUI" parent="@android:style/Theme.DeviceDefault">
-        <!-- Needed for MediaRoute chooser dialog -->
+        <!-- Specifies that a theme has a light background with dark text on top.  -->
         <item name="*android:isLightTheme">false</item>
     </style>
 

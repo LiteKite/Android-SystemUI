@@ -23,10 +23,10 @@
     <dimen name="quick_step_touch_slop">24dp</dimen>
 
     <!--Back Key Button View-->
-    <dimen name="back_key_button_view_width">48dp</dimen>
-    <dimen name="back_key_button_view_height">48dp</dimen>
-    <dimen name="back_key_button_padding_start">30dp</dimen>
-    <dimen name="back_key_button_padding_end">10dp</dimen>
+    <dimen name="back_key_btn_view_width">48dp</dimen>
+    <dimen name="back_key_btn_view_height">48dp</dimen>
+    <dimen name="back_key_btn_padding_start">30dp</dimen>
+    <dimen name="back_key_btn_padding_end">10dp</dimen>
 
     <!--Status Bar Container Icons-->
     <dimen name="status_bar_container_padding_end">20dp</dimen>
@@ -37,5 +37,12 @@
     <!--Status Bar Container Roaming Icon-->
     <dimen name="status_bar_container_roaming_icon_width">24dp</dimen>
     <dimen name="status_bar_container_roaming_icon_height">24dp</dimen>
+
+    <!--Bottom Navigation Bar-->
+    <dimen name="bottom_nav_bar_height">124dp</dimen>
+
+    <!--User Avatar Image Button-->
+    <dimen name="user_avatar_img_btn_width">96dp</dimen>
+    <dimen name="user_avatar_img_btn_height">96dp</dimen>
 
 </resources>
