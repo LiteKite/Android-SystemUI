@@ -22,12 +22,82 @@
     android:layout_gravity="bottom"
     android:background="@color/black">
 
+    <com.litekite.systemui.widget.KeyButtonView
+        android:id="@+id/home"
+        style="@style/KeyButtonView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:keyCode="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_power"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_home" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_power"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_music"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/home"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_power" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/cib_user_avatar"
+        app:layout_constraintEnd_toStartOf="@+id/cib_user_avatar"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ib_power"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_music" />
+
     <com.litekite.widgets.CircleImageButton
+        android:id="@+id/cib_user_avatar"
         android:layout_width="@dimen/user_avatar_img_btn_width"
         android:layout_height="@dimen/user_avatar_img_btn_height"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_apps"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cib_user_avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_phone" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_apps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ib_settings"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ib_phone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_apps" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/ib_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/ib_apps"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_settings" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

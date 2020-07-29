@@ -45,4 +45,8 @@
     <dimen name="user_avatar_img_btn_width">96dp</dimen>
     <dimen name="user_avatar_img_btn_height">96dp</dimen>
 
+    <!--Status Bar Container Icons-->
+    <dimen name="bottom_nav_bar_container_icon_width">76dp</dimen>
+    <dimen name="bottom_nav_bar_container_icon_height">76dp</dimen>
+
 </resources>

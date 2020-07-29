@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Copyright 2020 LiteKite Startup. All rights reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/bottom_nav_bar_container_icon_width"
+    android:height="@dimen/bottom_nav_bar_container_icon_height"
+    android:viewportWidth="462"
+    android:viewportHeight="462">
+    <group
+        android:pivotX="231"
+        android:pivotY="231"
+        android:scaleX="0.8"
+        android:scaleY="0.8">
+        <path
+            android:fillColor="@color/white"
+            android:pathData="m181.5,0h-165c-9.12,0 -16.5,7.38 -16.5,16.5v165c0,9.12 7.38,16.5 16.5,16.5h165c9.12,0 16.5,-7.38 16.5,-16.5v-49.5,-115.5c0,-9.12 -7.38,-16.5 -16.5,-16.5zM165,165h-132v-132h132z" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="m181.5,264h-165c-9.12,0 -16.5,7.38 -16.5,16.5v165c0,9.12 7.38,16.5 16.5,16.5h165c9.12,0 16.5,-7.38 16.5,-16.5v-165c0,-9.12 -7.38,-16.5 -16.5,-16.5zM165,429h-132v-132h132z" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="m445.5,264h-115.5,-49.5c-9.12,0 -16.5,7.38 -16.5,16.5v165c0,9.12 7.38,16.5 16.5,16.5h165c9.12,0 16.5,-7.38 16.5,-16.5v-165c0,-9.12 -7.38,-16.5 -16.5,-16.5zM429,429h-132v-132h132z" />
+        <path
+            android:fillColor="@color/white"
+            android:pathData="m457.166,143.666c6.445,-6.445 6.445,-16.887 0,-23.332l-115.5,-115.5c-6.445,-6.445 -16.887,-6.445 -23.332,0l-115.5,115.5c-3.223,3.223 -4.834,7.444 -4.834,11.666s1.611,8.443 4.834,11.666l115.5,115.5c3.223,3.223 7.444,4.834 11.666,4.834s8.443,-1.611 11.666,-4.834c0,0 115.5,-115.5 115.5,-115.5zM237.832,132 L330,39.832 422.168,132 330,224.168s-92.168,-92.168 -92.168,-92.168z" />
+    </group>
+</vector>
