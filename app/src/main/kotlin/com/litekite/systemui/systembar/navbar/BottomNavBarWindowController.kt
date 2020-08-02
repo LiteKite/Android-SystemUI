@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.systembar.statusbar
+package com.litekite.systemui.systembar.navbar
 
 import android.content.Context
 import android.graphics.PixelFormat
@@ -27,30 +27,31 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Encapsulates all logic for the status bar window state management.
+ * Encapsulates all logic for the bottom navigation bar window state management.
  *
  * @author Vignesh S
- * @version 1.0, 24/01/2020
+ * @version 1.0, 02/08/2020
  * @since 1.0
  */
 @Singleton
-class StatusBarWindowController @Inject constructor(private val context: Context) {
+class BottomNavBarWindowController @Inject constructor(private val context: Context) {
 
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams
-	private lateinit var statusBarView: View
-	private var barHeight: Int = context.resources.getDimensionPixelSize(R.dimen.status_bar_height)
+	private lateinit var bottomNavBarView: View
+	private var barHeight: Int =
+		context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
 
 	/**
-	 * Adds the status bar view to the window manager.
+	 * Adds the bottom navigation bar view to the window manager.
 	 *
-	 * @param statusBarView The view to add.
+	 * @param bottomNavBarView The view to add.
 	 */
-	fun add(statusBarView: View) {
+	fun add(bottomNavBarView: View) {
 		lp = WindowManager.LayoutParams(
 			WindowManager.LayoutParams.MATCH_PARENT,
 			barHeight,
-			WindowManager.LayoutParams.TYPE_STATUS_BAR,
+			WindowManager.LayoutParams.TYPE_NAVIGATION_BAR,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 					or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 					or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
@@ -59,12 +60,12 @@ class StatusBarWindowController @Inject constructor(private val context: Context
 			PixelFormat.TRANSLUCENT
 		)
 		lp.token = Binder()
-		lp.gravity = Gravity.TOP
+		lp.gravity = Gravity.BOTTOM
 		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-		lp.title = "StatusBar"
+		lp.title = "BottomNavBar"
 		lp.packageName = context.packageName
-		this.statusBarView = statusBarView
-		windowManager.addView(this.statusBarView, lp)
+		this.bottomNavBarView = bottomNavBarView
+		windowManager.addView(this.bottomNavBarView, lp)
 	}
 
 }

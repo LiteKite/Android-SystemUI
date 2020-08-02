@@ -27,7 +27,8 @@
         style="@style/KeyButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:keyCode="3"
+        android:tint="@color/selector_tint_color"
+        app:keyCode="@integer/keycode_home"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ib_power"
         app:layout_constraintHorizontal_bias="0.5"
@@ -37,6 +38,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_power"
+        style="@style/BottomNavBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +50,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_music"
+        style="@style/BottomNavBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -69,6 +72,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_phone"
+        style="@style/BottomNavBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -80,6 +84,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_apps"
+        style="@style/BottomNavBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -91,6 +96,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_settings"
+        style="@style/BottomNavBarButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

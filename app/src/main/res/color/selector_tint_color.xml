@@ -14,11 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
-
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="red">#F44336</color>
-    <color name="blue">#0080FF</color>
-
-</resources>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@color/white" android:state_pressed="false" />
+    <item android:color="@color/blue" android:state_pressed="true" />
+    <item android:color="@color/white" android:state_activated="false" />
+    <item android:color="@color/blue" android:state_activated="true" />
+</selector>

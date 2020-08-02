@@ -19,7 +19,7 @@
     <!-- Base application theme. -->
     <style name="Theme.SystemUI" parent="@android:style/Theme.DeviceDefault">
         <!-- Specifies that a theme has a light background with dark text on top.  -->
-        <item name="*android:isLightTheme">false</item>
+        <item name="isLightTheme">false</item>
     </style>
 
     <style name="KeyButtonView">
@@ -32,6 +32,10 @@
         <item name="singleLine">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="BottomNavBarButtonStyle">
+        <item name="android:tint">@color/selector_tint_color</item>
     </style>
 
 </resources>

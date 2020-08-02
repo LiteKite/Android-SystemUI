@@ -88,7 +88,7 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
 		// Attaching the status bar manager service
 		statusBarServiceController.addCallback(this)
-		// Initiates the status bar manager service
+		// Initiates the status bar window controller
 		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
