@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.systembar.navbar
+package com.litekite.systemui.systembar.navbar.bottom
 
 import android.app.WindowConfiguration
 import android.content.res.Configuration

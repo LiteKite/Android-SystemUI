@@ -22,6 +22,7 @@ import com.android.systemui.shared.system.ActivityManagerWrapper
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.car.CarController
 import com.litekite.systemui.preference.PreferenceController
+import com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindowController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
 import dagger.Module
 import dagger.Provides
@@ -65,5 +66,10 @@ object SystemUIControllers {
 	@Singleton
 	fun provideStatusBarWindowController(@ApplicationContext context: Context) =
 		StatusBarWindowController(context)
+
+	@Provides
+	@Singleton
+	fun provideBottomNavBarWindowController(@ApplicationContext context: Context) =
+		BottomNavBarWindowController(context)
 
 }

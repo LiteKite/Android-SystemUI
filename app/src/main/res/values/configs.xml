@@ -28,7 +28,7 @@
         com.litekite.systemui.systembar.statusbar.StatusBar</string>
 
     <string-array name="config_navBarComponents">
-        <item>com.litekite.systemui.systembar.navbar.BottomNavBar</item>
+        <item>com.litekite.systemui.systembar.navbar.bottom.BottomNavBar</item>
     </string-array>
 
     <!--StatusBar Container: Ordered Status Bar Icons-->

@@ -19,7 +19,7 @@ package com.litekite.systemui.di
 import android.content.Context
 import com.litekite.systemui.base.SystemUIServiceProvider
 import com.litekite.systemui.power.Power
-import com.litekite.systemui.systembar.navbar.BottomNavBar
+import com.litekite.systemui.systembar.navbar.bottom.BottomNavBar
 import com.litekite.systemui.systembar.statusbar.StatusBar
 import dagger.Module
 import dagger.Provides

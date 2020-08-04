@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.litekite.systemui.systembar.navbar
+package com.litekite.systemui.systembar.navbar.bottom
 
 import android.content.Context
 import android.graphics.PixelFormat
@@ -39,8 +39,7 @@ class BottomNavBarWindowController @Inject constructor(private val context: Cont
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams
 	private lateinit var bottomNavBarView: View
-	private var barHeight: Int =
-		context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
+	private var barHeight = context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
 
 	/**
 	 * Adds the bottom navigation bar view to the window manager.
