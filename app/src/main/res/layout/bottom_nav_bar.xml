@@ -16,6 +16,7 @@
 -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_nav_bar_container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_nav_bar_height"
@@ -27,6 +28,7 @@
         style="@style/KeyButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_ripple_round_48"
         android:tint="@color/selector_tint_color"
         app:keyCode="@integer/keycode_home"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,9 +40,10 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_power"
-        style="@style/BottomNavBarButtonStyle"
+        style="@style/BottomNavBarBtnStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ib_music"
         app:layout_constraintHorizontal_bias="0.5"
@@ -50,7 +53,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_music"
-        style="@style/BottomNavBarButtonStyle"
+        style="@style/BottomNavBarBtnStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -63,16 +66,19 @@
 
     <com.litekite.widgets.CircleImageButton
         android:id="@+id/cib_user_avatar"
+        style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="@dimen/user_avatar_img_btn_width"
         android:layout_height="@dimen/user_avatar_img_btn_height"
+        android:background="@drawable/bg_ripple_round_54"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_preview_user_avatar" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_phone"
-        style="@style/BottomNavBarButtonStyle"
+        style="@style/BottomNavBarBtnStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -84,7 +90,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_apps"
-        style="@style/BottomNavBarButtonStyle"
+        style="@style/BottomNavBarBtnStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +102,7 @@
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_settings"
-        style="@style/BottomNavBarButtonStyle"
+        style="@style/BottomNavBarBtnStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

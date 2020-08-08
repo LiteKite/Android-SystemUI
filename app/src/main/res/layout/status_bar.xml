@@ -26,6 +26,7 @@
         style="@style/KeyButtonView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_ripple_round_34"
         android:paddingStart="@dimen/back_key_btn_padding_start"
         android:paddingEnd="@dimen/back_key_btn_padding_end"
         android:src="@drawable/ic_back"

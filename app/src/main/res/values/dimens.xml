@@ -42,11 +42,16 @@
     <dimen name="bottom_nav_bar_height">106dp</dimen>
 
     <!--User Avatar Image Button-->
-    <dimen name="user_avatar_img_btn_width">86dp</dimen>
-    <dimen name="user_avatar_img_btn_height">86dp</dimen>
+    <dimen name="user_avatar_img_btn_width">82dp</dimen>
+    <dimen name="user_avatar_img_btn_height">82dp</dimen>
 
-    <!--Status Bar Container Icons-->
+    <!--Bottom Navigation Bar Container Icons-->
     <dimen name="bottom_nav_bar_container_icon_width">72dp</dimen>
     <dimen name="bottom_nav_bar_container_icon_height">72dp</dimen>
+
+    <!--Ripple Backgrounds-->
+    <dimen name="bg_ripple_round_34">34dp</dimen>
+    <dimen name="bg_ripple_round_48">48dp</dimen>
+    <dimen name="bg_ripple_round_54">54dp</dimen>
 
 </resources>

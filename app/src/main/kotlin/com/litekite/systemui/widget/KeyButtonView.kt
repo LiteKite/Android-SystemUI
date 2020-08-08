@@ -26,7 +26,7 @@ import android.view.*
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction
-import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatImageButton
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import kotlin.math.abs
@@ -40,7 +40,7 @@ class KeyButtonView @JvmOverloads constructor(
 	context: Context,
 	attrs: AttributeSet? = null,
 	defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr) {
+) : AppCompatImageButton(context, attrs, defStyleAttr) {
 
 	companion object {
 		val TAG = KeyButtonView::class.java.simpleName

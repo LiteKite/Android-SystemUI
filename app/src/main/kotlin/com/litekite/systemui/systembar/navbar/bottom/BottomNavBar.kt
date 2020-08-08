@@ -17,6 +17,7 @@
 package com.litekite.systemui.systembar.navbar.bottom
 
 import android.app.WindowConfiguration
+import android.car.userlib.CarUserManagerHelper
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.view.View
@@ -55,8 +56,11 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 
 		fun getActivityManagerWrapper(): ActivityManagerWrapper
 
+		fun getUserController(): CarUserManagerHelper
+
 	}
 
+	private lateinit var userController: CarUserManagerHelper
 	private lateinit var activityManagerWrapper: ActivityManagerWrapper
 	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var bottomNavBarWindowController: BottomNavBarWindowController
@@ -91,8 +95,12 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 		statusBarServiceController.addCallback(this)
 		// Initiates the bottom navigation bar window controller
 		bottomNavBarWindowController = entryPointAccessors.getBottomNavBarWindowController()
+		// Initiates User Controller
+		userController = entryPointAccessors.getUserController()
 		// Creates bottom navigation bar view
 		makeBottomNavBar()
+		// Updates current user avatar
+		updateUserAvatar()
 		// Listens for app task stack changes
 		activityManagerWrapper = entryPointAccessors.getActivityManagerWrapper()
 		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
@@ -103,6 +111,12 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 				as FrameLayout
 		bottomNavBarView = bottomNavBarWindow.bottom_nav_bar_container
 		bottomNavBarWindowController.add(bottomNavBarWindow)
+	}
+
+	private fun updateUserAvatar() {
+		bottomNavBarView.cib_user_avatar.setImageBitmap(
+			userController.getUserIcon(userController.currentForegroundUserInfo)
+		)
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {

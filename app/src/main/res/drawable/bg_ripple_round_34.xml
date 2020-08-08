@@ -14,12 +14,5 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
-
-    <color name="white">#FFFFFF</color>
-    <color name="white_40">#40FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="red">#F44336</color>
-    <color name="blue">#0080FF</color>
-
-</resources>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/white_40" android:radius="@dimen/bg_ripple_round_34" />
