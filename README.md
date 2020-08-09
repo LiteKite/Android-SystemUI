@@ -18,6 +18,16 @@
 
 ### A custom SystemUI Android Application that has screen decoration windows like Status Bar, Navigation Bar, etc.
 
+##
+
+<br>
+
+<p align="center">
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_status_and_nav_bar.png" alt="App Icon" width="60%" />
+</p>
+
+<br>
+
 ## License
 
 ~~~
