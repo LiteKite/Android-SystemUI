@@ -59,8 +59,11 @@ android {
         enable "Interoperability"
     }
     compileOptions {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
     }
     signingConfigs {
         release {
@@ -92,11 +95,11 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: [])
     implementation fileTree(dir: 'system_libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
     implementation 'androidx.core:core-ktx:1.3.1'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     implementation 'com.google.android.material:material:1.2.0'
 
     // Widgets library
@@ -115,7 +118,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     // Test helpers for Core library
-    androidTestImplementation 'androidx.test:core-ktx:1.2.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.3.0'
 
     // Test helpers for LiveData
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
@@ -135,13 +138,13 @@ dependencies {
     testImplementation 'junit:junit:4.13'
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test:rules:1.3.0'
 
     // Assertions
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1'
-    androidTestImplementation 'androidx.test.ext:truth:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.2'
+    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
 
     // Espresso dependencies
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
