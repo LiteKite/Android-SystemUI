@@ -21,6 +21,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
 /**
@@ -28,7 +29,8 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 26/02/2020
  * @since 1.0
  */
-class BluetoothController constructor(private val context: Context) : BroadcastReceiver() {
+class BluetoothController constructor(private val context: Context) : BroadcastReceiver(),
+	CallbackProvider<BluetoothController.Callback> {
 
 	companion object {
 		val TAG = BluetoothController::class.java.simpleName
@@ -37,7 +39,7 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	private var bluetoothA2dpSink: BluetoothA2dpSink? = null
-	private val callbacks: ArrayList<BluetoothCallback> = ArrayList()
+	override val callbacks = ArrayList<Callback>()
 
 	private val serviceListener = object : BluetoothProfile.ServiceListener {
 
@@ -85,14 +87,6 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 
 	fun stopListening() {
 		context.unregisterReceiver(this)
-	}
-
-	fun addCallback(cb: BluetoothCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: BluetoothCallback) {
-		callbacks.remove(cb)
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
@@ -147,7 +141,7 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 		}
 	}
 
-	interface BluetoothCallback {
+	interface Callback {
 
 		fun onBluetoothConnected()
 

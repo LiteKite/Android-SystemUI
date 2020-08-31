@@ -46,12 +46,12 @@ class KeyButtonView @JvmOverloads constructor(
 		val TAG = KeyButtonView::class.java.simpleName
 	}
 
+	val code: Int
 	private var touchDownX: Int = 0
 	private var touchDownY: Int = 0
 	private var longClicked: Boolean = false
 	private var downTime: Long = 0
 	private var onClickListener: OnClickListener? = null
-	private val code: Int
 	private val supportsLongPress: Boolean
 	private val playSounds: Boolean
 	private var contentDescriptionRes: Int = 0

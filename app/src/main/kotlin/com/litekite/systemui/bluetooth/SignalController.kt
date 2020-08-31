@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
 /**
@@ -34,7 +35,8 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 25/02/2020
  * @since 1.0
  */
-class SignalController constructor(private val context: Context) : BroadcastReceiver() {
+class SignalController constructor(private val context: Context) : BroadcastReceiver(),
+	CallbackProvider<SignalController.Callback> {
 
 	companion object {
 		val TAG = SignalController::class.java.simpleName
@@ -42,7 +44,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
-	private val callbacks: ArrayList<SignalCallback> = ArrayList()
+	override val callbacks = ArrayList<Callback>()
 
 	/**
 	 * All possible signal strength icons. According to the Bluetooth HFP 1.5 specification,
@@ -118,14 +120,6 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 
 	fun stopListening() {
 		context.unregisterReceiver(this)
-	}
-
-	fun addCallback(cb: SignalCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: SignalCallback) {
-		callbacks.remove(cb)
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
@@ -246,7 +240,7 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	 * A listener that will be notified whenever a change in signal level or to add or remove the
 	 * signal view, roaming view based on its availability or its existence.
 	 */
-	interface SignalCallback {
+	interface Callback {
 
 		fun onSignalLevelChanged(signalLevel: SignalLevel)
 

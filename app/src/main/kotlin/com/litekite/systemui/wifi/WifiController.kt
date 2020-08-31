@@ -23,6 +23,7 @@ import android.content.IntentFilter
 import android.net.*
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
 /**
@@ -30,7 +31,8 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 26/02/2020
  * @since 1.0
  */
-class WifiController constructor(private val context: Context) : BroadcastReceiver() {
+class WifiController constructor(private val context: Context) : BroadcastReceiver(),
+	CallbackProvider<WifiController.Callback> {
 
 	companion object {
 		val TAG = WifiController::class.java.simpleName
@@ -40,7 +42,7 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		context.getSystemService(Context.WIFI_SERVICE) as? WifiManager
 	private val connectivityManager: ConnectivityManager? =
 		context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-	private val callbacks: ArrayList<WifiCallback> = ArrayList()
+	override val callbacks = ArrayList<Callback>()
 	private var ssid: String? = null
 
 	enum class WifiLevel(val level: Int) {
@@ -106,14 +108,6 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		connectivityManager?.unregisterNetworkCallback(networkCallback)
 	}
 
-	fun addCallback(cb: WifiCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: WifiCallback) {
-		callbacks.remove(cb)
-	}
-
 	override fun onReceive(context: Context?, intent: Intent?) {
 		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
 		when (intent?.action) {
@@ -161,7 +155,7 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		}
 	}
 
-	interface WifiCallback {
+	interface Callback {
 
 		fun onWifiLevelChanged(wifiLevel: WifiLevel)
 

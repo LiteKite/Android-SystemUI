@@ -59,7 +59,7 @@ class StatusBarIconContainer @JvmOverloads constructor(
 
 	override val coroutineContext = Dispatchers.Main
 
-	private val wifiCallback = object : WifiController.WifiCallback {
+	private val wifiCallback = object : WifiController.Callback {
 
 		override fun onWifiLevelChanged(wifiLevel: WifiController.WifiLevel) {
 			launch {
@@ -80,7 +80,7 @@ class StatusBarIconContainer @JvmOverloads constructor(
 
 	}
 
-	private val bluetoothCallback = object : BluetoothController.BluetoothCallback {
+	private val bluetoothCallback = object : BluetoothController.Callback {
 
 		override fun onBluetoothConnected() {
 			launch { updateStatusBarIconIV(R.id.iv_bt_icon, R.drawable.ic_bluetooth_connected) }
@@ -92,7 +92,7 @@ class StatusBarIconContainer @JvmOverloads constructor(
 
 	}
 
-	private val signalCallback = object : SignalController.SignalCallback {
+	private val signalCallback = object : SignalController.Callback {
 
 		override fun onSignalLevelChanged(signalLevel: SignalController.SignalLevel) {
 			launch {
@@ -117,7 +117,7 @@ class StatusBarIconContainer @JvmOverloads constructor(
 
 	}
 
-	private val batteryCallback = object : BatteryController.BatteryCallback {
+	private val batteryCallback = object : BatteryController.Callback {
 
 		override fun onBatteryLevelChanged(batteryLevel: BatteryController.BatteryLevel) {
 			launch {

@@ -68,4 +68,22 @@
         <item>@drawable/ic_signal_5</item>
     </array>
 
+    <!--Launcher app components-->
+    <string name="pkg_launcher">com.android.car.carlauncher</string>
+    <string name="component_launcher">com.android.car.carlauncher/.CarLauncher</string>
+
+    <!--Apps drawer components-->
+    <string name="component_apps_drawer">com.android.car.carlauncher/.AppGridActivity</string>
+
+    <!--Music app components-->
+    <string name="action_music">android.car.intent.action.MEDIA_TEMPLATE</string>
+    <string name="pkg_music">com.android.car.media</string>
+
+    <!--Dialer app components-->
+    <string name="pkg_dialer">com.android.car.dialer</string>
+
+    <!--Settings components-->
+    <string name="action_user_settings">android.settings.USER_SETTINGS</string>
+    <string name="pkg_settings">com.android.car.settings</string>
+
 </resources>

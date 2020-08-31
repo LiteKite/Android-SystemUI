@@ -22,7 +22,7 @@
     android:background="@color/black">
 
     <com.litekite.systemui.widget.KeyButtonView
-        android:id="@+id/back"
+        android:id="@+id/kbv_back"
         style="@style/KeyButtonView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

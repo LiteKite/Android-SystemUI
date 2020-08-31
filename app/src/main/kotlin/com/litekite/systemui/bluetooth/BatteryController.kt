@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
 /**
@@ -36,7 +37,8 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 21/02/2020
  * @since 1.0
  */
-class BatteryController constructor(private val context: Context) : BroadcastReceiver() {
+class BatteryController constructor(private val context: Context) : BroadcastReceiver(),
+	CallbackProvider<BatteryController.Callback> {
 
 	companion object {
 		val TAG = BatteryController::class.java.simpleName
@@ -44,7 +46,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 
 	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
-	private val callbacks: ArrayList<BatteryCallback> = ArrayList()
+	override val callbacks = ArrayList<Callback>()
 
 	/**
 	 * According to the Bluetooth HFP 1.5 specification, battery levels are indicated by a
@@ -101,14 +103,6 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 
 	fun stopListening() {
 		context.unregisterReceiver(this)
-	}
-
-	fun addCallback(cb: BatteryCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: BatteryCallback) {
-		callbacks.remove(cb)
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
@@ -192,7 +186,7 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	 * A listener that will be notified whenever a change in battery level or to add or remove the
 	 * battery view based on its availability or its existence.
 	 */
-	interface BatteryCallback {
+	interface Callback {
 
 		fun onBatteryLevelChanged(batteryLevel: BatteryLevel)
 

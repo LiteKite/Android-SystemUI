@@ -16,10 +16,13 @@
 -->
 <resources>
 
-    <!--Home Keycode KeyEvent-->
+    <!--Home keycode key event-->
     <integer name="keycode_home">3</integer>
 
-    <!--Back Keycode KeyEvent-->
+    <!--Back keycode key event-->
     <integer name="keycode_back">4</integer>
+
+    <!--Power keycode key event-->
+    <integer name="keycode_power">26</integer>
 
 </resources>

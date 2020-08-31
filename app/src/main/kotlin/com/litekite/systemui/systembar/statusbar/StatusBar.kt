@@ -16,15 +16,19 @@
 
 package com.litekite.systemui.systembar.statusbar
 
-import android.app.WindowConfiguration
+import android.app.ActivityManager
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
-import com.android.systemui.shared.system.ActivityManagerWrapper
-import com.android.systemui.shared.system.TaskStackChangeListener
+import androidx.core.view.forEach
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.taskstack.TaskStackController
+import com.litekite.systemui.util.taskChanged
+import com.litekite.systemui.widget.AppButtonView
+import com.litekite.systemui.widget.KeyButtonView
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -52,27 +56,30 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 
 		fun getStatusBarWindowController(): StatusBarWindowController
 
-		fun getActivityManagerWrapper(): ActivityManagerWrapper
+		fun getTaskStackController(): TaskStackController
 
 	}
 
-	private lateinit var activityManagerWrapper: ActivityManagerWrapper
+	private lateinit var taskStackController: TaskStackController
 	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
-	private lateinit var statusBarView: View
+	private lateinit var statusBarView: ViewGroup
 
-	private val taskStackChangeListener = object : TaskStackChangeListener() {
+	private val taskStackChangeCallback = object : TaskStackController.Callback {
 
-		override fun onTaskStackChanged() {
-			super.onTaskStackChanged()
-			printLog(TAG, "onTaskStackChanged:")
-			val topActivity = activityManagerWrapper.runningTask
-			printLog(TAG, "topActivity: $topActivity")
-			val activityType = WindowConfiguration.activityTypeToString(
-				topActivity.configuration.windowConfiguration.activityType
+		override fun onTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
+			printLog(
+				TAG,
+				"onTaskStackChanged: ${runningTaskInfo.topActivity.flattenToShortString()}"
 			)
-			printLog(TAG, "activityType: $activityType")
+			statusBarView.forEach { v ->
+				if (v is AppButtonView) {
+					v.taskChanged(runningTaskInfo)
+				} else if (v is KeyButtonView) {
+					v.taskChanged(runningTaskInfo)
+				}
+			}
 		}
 
 	}
@@ -93,8 +100,8 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		// Creates status bar view
 		makeStatusBarView()
 		// Listens for app task stack changes
-		activityManagerWrapper = entryPointAccessors.getActivityManagerWrapper()
-		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
+		taskStackController = entryPointAccessors.getTaskStackController()
+		taskStackController.addCallback(taskStackChangeCallback)
 	}
 
 	private fun makeStatusBarView() {

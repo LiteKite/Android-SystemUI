@@ -19,6 +19,7 @@ package com.litekite.systemui.car
 import android.car.Car
 import android.content.Context
 import android.os.Handler
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +30,8 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class CarController @Inject constructor(private val context: Context) {
+class CarController @Inject constructor(private val context: Context) :
+	CallbackProvider<CarController.Callback> {
 
 	companion object {
 		val TAG = CarController::class.java.simpleName
@@ -38,7 +40,7 @@ class CarController @Inject constructor(private val context: Context) {
 	private val handler: Handler = Handler()
 	private lateinit var car: Car
 	var isConnected: Boolean = false
-	private var callbacks: ArrayList<ConnectionCallback> = ArrayList()
+	override var callbacks = ArrayList<Callback>()
 
 	private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->
 		SystemUI.printLog(TAG, "onLifecycleChanged: $isConnected Car: $car")
@@ -76,14 +78,6 @@ class CarController @Inject constructor(private val context: Context) {
 		}
 	}
 
-	fun addCallback(cb: ConnectionCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: ConnectionCallback) {
-		callbacks.add(cb)
-	}
-
 	fun destroy() {
 		if (isConnected) car.disconnect()
 	}
@@ -94,7 +88,7 @@ class CarController @Inject constructor(private val context: Context) {
 		}
 	}
 
-	interface ConnectionCallback {
+	interface Callback {
 
 		fun onConnectionChanged(isConnected: Boolean)
 

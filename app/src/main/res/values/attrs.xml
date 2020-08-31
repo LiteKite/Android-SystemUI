@@ -17,17 +17,39 @@
 <resources>
 
     <declare-styleable name="KeyButtonView">
-        <!-- key code to send when pressed; if absent or 0, no key is sent -->
+
+        <!--key code to send when pressed; if absent or 0, no key is sent-->
         <attr name="keyCode" format="integer" />
-        <!-- does this button generate long press / repeat events? -->
+
+        <!--does this button generate long press / repeat events?-->
         <attr name="keyRepeat" format="boolean" />
-        <!-- Should this button play sound effects, default true -->
+
+        <!--Should this button play sound effects, default true-->
         <attr name="playSound" format="boolean" />
+
+        <!--Content description for accessibility-->
         <attr name="android:contentDescription" />
+
     </declare-styleable>
 
     <declare-styleable name="Clock">
+
+        <!--Should the clock need to show seconds-->
         <attr name="showSeconds" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="AppButtonView">
+
+        <!--The action of the intent-->
+        <attr name="action" format="string" />
+
+        <!--The package name of the intent-->
+        <attr name="pkg" format="string" />
+
+        <!--The component name of the intent-->
+        <attr name="component" format="string" />
+
     </declare-styleable>
 
 </resources>

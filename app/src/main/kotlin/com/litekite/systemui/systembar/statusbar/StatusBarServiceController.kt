@@ -30,6 +30,7 @@ import android.view.KeyEvent
 import com.android.internal.statusbar.IStatusBar
 import com.android.internal.statusbar.IStatusBarService
 import com.android.internal.statusbar.StatusBarIcon
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +50,9 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), CoroutineScope {
+class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(),
+	CoroutineScope,
+	CallbackProvider<StatusBarServiceController.Callback> {
 
 	companion object {
 		val TAG = StatusBarServiceController::class.java.simpleName
@@ -71,7 +74,7 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), Coro
 
 	}
 
-	private val callbacks: ArrayList<Callback> = ArrayList()
+	override val callbacks = ArrayList<Callback>()
 
 	override val coroutineContext = Dispatchers.Main
 
@@ -88,14 +91,6 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(), Coro
 		} catch (e: RemoteException) {
 			e.rethrowFromSystemServer()
 		}
-	}
-
-	fun addCallback(cb: Callback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: Callback) {
-		callbacks.remove(cb)
 	}
 
 	private fun getSystemKeyString(key: Int) = KeyEvent.keyCodeToString(key)

@@ -35,7 +35,7 @@ abstract class CarPropertyController constructor(private val carController: CarC
 
 	private var carPropertyManager: CarPropertyManager? = null
 
-	private val carConnectionCallback = object : CarController.ConnectionCallback {
+	private val carConnectionCallback = object : CarController.Callback {
 		override fun onConnectionChanged(isConnected: Boolean) {
 			if (isConnected) {
 				createCarPropertyManager()

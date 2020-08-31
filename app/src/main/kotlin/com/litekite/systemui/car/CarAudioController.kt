@@ -19,6 +19,7 @@ package com.litekite.systemui.car
 import android.car.Car
 import android.car.media.CarAudioManager
 import android.os.RemoteException
+import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,17 +30,20 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class CarAudioController @Inject constructor() {
+class CarAudioController @Inject constructor() :
+	CallbackProvider<CarAudioController.Callback> {
 
 	companion object {
 		val TAG = CarAudioController::class.java.simpleName
 	}
 
-	@Inject lateinit var carController: CarController
+	@Inject
+	lateinit var carController: CarController
 	private var carAudioManager: CarAudioManager? = null
-	private var callbacks: ArrayList<CarAudioControllerCallback> = ArrayList()
+	override var callbacks = ArrayList<Callback>()
 
-	private val carConnectionCallback = object : CarController.ConnectionCallback {
+	private val carConnectionCallback = object :
+		CarController.Callback {
 		override fun onConnectionChanged(isConnected: Boolean) {
 			if (isConnected) {
 				createCarAudioManager()
@@ -138,14 +142,6 @@ class CarAudioController @Inject constructor() {
 		carAudioManager?.unregisterCarVolumeCallback(carVolumeCallback)
 	}
 
-	fun addCallback(cb: CarAudioControllerCallback) {
-		callbacks.add(cb)
-	}
-
-	fun removeCallback(cb: CarAudioControllerCallback) {
-		callbacks.remove(cb)
-	}
-
 	fun destroy() {
 		unregisterCarVolumeCallback()
 	}
@@ -158,7 +154,7 @@ class CarAudioController @Inject constructor() {
 		callbacks.forEach { it.onGroupVolumeChanged() }
 	}
 
-	interface CarAudioControllerCallback {
+	interface Callback {
 
 		fun onCarAudioManagerCreated()
 

@@ -18,12 +18,12 @@ package com.litekite.systemui.di
 
 import android.car.userlib.CarUserManagerHelper
 import android.content.Context
-import com.android.systemui.shared.system.ActivityManagerWrapper
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.car.CarController
 import com.litekite.systemui.preference.PreferenceController
 import com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindowController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
+import com.litekite.systemui.taskstack.TaskStackController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,8 +42,7 @@ object SystemUIControllers {
 
 	@Provides
 	@Singleton
-	fun provideActivityManagerWrapper(): ActivityManagerWrapper =
-		ActivityManagerWrapper.getInstance()
+	fun provideTaskStackController(): TaskStackController = TaskStackController()
 
 	@Provides
 	@Singleton
