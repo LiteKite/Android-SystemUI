@@ -37,6 +37,10 @@ interface SystemUIServiceProvider {
 		fun startSystemUIServices(context: Context) =
 			(context.applicationContext as SystemUIApp).startSystemUIServices()
 
+		fun startSystemUISecondaryUserServices(context: Context) {
+			(context.applicationContext as SystemUIApp).startSystemUISecondaryUserServices()
+		}
+
 		fun getSystemUIServices(context: Context): List<SystemUI> =
 			(context.applicationContext as SystemUIApp).services
 

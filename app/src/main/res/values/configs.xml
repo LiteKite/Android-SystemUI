@@ -20,16 +20,21 @@
     <string-array name="config_systemUIServiceComponents" translatable="false">
         <item>com.litekite.systemui.power.Power</item>
         <item>com.litekite.systemui.systembar.base.SystemBars</item>
+
     </string-array>
 
     <!--Component to be used as the status bar service.  Must implement the IStatusBar
-     interface.  This name is in the ComponentName flattened format (package/class)-->
+     interface. This name is in the ComponentName flattened format (package/class)-->
     <string name="config_statusBarComponent" translatable="false">
         com.litekite.systemui.systembar.statusbar.StatusBar</string>
 
     <string-array name="config_navBarComponents">
         <item>com.litekite.systemui.systembar.navbar.bottom.BottomNavBar</item>
     </string-array>
+
+    <!-- SystemUI Services (per user): The classes of the stuff to start for each user.
+     This is a subset of the config_systemUIServiceComponents -->
+    <string-array name="config_systemUIServiceComponentsPerUser" translatable="false" />
 
     <!--StatusBar Container: Ordered Status Bar Icons-->
     <array name="config_status_bar_ordered_icons">

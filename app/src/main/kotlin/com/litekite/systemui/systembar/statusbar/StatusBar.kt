@@ -111,6 +111,11 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		statusBarWindowController.add(statusBarWindow)
 	}
 
+	override fun onBootCompleted() {
+		super.onBootCompleted()
+		printLog(TAG, "onBootCompleted:")
+	}
+
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		printLog(TAG, "onConfigurationChanged:")

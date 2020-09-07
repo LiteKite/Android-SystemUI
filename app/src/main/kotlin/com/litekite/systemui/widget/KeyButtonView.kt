@@ -77,12 +77,11 @@ class KeyButtonView @JvmOverloads constructor(
 
 	private val checkLongPress = Runnable {
 		if (isPressed) {
-			if (isLongClickable) {
-				performLongClick()
-				longClicked = true
-			} else if (supportsLongPress) {
+			if (isLongClickable && supportsLongPress) {
 				sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS)
 				sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED)
+				// Just an old-fashioned ImageView
+				performLongClick()
 				longClicked = true
 			}
 		}

@@ -48,6 +48,8 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	abstract fun start()
 
+	open fun onBootCompleted() {}
+
 	open fun onConfigurationChanged(newConfig: Configuration) {}
 
 	open fun onOverlayChanged() {}

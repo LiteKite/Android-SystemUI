@@ -43,6 +43,14 @@ class SystemBars : SystemUI() {
 		createNavBarsFromConfig()
 	}
 
+	override fun onBootCompleted() {
+		super.onBootCompleted()
+		// Notifying status bar about boot complete event
+		statusBar.onBootCompleted()
+		// Notifying nav bars about boot complete event
+		navBarComponents.forEach { it.onBootCompleted() }
+	}
+
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		// Notifying status bar about config change

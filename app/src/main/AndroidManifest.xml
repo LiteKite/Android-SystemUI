@@ -428,7 +428,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SystemUI">
 
-        <service android:name=".service.SystemUIService" />
+        <service
+            android:name=".service.SystemUIService"
+            android:exported="true"
+            android:permission="com.android.systemui.permission.SELF" />
+
+        <service
+            android:name=".service.SystemUISecondaryUserService"
+            android:exported="true"
+            android:permission="com.android.systemui.permission.SELF" />
 
     </application>
 

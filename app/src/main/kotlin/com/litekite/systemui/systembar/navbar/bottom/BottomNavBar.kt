@@ -139,6 +139,11 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 		}
 	}
 
+	override fun onBootCompleted() {
+		super.onBootCompleted()
+		printLog(TAG, "onBootCompleted:")
+	}
+
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		printLog(TAG, "onConfigurationChanged:")

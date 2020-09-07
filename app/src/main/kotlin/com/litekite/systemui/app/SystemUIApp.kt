@@ -17,6 +17,10 @@
 package com.litekite.systemui.app
 
 import android.app.Application
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Process
@@ -40,6 +44,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 		val TAG = SystemUIApp::class.java.simpleName
 	}
 
+	private var bootCompleted: Boolean = false
 	private var serviceStarted: Boolean = false
 
 	/**
@@ -51,12 +56,33 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 
 	override fun onCreate() {
 		super.onCreate()
+		SystemUI.printLog(TAG, "onCreate: SystemUIApp started successfully")
 		// Set the application theme that is inherited by all services. Note that setting the
 		// application theme in the manifest does only work for activities. Keep this in sync with
 		// the theme set there.
 		setTheme(R.style.Theme_SystemUI)
-		SystemUI.printLog(TAG, "onCreate: SystemUIApp started successfully")
-		startSystemUIServices()
+		registerBootReceiver()
+		if (Process.myUserHandle() == UserHandle.SYSTEM) {
+			startSystemUIServices()
+		} else {
+			startSystemUISecondaryUserServices()
+		}
+	}
+
+	private fun registerBootReceiver() {
+		val filter = IntentFilter(Intent.ACTION_BOOT_COMPLETED)
+		filter.priority = IntentFilter.SYSTEM_HIGH_PRIORITY
+		registerReceiver(object : BroadcastReceiver() {
+
+			override fun onReceive(context: Context?, intent: Intent?) {
+				SystemUI.printLog(TAG, "onReceive: BOOT_COMPLETED received")
+				bootCompleted = true
+				if (serviceStarted) {
+					services.forEach { it.onBootCompleted() }
+				}
+			}
+
+		}, filter)
 	}
 
 	/**
@@ -67,14 +93,38 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 */
 	@Synchronized
 	internal fun startSystemUIServices() {
-		if (serviceStarted || Process.myUserHandle() != UserHandle.SYSTEM) {
+		if (serviceStarted) {
 			SystemUI.printLog(
 				TAG,
-				"startServicesIfNeeded: already started or not a system user. Skipping..."
+				"startServicesIfNeeded: already started. Skipping..."
 			)
 			return
 		}
 		val serviceComponents = resources.getStringArray(R.array.config_systemUIServiceComponents)
+		startServices(serviceComponents)
+	}
+
+	/**
+	 * Ensures that all the Secondary user SystemUI services are running. If they are already
+	 * running, this is a no-op. This is needed to conditinally start all the services, as we only
+	 * need to have it in the main process.
+	 * <p>This method must only be called from the main thread.</p>
+	 */
+	@Synchronized
+	fun startSystemUISecondaryUserServices() {
+		if (serviceStarted) {
+			SystemUI.printLog(
+				TAG,
+				"startSystemUISecondaryUserServices: already started. Skipping..."
+			)
+			return
+		}
+		val serviceComponents =
+			resources.getStringArray(R.array.config_systemUIServiceComponentsPerUser)
+		startServices(serviceComponents)
+	}
+
+	private fun startServices(serviceComponents: Array<String>) {
 		serviceComponents.forEach {
 			val systemUIService = Class.forName(it).newInstance() as SystemUI
 			systemUIService.context = this
@@ -83,6 +133,11 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 			services.add(systemUIService)
 		}
 		serviceStarted = true
+		// If boot complete event already been received, let SystemUI components aware of boot
+		// complete event...
+		if (bootCompleted) {
+			services.forEach { it.onBootCompleted() }
+		}
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
