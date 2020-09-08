@@ -130,15 +130,11 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 	}
 
 	private fun notifyBluetoothConnected() {
-		for (cb in callbacks) {
-			cb.onBluetoothConnected()
-		}
+		callbacks.forEach { it.onBluetoothConnected() }
 	}
 
 	private fun notifyBluetoothDisconnected() {
-		for (cb in callbacks) {
-			cb.onBluetoothDisconnected()
-		}
+		callbacks.forEach { it.onBluetoothDisconnected() }
 	}
 
 	interface Callback {

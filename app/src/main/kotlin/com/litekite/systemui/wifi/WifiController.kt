@@ -138,21 +138,15 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 	}
 
 	private fun notifyWifiDisabled() {
-		for (cb in callbacks) {
-			cb.onWifiDisabled()
-		}
+		callbacks.forEach { it.onWifiDisabled() }
 	}
 
 	private fun notifyWifiNotConnected() {
-		for (cb in callbacks) {
-			cb.onWifiNotConnected()
-		}
+		callbacks.forEach { it.onWifiNotConnected() }
 	}
 
 	private fun notifyWifiLevelChanged(wifiLevel: WifiLevel) {
-		for (cb in callbacks) {
-			cb.onWifiLevelChanged(wifiLevel)
-		}
+		callbacks.forEach { it.onWifiLevelChanged(wifiLevel) }
 	}
 
 	interface Callback {

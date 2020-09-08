@@ -20,6 +20,7 @@ import android.car.userlib.CarUserManagerHelper
 import android.content.Context
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.car.CarController
+import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.preference.PreferenceController
 import com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindowController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
@@ -39,6 +40,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object SystemUIControllers {
+
 
 	@Provides
 	@Singleton
@@ -60,6 +62,11 @@ object SystemUIControllers {
 	@Singleton
 	fun providePreferenceController(@ApplicationContext context: Context) =
 		PreferenceController(context)
+
+	@Provides
+	@Singleton
+	fun provideConfigController(@ApplicationContext context: Context): ConfigController =
+		ConfigController(context)
 
 	@Provides
 	@Singleton

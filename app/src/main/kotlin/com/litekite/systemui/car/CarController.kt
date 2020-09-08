@@ -83,9 +83,7 @@ class CarController @Inject constructor(private val context: Context) :
 	}
 
 	private fun notifyConnectionState(isConnected: Boolean) {
-		for (cb in callbacks) {
-			cb.onConnectionChanged(isConnected)
-		}
+		callbacks.forEach { it.onConnectionChanged(isConnected) }
 	}
 
 	interface Callback {

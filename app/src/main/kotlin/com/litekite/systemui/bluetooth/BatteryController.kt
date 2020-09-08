@@ -171,15 +171,11 @@ class BatteryController constructor(private val context: Context) : BroadcastRec
 	}
 
 	private fun notifyBatteryLevelChanged(batteryLevel: BatteryLevel) {
-		for (cb in callbacks) {
-			cb.onBatteryLevelChanged(batteryLevel)
-		}
+		callbacks.forEach { it.onBatteryLevelChanged(batteryLevel) }
 	}
 
 	private fun notifyBatteryLevelUnavailable() {
-		for (cb in callbacks) {
-			cb.onBatteryLevelUnavailable()
-		}
+		callbacks.forEach { it.onBatteryLevelUnavailable() }
 	}
 
 	/**

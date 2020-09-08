@@ -22,19 +22,32 @@ import android.content.res.Configuration
 import android.os.*
 import android.text.format.DateUtils
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.config.ConfigController
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 
 /**
  * @author Vignesh S
  * @version 1.0, 14/02/2020
  * @since 1.0
  */
-class Power : SystemUI() {
+class Power : SystemUI(), ConfigController.Callback {
 
 	companion object {
 
 		val TAG = Power::class.java.simpleName
 
 		const val TEMPERATURE_INTERVAL = 1 * DateUtils.SECOND_IN_MILLIS
+
+	}
+
+	@EntryPoint
+	@InstallIn(ApplicationComponent::class)
+	interface PowerEntryPoint {
+
+		fun getConfigController(): ConfigController
 
 	}
 
@@ -49,11 +62,18 @@ class Power : SystemUI() {
 
 	override fun start() {
 		putComponent(Power::class.java, this)
+		// Hilt Dependency Entry Point
+		val entryPointAccessors = EntryPointAccessors.fromApplication(
+			context,
+			PowerEntryPoint::class.java
+		)
 		hardwarePropertiesManager = context.getSystemService(Context.HARDWARE_PROPERTIES_SERVICE)
 				as HardwarePropertiesManager
 		lastConfiguration.setTo(context.resources.configuration)
 		registerThermalListener()
 		updateTemperatureWarning()
+		// Listens for app task stack changes
+		entryPointAccessors.getConfigController().addCallback(this)
 	}
 
 	private fun registerThermalListener() {
@@ -73,8 +93,8 @@ class Power : SystemUI() {
 		}
 	}
 
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
+	override fun onConfigChanged(newConfig: Configuration) {
+		super.onConfigChanged(newConfig)
 		val mask = ActivityInfo.CONFIG_MCC or ActivityInfo.CONFIG_MNC
 		// Safe to modify mLastConfiguration here as it's only updated by the main thread (here).
 		if (lastConfiguration.updateFrom(newConfig) and mask != 0) {

@@ -21,14 +21,15 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Process
 import android.os.UserHandle
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.base.SystemUIServiceProvider
+import com.litekite.systemui.config.ConfigController
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 /**
  * Application class.
@@ -44,6 +45,8 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 		val TAG = SystemUIApp::class.java.simpleName
 	}
 
+	@Inject
+	private lateinit var configController: ConfigController
 	private var bootCompleted: Boolean = false
 	private var serviceStarted: Boolean = false
 
@@ -52,7 +55,6 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	 */
 	internal var services: ArrayList<SystemUI> = ArrayList()
 	private val components: MutableMap<Class<*>, Any> = HashMap()
-	private val lastConfig = Configuration()
 
 	override fun onCreate() {
 		super.onCreate()
@@ -141,13 +143,10 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration) {
-		if (serviceStarted) {
-			services.forEach { it.onConfigurationChanged(newConfig) }
-		}
-		if (lastConfig.updateFrom(newConfig) and ActivityInfo.CONFIG_ASSETS_PATHS != 0) {
-			services.forEach { it.onOverlayChanged() }
-		}
 		super.onConfigurationChanged(newConfig)
+		if (serviceStarted) {
+			configController.onConfigChanged(newConfig)
+		}
 	}
 
 	@Suppress("UNCHECKED_CAST")

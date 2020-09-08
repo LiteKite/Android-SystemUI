@@ -71,9 +71,7 @@ class TaskStackController @Inject constructor() :
 	}
 
 	private fun notifyTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
-		for (cb in callbacks) {
-			cb.onTaskStackChanged(runningTaskInfo)
-		}
+		callbacks.forEach { it.onTaskStackChanged(runningTaskInfo) }
 	}
 
 	/**

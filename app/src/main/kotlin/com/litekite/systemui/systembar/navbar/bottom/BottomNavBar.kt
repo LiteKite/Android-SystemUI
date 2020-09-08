@@ -26,6 +26,7 @@ import android.widget.FrameLayout
 import androidx.core.view.forEach
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.IntentUtils
@@ -45,7 +46,7 @@ import java.io.PrintWriter
  * @version 1.0, 01/07/2020
  * @since 1.0
  */
-class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
+class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigController.Callback {
 
 	companion object {
 		val TAG = BottomNavBar::class.java.simpleName
@@ -55,9 +56,11 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 	@InstallIn(ApplicationComponent::class)
 	interface BottomNavBarEntryPoint {
 
+		fun getBottomNavBarWindowController(): BottomNavBarWindowController
+
 		fun getStatusBarServiceController(): StatusBarServiceController
 
-		fun getBottomNavBarWindowController(): BottomNavBarWindowController
+		fun getConfigController(): ConfigController
 
 		fun getTaskStackController(): TaskStackController
 
@@ -66,8 +69,6 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 	}
 
 	private lateinit var userController: CarUserManagerHelper
-	private lateinit var taskStackController: TaskStackController
-	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var bottomNavBarWindowController: BottomNavBarWindowController
 	private lateinit var bottomNavBarWindow: FrameLayout
 	private lateinit var bottomNavBarView: ViewGroup
@@ -98,21 +99,21 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 			context,
 			BottomNavBarEntryPoint::class.java
 		)
-		// Initiates the status bar manager service
-		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
-		// Attaching the status bar manager service
-		statusBarServiceController.addCallback(this)
 		// Initiates the bottom navigation bar window controller
 		bottomNavBarWindowController = entryPointAccessors.getBottomNavBarWindowController()
-		// Initiates user controller
-		userController = entryPointAccessors.getUserController()
-		// Initiates task stack controller
-		taskStackController = entryPointAccessors.getTaskStackController()
 		// Creates bottom navigation bar view
 		makeBottomNavBar()
+		// Initiates user controller
+		userController = entryPointAccessors.getUserController()
 		// Updates current user avatar
 		updateUserAvatar()
-		// Registers event listener
+		// Listens for window and system ui visibility changes
+		entryPointAccessors.getStatusBarServiceController().addCallback(this)
+		// Listens for config changes
+		entryPointAccessors.getConfigController().addCallback(this)
+		// Listens for app task stack changes
+		entryPointAccessors.getTaskStackController().addCallback(taskStackChangeCallback)
+		// Registers event listeners
 		registerListeners()
 	}
 
@@ -130,8 +131,6 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 	}
 
 	private fun registerListeners() {
-		// Listens for app task stack changes
-		taskStackController.addCallback(taskStackChangeCallback)
 		// Short press event that launches user settings activity
 		bottomNavBarView.cib_user_avatar.setOnClickListener {
 			val action = context.getString(R.string.action_user_settings)
@@ -144,9 +143,19 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback {
 		printLog(TAG, "onBootCompleted:")
 	}
 
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-		printLog(TAG, "onConfigurationChanged:")
+	override fun onConfigChanged(newConfig: Configuration) {
+		super.onConfigChanged(newConfig)
+		printLog(TAG, "onConfigChanged:")
+	}
+
+	override fun onDensityOrFontScaleChanged() {
+		super.onDensityOrFontScaleChanged()
+		printLog(TAG, "onDensityOrFontScaleChanged:")
+	}
+
+	override fun onLocaleChanged() {
+		super.onLocaleChanged()
+		printLog(TAG, "onLocaleChanged:")
 	}
 
 	override fun onOverlayChanged() {

@@ -213,27 +213,19 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 	}
 
 	private fun notifySignalLevelChanged(signalLevel: SignalLevel) {
-		for (cb in callbacks) {
-			cb.onSignalLevelChanged(signalLevel)
-		}
+		callbacks.forEach { it.onSignalLevelChanged(signalLevel) }
 	}
 
 	private fun notifySignalLevelUnavailable() {
-		for (cb in callbacks) {
-			cb.onSignalLevelUnavailable()
-		}
+		callbacks.forEach { it.onSignalLevelUnavailable() }
 	}
 
 	private fun notifyRoamingStateAvailable() {
-		for (cb in callbacks) {
-			cb.onRoamingStateAvailable()
-		}
+		callbacks.forEach { it.onRoamingStateAvailable() }
 	}
 
 	private fun notifyRoamingStateUnavailable() {
-		for (cb in callbacks) {
-			cb.onRoamingStateUnavailable()
-		}
+		callbacks.forEach { it.onRoamingStateUnavailable() }
 	}
 
 	/**

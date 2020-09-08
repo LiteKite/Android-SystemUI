@@ -16,7 +16,6 @@
 
 package com.litekite.systemui.systembar.base
 
-import android.content.res.Configuration
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import java.io.FileDescriptor
@@ -49,22 +48,6 @@ class SystemBars : SystemUI() {
 		statusBar.onBootCompleted()
 		// Notifying nav bars about boot complete event
 		navBarComponents.forEach { it.onBootCompleted() }
-	}
-
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-		// Notifying status bar about config change
-		statusBar.onConfigurationChanged(newConfig)
-		// Notifying nav bars about config change
-		navBarComponents.forEach { it.onConfigurationChanged(newConfig) }
-	}
-
-	override fun onOverlayChanged() {
-		super.onOverlayChanged()
-		// Notifying status bar about overlay change
-		statusBar.onOverlayChanged()
-		// Notifying nav bars about overlay change
-		navBarComponents.forEach { it.onOverlayChanged() }
 	}
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {

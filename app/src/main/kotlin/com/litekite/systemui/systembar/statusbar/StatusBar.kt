@@ -25,6 +25,7 @@ import android.widget.FrameLayout
 import androidx.core.view.forEach
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.taskChanged
 import com.litekite.systemui.widget.AppButtonView
@@ -42,7 +43,7 @@ import java.io.PrintWriter
  * @version 1.0, 23/01/2020
  * @since 1.0
  */
-class StatusBar : SystemUI(), StatusBarServiceController.Callback {
+class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigController.Callback {
 
 	companion object {
 		val TAG = StatusBar::class.java.simpleName
@@ -52,16 +53,16 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 	@InstallIn(ApplicationComponent::class)
 	interface StatusBarEntryPoint {
 
+		fun getStatusBarWindowController(): StatusBarWindowController
+
 		fun getStatusBarServiceController(): StatusBarServiceController
 
-		fun getStatusBarWindowController(): StatusBarWindowController
+		fun getConfigController(): ConfigController
 
 		fun getTaskStackController(): TaskStackController
 
 	}
 
-	private lateinit var taskStackController: TaskStackController
-	private lateinit var statusBarServiceController: StatusBarServiceController
 	private lateinit var statusBarWindowController: StatusBarWindowController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: ViewGroup
@@ -91,17 +92,16 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 			context,
 			StatusBarEntryPoint::class.java
 		)
-		// Initiates the status bar manager service
-		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
-		// Attaching the status bar manager service
-		statusBarServiceController.addCallback(this)
 		// Initiates the status bar window controller
 		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
 		// Creates status bar view
 		makeStatusBarView()
+		// Listens for window and system ui visibility changes
+		entryPointAccessors.getStatusBarServiceController().addCallback(this)
+		// Listens for config changes
+		entryPointAccessors.getConfigController().addCallback(this)
 		// Listens for app task stack changes
-		taskStackController = entryPointAccessors.getTaskStackController()
-		taskStackController.addCallback(taskStackChangeCallback)
+		entryPointAccessors.getTaskStackController().addCallback(taskStackChangeCallback)
 	}
 
 	private fun makeStatusBarView() {
@@ -116,9 +116,19 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback {
 		printLog(TAG, "onBootCompleted:")
 	}
 
-	override fun onConfigurationChanged(newConfig: Configuration) {
-		super.onConfigurationChanged(newConfig)
-		printLog(TAG, "onConfigurationChanged:")
+	override fun onConfigChanged(newConfig: Configuration) {
+		super.onConfigChanged(newConfig)
+		printLog(TAG, "onConfigChanged:")
+	}
+
+	override fun onDensityOrFontScaleChanged() {
+		super.onDensityOrFontScaleChanged()
+		printLog(TAG, "onDensityOrFontScaleChanged:")
+	}
+
+	override fun onLocaleChanged() {
+		super.onLocaleChanged()
+		printLog(TAG, "onLocaleChanged:")
 	}
 
 	override fun onOverlayChanged() {
