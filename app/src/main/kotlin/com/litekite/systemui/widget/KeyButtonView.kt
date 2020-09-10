@@ -40,7 +40,9 @@ class KeyButtonView @JvmOverloads constructor(
 	context: Context,
 	attrs: AttributeSet? = null,
 	defStyleAttr: Int = 0
-) : AppCompatImageButton(context, attrs, defStyleAttr) {
+) : AppCompatImageButton(context, attrs, defStyleAttr),
+	View.OnLongClickListener,
+	View.OnClickListener {
 
 	companion object {
 		val TAG = KeyButtonView::class.java.simpleName
@@ -51,10 +53,19 @@ class KeyButtonView @JvmOverloads constructor(
 	private var touchDownY: Int = 0
 	private var longClicked: Boolean = false
 	private var downTime: Long = 0
-	private var onClickListener: OnClickListener? = null
 	private val supportsLongPress: Boolean
 	private val playSounds: Boolean
 	private var contentDescriptionRes: Int = 0
+
+	private val performLongPress = Runnable {
+		if (isPressed) {
+			if (isLongClickable) {
+				// Just an old-fashioned ImageView
+				performLongClick()
+				longClicked = true
+			}
+		}
+	}
 
 	init {
 		val ta = context.obtainStyledAttributes(
@@ -75,25 +86,12 @@ class KeyButtonView @JvmOverloads constructor(
 		forceHasOverlappingRendering(false)
 	}
 
-	private val checkLongPress = Runnable {
-		if (isPressed) {
-			if (isLongClickable && supportsLongPress) {
-				sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS)
-				sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED)
-				// Just an old-fashioned ImageView
-				performLongClick()
-				longClicked = true
-			}
-		}
-	}
-
-	override fun isClickable(): Boolean {
-		return code != 0 || super.isClickable()
-	}
-
-	override fun setOnClickListener(onClickListener: OnClickListener?) {
-		super.setOnClickListener(onClickListener)
-		this.onClickListener = onClickListener
+	override fun onFinishInflate() {
+		super.onFinishInflate()
+		// Registers short press events
+		setOnClickListener(this)
+		// Registers long press events
+		setOnLongClickListener(this)
 	}
 
 	override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -107,7 +105,7 @@ class KeyButtonView @JvmOverloads constructor(
 		super.onInitializeAccessibilityNodeInfo(info)
 		if (code != 0) {
 			info?.addAction(AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, null))
-			if (supportsLongPress || isLongClickable) {
+			if (isLongClickable) {
 				info?.addAction(
 					AccessibilityAction(AccessibilityNodeInfo.ACTION_LONG_CLICK, null)
 				)
@@ -140,8 +138,8 @@ class KeyButtonView @JvmOverloads constructor(
 					performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
 				}
 				playSoundEffect(SoundEffectConstants.CLICK)
-				removeCallbacks(checkLongPress)
-				postDelayed(checkLongPress, ViewConfiguration.getLongPressTimeout().toLong())
+				removeCallbacks(performLongPress)
+				postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
 			}
 			MotionEvent.ACTION_MOVE -> {
 				x = event.rawX.toInt()
@@ -152,7 +150,7 @@ class KeyButtonView @JvmOverloads constructor(
 					// When quick step is enabled, prevent animating the ripple triggered by
 					// setPressed and decide to run it on touch up
 					isPressed = false
-					removeCallbacks(checkLongPress)
+					removeCallbacks(performLongPress)
 				}
 			}
 			MotionEvent.ACTION_UP -> {
@@ -173,29 +171,53 @@ class KeyButtonView @JvmOverloads constructor(
 						sendEvent(KeyEvent.ACTION_UP, KeyEvent.FLAG_CANCELED)
 					}
 				} else {
-					// no key code, just a regular ImageView
-					if (doIt && onClickListener != null) {
-						onClickListener?.onClick(this)
+					if (doIt) {
 						sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED)
 					}
 				}
 				performClick()
-				removeCallbacks(checkLongPress)
+				removeCallbacks(performLongPress)
 			}
 			MotionEvent.ACTION_CANCEL -> {
 				isPressed = false
 				if (code != 0) {
 					sendEvent(KeyEvent.ACTION_UP, KeyEvent.FLAG_CANCELED)
 				}
-				removeCallbacks(checkLongPress)
+				removeCallbacks(performLongPress)
 			}
 		}
 		return true
 	}
 
+	override fun isClickable(): Boolean {
+		return code != 0 || super.isClickable()
+	}
+
 	override fun performClick(): Boolean {
-		SystemUI.printLog(TAG, "key button performed click. code: $code")
+		SystemUI.printLog(TAG, "performClick: code: $code")
 		return super.performClick()
+	}
+
+	override fun onClick(v: View?) {
+		SystemUI.printLog(TAG, "onClick: code: $code")
+	}
+
+	override fun isLongClickable(): Boolean {
+		return supportsLongPress || super.isLongClickable()
+	}
+
+	override fun onLongClick(v: View?): Boolean {
+		SystemUI.printLog(TAG, "onLongClick: code: $code")
+		if (v != null) {
+			if (supportsLongPress && code != 0) {
+				sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS)
+				sendEvent(KeyEvent.ACTION_UP, 0)
+				sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED)
+			} else {
+				sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED)
+			}
+		}
+		return true
 	}
 
 	private fun getQuickStepTouchSlopPx(): Int {

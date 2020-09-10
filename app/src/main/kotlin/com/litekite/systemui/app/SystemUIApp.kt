@@ -46,7 +46,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	}
 
 	@Inject
-	private lateinit var configController: ConfigController
+	lateinit var configController: ConfigController
 	private var bootCompleted: Boolean = false
 	private var serviceStarted: Boolean = false
 
