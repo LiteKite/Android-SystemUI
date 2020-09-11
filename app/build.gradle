@@ -149,7 +149,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
 
-task deploy(dependsOn: "assembleRelease") {
+task deploy(dependsOn: [clean, assemble]) {
+
+    assemble.mustRunAfter clean
+
     doLast {
         def appName = "CarSystemUI"
 
