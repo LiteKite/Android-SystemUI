@@ -45,9 +45,8 @@ class CarController @Inject constructor(private val context: Context) :
 	private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->
 		SystemUI.printLog(TAG, "onLifecycleChanged: $isConnected Car: $car")
 		this.isConnected = isConnected
-		notifyConnectionState(isConnected)
+		notifyConnectionState()
 		if (!isConnected) {
-			car.disconnect()
 			startCar()
 		}
 	}
@@ -78,12 +77,21 @@ class CarController @Inject constructor(private val context: Context) :
 		}
 	}
 
-	fun destroy() {
-		if (isConnected) car.disconnect()
+	override fun addCallback(cb: Callback) {
+		super.addCallback(cb)
+		if (isConnected) {
+			notifyConnectionState()
+		}
 	}
 
-	private fun notifyConnectionState(isConnected: Boolean) {
+	private fun notifyConnectionState() {
 		callbacks.forEach { it.onConnectionChanged(isConnected) }
+	}
+
+	fun destroy() {
+		if (isConnected) {
+			car.disconnect()
+		}
 	}
 
 	interface Callback {

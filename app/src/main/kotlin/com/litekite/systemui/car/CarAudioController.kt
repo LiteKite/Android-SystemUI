@@ -65,9 +65,6 @@ class CarAudioController @Inject constructor() :
 
 	init {
 		carController.addCallback(carConnectionCallback)
-		if (carController.isConnected) {
-			createCarAudioManager()
-		}
 	}
 
 	private fun createCarAudioManager() {

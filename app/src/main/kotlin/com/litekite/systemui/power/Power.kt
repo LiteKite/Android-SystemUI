@@ -96,7 +96,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	override fun onConfigChanged(newConfig: Configuration) {
 		super.onConfigChanged(newConfig)
 		val mask = ActivityInfo.CONFIG_MCC or ActivityInfo.CONFIG_MNC
-		// Safe to modify mLastConfiguration here as it's only updated by the main thread (here).
+		// Safe to modify lastConfiguration here as it's only updated by the main thread (here).
 		if (lastConfiguration.updateFrom(newConfig) and mask != 0) {
 			// This initialization method may be called on a configuration change. Only one set of
 			// ongoing callbacks should be occurring, so remove any now. updateTemperatureWarning will
