@@ -21,6 +21,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.UserHandle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
@@ -82,7 +83,13 @@ class BluetoothController constructor(private val context: Context) : BroadcastR
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
 		filter.addAction(BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED)
-		context.registerReceiver(this, filter)
+		context.registerReceiverAsUser(
+			this,
+			UserHandle.ALL,
+			filter,
+			null,
+			null
+		)
 	}
 
 	fun stopListening() {

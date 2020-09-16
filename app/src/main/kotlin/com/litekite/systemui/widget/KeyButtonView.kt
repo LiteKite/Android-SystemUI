@@ -137,7 +137,6 @@ class KeyButtonView @JvmOverloads constructor(
 					// Provide the same haptic feedback that the system offers for virtual keys.
 					performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
 				}
-				playSoundEffect(SoundEffectConstants.CLICK)
 				removeCallbacks(performLongPress)
 				postDelayed(performLongPress, ViewConfiguration.getLongPressTimeout().toLong())
 			}
@@ -164,7 +163,6 @@ class KeyButtonView @JvmOverloads constructor(
 				}
 				if (code != 0) {
 					if (doIt) {
-						playSoundEffect(SoundEffectConstants.CLICK)
 						sendEvent(KeyEvent.ACTION_UP, 0)
 						sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED)
 					} else {
@@ -175,6 +173,7 @@ class KeyButtonView @JvmOverloads constructor(
 						sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED)
 					}
 				}
+				playSoundEffect(SoundEffectConstants.CLICK)
 				performClick()
 				removeCallbacks(performLongPress)
 			}

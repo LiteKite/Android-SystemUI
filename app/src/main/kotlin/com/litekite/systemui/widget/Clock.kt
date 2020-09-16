@@ -103,7 +103,7 @@ class Clock @JvmOverloads constructor(
 			val handler = Handler(handleThread.looper)
 			context.registerReceiverAsUser(
 				receiver,
-				UserHandle.getUserHandleForUid(UserHandle.myUserId()),
+				UserHandle.ALL,
 				filter,
 				null,
 				handler
@@ -138,7 +138,7 @@ class Clock @JvmOverloads constructor(
 
 	private fun updateClock() {
 		calendar.timeInMillis = System.currentTimeMillis()
-		val is24HourFormat = DateFormat.is24HourFormat(context, UserHandle.myUserId())
+		val is24HourFormat = DateFormat.is24HourFormat(context, UserHandle.CURRENT.identifier)
 		val format = if (showSeconds) {
 			if (is24HourFormat) {
 				"HH:mm:ss"

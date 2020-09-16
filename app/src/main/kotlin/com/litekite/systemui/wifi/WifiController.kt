@@ -23,6 +23,7 @@ import android.content.IntentFilter
 import android.net.*
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+import android.os.UserHandle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
@@ -93,7 +94,13 @@ class WifiController constructor(private val context: Context) : BroadcastReceiv
 		val filter = IntentFilter()
 		filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION)
 		filter.addAction(WifiManager.RSSI_CHANGED_ACTION)
-		context.registerReceiver(this, filter)
+		context.registerReceiverAsUser(
+			this,
+			UserHandle.ALL,
+			filter,
+			null,
+			null
+		)
 		// just receive notifications for scanned networks without switching network
 		connectivityManager?.registerNetworkCallback(getNetworkRequest(), networkCallback)
 	}

@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.UserHandle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 
@@ -115,7 +116,13 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
 		filter.addAction(BluetoothHeadsetClient.ACTION_AG_EVENT)
-		context.registerReceiver(this, filter)
+		context.registerReceiverAsUser(
+			this,
+			UserHandle.ALL,
+			filter,
+			null,
+			null
+		)
 	}
 
 	fun stopListening() {
