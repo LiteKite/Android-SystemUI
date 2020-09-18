@@ -145,7 +145,7 @@ class SystemUIApp : Application(), SystemUIServiceProvider {
 	override fun onConfigurationChanged(newConfig: Configuration) {
 		super.onConfigurationChanged(newConfig)
 		if (serviceStarted) {
-			configController.onConfigChanged(newConfig)
+			configController.configChanged(newConfig)
 		}
 	}
 

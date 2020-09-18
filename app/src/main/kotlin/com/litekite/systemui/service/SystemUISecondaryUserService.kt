@@ -19,6 +19,7 @@ package com.litekite.systemui.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
+import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.base.SystemUIServiceProvider
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -29,6 +30,12 @@ import java.io.PrintWriter
  * @since 1.0
  */
 class SystemUISecondaryUserService : Service() {
+
+	companion object {
+
+		val TAG = SystemUISecondaryUserService::class.java.simpleName
+
+	}
 
 	override fun onCreate() {
 		super.onCreate()
@@ -57,6 +64,13 @@ class SystemUISecondaryUserService : Service() {
 				if (name.endsWith(svc)) it.dump(fd, pw, args)
 			}
 		}
+	}
+
+	override fun onDestroy() {
+		SystemUI.printLog(TAG, "onDestroy:")
+		val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
+		services.forEach { it.destroy() }
+		super.onDestroy()
 	}
 
 }

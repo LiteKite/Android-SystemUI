@@ -166,4 +166,6 @@ abstract class CarPropertyController constructor(private val carController: CarC
 
 	protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
 
+	protected abstract fun destroy()
+
 }

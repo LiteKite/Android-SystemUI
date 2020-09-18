@@ -45,17 +45,19 @@ abstract class SystemUI : SystemUIServiceProvider {
 	lateinit var context: Context
 	lateinit var components: MutableMap<Class<*>, Any>
 
-	abstract fun start()
-
-	open fun onBootCompleted() {}
-
-	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
-
 	@Suppress("UNCHECKED_CAST")
 	override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T
 
 	fun <T, C : T> putComponent(interfaceType: Class<T>, component: C) {
 		components[interfaceType] = component as Any
 	}
+
+	abstract fun start()
+
+	open fun onBootCompleted() {}
+
+	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
+
+	abstract fun destroy()
 
 }

@@ -70,6 +70,9 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 
 	private lateinit var userController: CarUserManagerHelper
 	private lateinit var bottomNavBarWindowController: BottomNavBarWindowController
+	private lateinit var statusBarServiceController: StatusBarServiceController
+	private lateinit var configController: ConfigController
+	private lateinit var taskStackController: TaskStackController
 	private lateinit var bottomNavBarWindow: FrameLayout
 	private lateinit var bottomNavBarView: ViewGroup
 
@@ -93,6 +96,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	override fun start() {
+		printLog(TAG, "start:")
 		putComponent(BottomNavBar::class.java, this)
 		// Hilt dependency entry point
 		val entryPointAccessors = EntryPointAccessors.fromApplication(
@@ -108,11 +112,14 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		// Updates current user avatar
 		updateUserAvatar()
 		// Listens for window and system ui visibility changes
-		entryPointAccessors.getStatusBarServiceController().addCallback(this)
+		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
+		statusBarServiceController.addCallback(this)
 		// Listens for config changes
-		entryPointAccessors.getConfigController().addCallback(this)
+		configController = entryPointAccessors.getConfigController()
+		configController.addCallback(this)
 		// Listens for app task stack changes
-		entryPointAccessors.getTaskStackController().addCallback(taskStackChangeCallback)
+		taskStackController = entryPointAccessors.getTaskStackController()
+		taskStackController.addCallback(taskStackChangeCallback)
 		// Registers event listeners
 		registerListeners()
 	}
@@ -183,6 +190,18 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
 		super.dump(fd, pw, args)
 		pw?.println("bottomNavBarView: $bottomNavBarView")
+	}
+
+	override fun destroy() {
+		printLog(TAG, "destroy:")
+		// Removes window and system ui visibility change callback
+		statusBarServiceController.removeCallback(this)
+		// Removes config change callback
+		configController.removeCallback(this)
+		// Removes app task stack change callback
+		taskStackController.removeCallback(taskStackChangeCallback)
+		// Removes bottom nav bar window view
+		bottomNavBarWindowController.remove()
 	}
 
 }

@@ -67,4 +67,11 @@ class StatusBarWindowController @Inject constructor(private val context: Context
 		windowManager.addView(this.statusBarView, lp)
 	}
 
+	/**
+	 * Removes the status bar view from the window manager.
+	 */
+	fun remove() {
+		windowManager.removeViewImmediate(statusBarView)
+	}
+
 }

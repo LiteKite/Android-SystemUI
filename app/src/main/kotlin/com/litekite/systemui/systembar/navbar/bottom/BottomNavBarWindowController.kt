@@ -27,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Encapsulates all logic for the bottom navigation bar window state management.
+ * Encapsulates all logic for the bottom nav bar window state management.
  *
  * @author Vignesh S
  * @version 1.0, 02/08/2020
@@ -42,7 +42,7 @@ class BottomNavBarWindowController @Inject constructor(private val context: Cont
 	private var barHeight = context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
 
 	/**
-	 * Adds the bottom navigation bar view to the window manager.
+	 * Adds the bottom nav bar view to the window manager.
 	 *
 	 * @param bottomNavBarView The view to add.
 	 */
@@ -65,6 +65,13 @@ class BottomNavBarWindowController @Inject constructor(private val context: Cont
 		lp.packageName = context.packageName
 		this.bottomNavBarView = bottomNavBarView
 		windowManager.addView(this.bottomNavBarView, lp)
+	}
+
+	/**
+	 * Removes the bottom nav bar view from the window manager.
+	 */
+	fun remove() {
+		windowManager.removeViewImmediate(bottomNavBarView)
 	}
 
 }

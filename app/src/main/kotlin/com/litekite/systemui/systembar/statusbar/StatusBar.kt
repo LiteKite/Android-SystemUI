@@ -64,6 +64,9 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 	}
 
 	private lateinit var statusBarWindowController: StatusBarWindowController
+	private lateinit var statusBarServiceController: StatusBarServiceController
+	private lateinit var configController: ConfigController
+	private lateinit var taskStackController: TaskStackController
 	private lateinit var statusBarWindow: FrameLayout
 	private lateinit var statusBarView: ViewGroup
 
@@ -86,6 +89,7 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 	}
 
 	override fun start() {
+		printLog(TAG, "start")
 		putComponent(StatusBar::class.java, this)
 		// Hilt Dependency Entry Point
 		val entryPointAccessors = EntryPointAccessors.fromApplication(
@@ -94,14 +98,17 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 		)
 		// Initiates the status bar window controller
 		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
-		// Creates status bar view
+		// Creates status bar window view
 		makeStatusBarView()
 		// Listens for window and system ui visibility changes
-		entryPointAccessors.getStatusBarServiceController().addCallback(this)
+		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
+		statusBarServiceController.addCallback(this)
 		// Listens for config changes
-		entryPointAccessors.getConfigController().addCallback(this)
+		configController = entryPointAccessors.getConfigController()
+		configController.addCallback(this)
 		// Listens for app task stack changes
-		entryPointAccessors.getTaskStackController().addCallback(taskStackChangeCallback)
+		taskStackController = entryPointAccessors.getTaskStackController()
+		taskStackController.addCallback(taskStackChangeCallback)
 	}
 
 	private fun makeStatusBarView() {
@@ -155,7 +162,24 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
 		super.dump(fd, pw, args)
+		pw?.println("statusBarWindowController: $statusBarWindowController")
+		pw?.println("statusBarServiceController: $statusBarServiceController")
+		pw?.println("configController: $configController")
+		pw?.println("TaskStackController: $TaskStackController")
+		pw?.println("statusBarWindow: $statusBarWindow")
 		pw?.println("statusBarView: $statusBarView")
+	}
+
+	override fun destroy() {
+		printLog(TAG, "destroy:")
+		// Removes window and system ui visibility change callback
+		statusBarServiceController.removeCallback(this)
+		// Removes config change callback
+		configController.removeCallback(this)
+		// Removes app task stack change callback
+		taskStackController.removeCallback(taskStackChangeCallback)
+		// Removes status bar window view
+		statusBarWindowController.remove()
 	}
 
 }

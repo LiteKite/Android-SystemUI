@@ -44,18 +44,15 @@ class SystemBars : SystemUI() {
 
 	override fun onBootCompleted() {
 		super.onBootCompleted()
+		printLog(TAG, "onBootCompleted:")
 		// Notifying status bar about boot complete event
 		statusBar.onBootCompleted()
 		// Notifying nav bars about boot complete event
 		navBarComponents.forEach { it.onBootCompleted() }
 	}
 
-	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		super.dump(fd, pw, args)
-		statusBar.dump(fd, pw, args)
-	}
-
 	private fun createStatusBarFromConfig() {
+		printLog(TAG, "createStatusBarFromConfig: staring status bar...")
 		val serviceComponent = context.resources.getString(R.string.config_statusBarComponent)
 		statusBar = Class.forName(serviceComponent).newInstance() as SystemUI
 		statusBar.context = context
@@ -75,6 +72,22 @@ class SystemBars : SystemUI() {
 			navBar.start()
 			navBarComponents.add(navBar)
 		}
+	}
+
+	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+		super.dump(fd, pw, args)
+		// Dumping status bar
+		statusBar.dump(fd, pw, args)
+		// Dumping nav bars
+		navBarComponents.forEach { it.dump(fd, pw, args) }
+	}
+
+	override fun destroy() {
+		printLog(TAG, "destroy")
+		// Destroys status bar
+		statusBar.destroy()
+		// Destroys nav bars
+		navBarComponents.forEach { it.destroy() }
 	}
 
 }

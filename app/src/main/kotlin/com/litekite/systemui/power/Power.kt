@@ -27,6 +27,8 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
@@ -54,6 +56,9 @@ class Power : SystemUI(), ConfigController.Callback {
 	private val handler = Handler()
 	private val lastConfiguration = Configuration()
 	private lateinit var hardwarePropertiesManager: HardwarePropertiesManager
+	private var thermalService: IThermalService? = null
+	private val thermalEventListener = ThermalEventListener()
+	private lateinit var configController: ConfigController
 
 	// by using the same instance (method references are not guaranteed to be the same object
 	// We create a method reference here so that we are guaranteed that we can remove a callback
@@ -61,6 +66,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	private val updateTempCallback = Runnable { updateTemperatureWarning() }
 
 	override fun start() {
+		printLog(TAG, "start:")
 		putComponent(Power::class.java, this)
 		// Hilt Dependency Entry Point
 		val entryPointAccessors = EntryPointAccessors.fromApplication(
@@ -72,8 +78,9 @@ class Power : SystemUI(), ConfigController.Callback {
 		lastConfiguration.setTo(context.resources.configuration)
 		registerThermalListener()
 		updateTemperatureWarning()
-		// Listens for app task stack changes
-		entryPointAccessors.getConfigController().addCallback(this)
+		// Listens for config changes
+		configController = entryPointAccessors.getConfigController()
+		configController.addCallback(this)
 	}
 
 	private fun registerThermalListener() {
@@ -82,9 +89,9 @@ class Power : SystemUI(), ConfigController.Callback {
 		// usual polling, to react to temperature jumps more quickly.
 		val binder: IBinder? = ServiceManager.getService("thermalservice")
 		if (binder != null) {
-			val thermalService: IThermalService = IThermalService.Stub.asInterface(binder)
+			thermalService = IThermalService.Stub.asInterface(binder)
 			try {
-				thermalService.registerThermalEventListener(ThermalEventListener())
+				thermalService?.registerThermalEventListener(thermalEventListener)
 			} catch (e: RemoteException) {
 				// Should never happen.
 			}
@@ -94,6 +101,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	}
 
 	override fun onConfigChanged(newConfig: Configuration) {
+		printLog(TAG, "onConfigChanged:")
 		super.onConfigChanged(newConfig)
 		val mask = ActivityInfo.CONFIG_MCC or ActivityInfo.CONFIG_MNC
 		// Safe to modify lastConfiguration here as it's only updated by the main thread (here).
@@ -116,6 +124,23 @@ class Power : SystemUI(), ConfigController.Callback {
 			printLog(TAG, "temperature: $temp")
 		}
 		handler.postDelayed(updateTempCallback, TEMPERATURE_INTERVAL)
+	}
+
+	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+		super.dump(fd, pw, args)
+		pw?.println("hardwarePropertiesManager: $hardwarePropertiesManager")
+		pw?.println("thermalService: $thermalService")
+		pw?.println("configController: $configController")
+	}
+
+	override fun destroy() {
+		printLog(TAG, "destroy:")
+		// Removes thermal event listener
+		thermalService?.unregisterThermalEventListener(thermalEventListener)
+		// Remove update temperature callback
+		handler.removeCallbacks(updateTempCallback)
+		// Removes config change callback
+		configController.removeCallback(this)
 	}
 
 	/**

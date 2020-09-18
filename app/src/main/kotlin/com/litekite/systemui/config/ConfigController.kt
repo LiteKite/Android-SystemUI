@@ -43,7 +43,7 @@ class ConfigController @Inject constructor(context: Context) :
 		uiMode = lastConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
 	}
 
-	fun onConfigChanged(newConfig: Configuration) {
+	fun configChanged(newConfig: Configuration) {
 		// Configuration change
 		callbacks.forEach { it.onConfigChanged(newConfig) }
 		// Density or font scale change
