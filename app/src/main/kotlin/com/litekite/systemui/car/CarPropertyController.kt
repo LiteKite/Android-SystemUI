@@ -21,17 +21,22 @@ import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.property.CarPropertyManager
 import com.litekite.systemui.base.SystemUI
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 /**
  * @author Vignesh S
  * @version 1.0, 05/03/2020
  * @since 1.0
  */
-abstract class CarPropertyController constructor(private val carController: CarController) {
+abstract class CarPropertyController constructor(private val carController: CarController) :
+	CoroutineScope {
 
 	companion object {
 		val TAG = CarPropertyController::class.java.simpleName
 	}
+
+	override val coroutineContext: CoroutineContext = Dispatchers.Main
 
 	private var carPropertyManager: CarPropertyManager? = null
 
@@ -98,21 +103,26 @@ abstract class CarPropertyController constructor(private val carController: CarC
 		return true
 	}
 
-	fun getCarProperty(properties: IntArray) {
+	fun fetchCarProperty(properties: IntArray) {
 		if (!carController.isConnected) {
-			SystemUI.printLog(TAG, "getCarProperty: Car is not connected")
+			SystemUI.printLog(TAG, "fetchCarProperty: Car is not connected")
 			return
 		}
-		properties.forEach {
-			try {
-				val propertyValue = carPropertyManager?.getProperty<Any>(
-					it,
-					VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
-				)
-				carPropertyCallback.onGetEvent(propertyValue)
-			} catch (e: RuntimeException) {
-				SystemUI.printLog(TAG, "getCarProperty - RuntimeException: $e")
-			}
+		properties.forEach { launch { fetch(it) } }
+	}
+
+	private suspend fun fetch(property: Int) = withContext(Dispatchers.Main) {
+		val deferred = async(Dispatchers.IO) {
+			carPropertyManager?.getProperty<Any>(
+				property,
+				VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+			)
+		}
+		try {
+			val propertyValue = deferred.await()
+			carPropertyCallback.onGetEvent(propertyValue)
+		} catch (e: RuntimeException) {
+			SystemUI.printLog(TAG, "fetch - RuntimeException: $e")
 		}
 	}
 
@@ -121,6 +131,10 @@ abstract class CarPropertyController constructor(private val carController: CarC
 			SystemUI.printLog(TAG, "setCarProperty: Car is not connected")
 			return
 		}
+		launch { set(propertyId, value) }
+	}
+
+	private suspend fun set(propertyId: Int, value: Any) = withContext(Dispatchers.IO) {
 		try {
 			carPropertyManager?.setProperty(
 				Any::class.java,
@@ -129,7 +143,7 @@ abstract class CarPropertyController constructor(private val carController: CarC
 				value
 			)
 		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "setCarProperty - RuntimeException: $e")
+			SystemUI.printLog(TAG, "set - RuntimeException: $e")
 		}
 	}
 
