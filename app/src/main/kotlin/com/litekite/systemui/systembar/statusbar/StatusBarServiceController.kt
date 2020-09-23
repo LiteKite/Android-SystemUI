@@ -58,6 +58,7 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(),
 		val TAG = StatusBarServiceController::class.java.simpleName
 	}
 
+	@Suppress("unused")
 	private enum class WindowType(@StatusBarManager.WindowType private val window: Int) {
 
 		WINDOW_STATUS_BAR(StatusBarManager.WINDOW_STATUS_BAR),
@@ -68,7 +69,7 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(),
 			fun valueOf(@StatusBarManager.WindowType window: Int) =
 				values().first { it.window == window }
 
-			fun windowTypeString(@StatusBarManager.WindowType window: Int) = valueOf(window).name
+			fun windowTypeToString(@StatusBarManager.WindowType window: Int) = valueOf(window).name
 
 		}
 
@@ -99,7 +100,7 @@ class StatusBarServiceController @Inject constructor() : IStatusBar.Stub(),
 		StatusBarManager.windowStateToString(state)
 
 	private fun getWindowTypeString(@StatusBarManager.WindowType window: Int) =
-		WindowType.windowTypeString(window)
+		WindowType.windowTypeToString(window)
 
 	override fun hideRecentApps(triggeredFromAltTab: Boolean, triggeredFromHomeKey: Boolean) {}
 

@@ -16,18 +16,16 @@
 
 package com.litekite.systemui.bluetooth
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothHeadsetClient
 import android.bluetooth.BluetoothProfile
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.os.UserHandle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
+import com.litekite.systemui.bluetooth.base.BluetoothHost
 
 /**
  * Controller that monitors signal strength for a device that is connected via bluetooth.
@@ -36,15 +34,13 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 25/02/2020
  * @since 1.0
  */
-class SignalController constructor(private val context: Context) : BroadcastReceiver(),
+class SignalController constructor(context: Context) : BluetoothHost(context),
 	CallbackProvider<SignalController.Callback> {
 
 	companion object {
 		val TAG = SignalController::class.java.simpleName
 	}
 
-	private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-	private var bluetoothHeadsetClient: BluetoothHeadsetClient? = null
 	override val callbacks = ArrayList<Callback>()
 
 	/**
@@ -88,45 +84,15 @@ class SignalController constructor(private val context: Context) : BroadcastRece
 		ACTIVE_ROAMING(1)
 	}
 
-	private val hfpServiceListener = object : BluetoothProfile.ServiceListener {
-
-		override fun onServiceDisconnected(profile: Int) {
-			if (profile == BluetoothProfile.HEADSET_CLIENT) {
-				bluetoothHeadsetClient = null
-			}
-		}
-
-		override fun onServiceConnected(profile: Int, proxy: BluetoothProfile?) {
-			if (profile == BluetoothProfile.HEADSET_CLIENT) {
-				bluetoothHeadsetClient = proxy as BluetoothHeadsetClient
-			}
-		}
-
-	}
-
 	init {
-		bluetoothAdapter?.getProfileProxy(
-			context,
-			hfpServiceListener,
-			BluetoothProfile.HEADSET_CLIENT
-		)
+		registerHfpProfileListener()
 	}
 
-	fun startListening() {
+	override fun getIntentFilters(): IntentFilter {
 		val filter = IntentFilter()
 		filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED)
 		filter.addAction(BluetoothHeadsetClient.ACTION_AG_EVENT)
-		context.registerReceiverAsUser(
-			this,
-			UserHandle.ALL,
-			filter,
-			null,
-			null
-		)
-	}
-
-	fun stopListening() {
-		context.unregisterReceiver(this)
+		return filter
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
