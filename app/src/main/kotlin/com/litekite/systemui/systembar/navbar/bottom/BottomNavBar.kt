@@ -29,7 +29,7 @@ import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
 import com.litekite.systemui.taskstack.TaskStackController
-import com.litekite.systemui.util.IntentUtils
+import com.litekite.systemui.util.IntentUtil
 import com.litekite.systemui.util.taskChanged
 import com.litekite.systemui.widget.AppButtonView
 import com.litekite.systemui.widget.KeyButtonView
@@ -141,7 +141,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		// Short press event that launches user settings activity
 		bottomNavBarView.cib_user_avatar.setOnClickListener {
 			val action = context.getString(R.string.action_user_settings)
-			IntentUtils.launchActivity(context, action)
+			IntentUtil.launchActivity(context, action)
 		}
 	}
 

@@ -22,7 +22,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatImageButton
 import com.litekite.systemui.R
-import com.litekite.systemui.util.IntentUtils
+import com.litekite.systemui.util.IntentUtil
 
 /**
  * @author Vignesh S
@@ -65,7 +65,7 @@ class AppButtonView @JvmOverloads constructor(
 
 	override fun onClick(v: View?) {
 		if (v != null) {
-			IntentUtils.launchActivity(context, action, pkg, component)
+			IntentUtil.launchActivity(context, action, pkg, component)
 		}
 	}
 

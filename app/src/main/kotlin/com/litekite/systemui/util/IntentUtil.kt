@@ -26,7 +26,7 @@ import android.os.UserHandle
  * @version 1.0, 30/08/2020
  * @since 1.0
  */
-object IntentUtils {
+object IntentUtil {
 
 	fun launchActivity(
 		context: Context,
