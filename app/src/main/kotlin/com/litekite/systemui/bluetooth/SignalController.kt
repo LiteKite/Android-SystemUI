@@ -25,7 +25,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.bluetooth.base.BluetoothHost
+import com.litekite.systemui.bluetooth.base.BluetoothHostController
 
 /**
  * Controller that monitors signal strength for a device that is connected via bluetooth.
@@ -34,7 +34,7 @@ import com.litekite.systemui.bluetooth.base.BluetoothHost
  * @version 1.0, 25/02/2020
  * @since 1.0
  */
-class SignalController constructor(context: Context) : BluetoothHost(context),
+class SignalController constructor(context: Context) : BluetoothHostController(context),
 	CallbackProvider<SignalController.Callback> {
 
 	companion object {

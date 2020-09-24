@@ -22,14 +22,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.bluetooth.base.BluetoothHost
+import com.litekite.systemui.bluetooth.base.BluetoothHostController
 
 /**
  * @author Vignesh S
  * @version 1.0, 26/02/2020
  * @since 1.0
  */
-class BluetoothController constructor(context: Context) : BluetoothHost(context),
+class BluetoothController constructor(context: Context) : BluetoothHostController(context),
 	CallbackProvider<BluetoothController.Callback> {
 
 	companion object {

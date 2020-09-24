@@ -25,7 +25,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.bluetooth.base.BluetoothHost
+import com.litekite.systemui.bluetooth.base.BluetoothHostController
 
 /**
  * @see BatteryController that is specific to the Auto use-case. For Auto, the battery icon
@@ -36,7 +36,7 @@ import com.litekite.systemui.bluetooth.base.BluetoothHost
  * @version 1.0, 21/02/2020
  * @since 1.0
  */
-class BatteryController constructor(context: Context) : BluetoothHost(context),
+class BatteryController constructor(context: Context) : BluetoothHostController(context),
 	CallbackProvider<BatteryController.Callback> {
 
 	companion object {

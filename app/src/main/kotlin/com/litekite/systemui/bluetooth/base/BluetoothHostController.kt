@@ -28,10 +28,10 @@ import com.litekite.systemui.base.SystemUI
  * @version 1.0, 22/09/2020
  * @since 1.0
  */
-abstract class BluetoothHost(private val context: Context) : BroadcastReceiver() {
+abstract class BluetoothHostController(private val context: Context) : BroadcastReceiver() {
 
 	companion object {
-		val TAG = BluetoothHost::class.java.simpleName
+		val TAG = BluetoothHostController::class.java.simpleName
 	}
 
 	@Suppress("unused")
