@@ -96,50 +96,22 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
+		SystemUI.printLog(TAG, "onReceive: action: ${intent?.action})")
 		when (intent?.action) {
 			BluetoothHeadsetClient.ACTION_AG_EVENT -> {
-				// Network State
-				val extraNetworkState = intent.getIntExtra(
-					BluetoothHeadsetClient.EXTRA_NETWORK_STATUS,
-					NetworkState.INVALID.state
-				)
-				if (extraNetworkState != NetworkState.INVALID.state) {
-					SystemUI.printLog(TAG, "EXTRA_NETWORK_STATUS:  $extraNetworkState")
-					if (extraNetworkState == NetworkState.UNAVAILABLE.state) {
-						updateSignalLevel(SignalLevel.EMPTY)
-					}
-				}
-				// Signal State
-				val extraSignalLevel = intent.getIntExtra(
-					BluetoothHeadsetClient.EXTRA_NETWORK_SIGNAL_STRENGTH,
-					SignalLevel.INVALID.level
-				)
-				val signalLevel = SignalLevel.valueOf(extraSignalLevel)
-				updateSignalLevel(signalLevel)
-				// Roaming State
-				val extraRoamingState = intent.getIntExtra(
-					BluetoothHeadsetClient.EXTRA_NETWORK_ROAMING,
-					RoamingState.INVALID.state
-				)
-				if (extraRoamingState != RoamingState.INVALID.state) {
-					SystemUI.printLog(TAG, "EXTRA_NETWORK_ROAMING:  $extraRoamingState")
-					if (extraRoamingState == RoamingState.ACTIVE_ROAMING.state) {
-						notifyRoamingStateAvailable()
-					} else if (extraRoamingState == RoamingState.NO_ROAMING.state) {
-						notifyRoamingStateUnavailable()
-					}
-				}
+				updateSignalLevel(intent.extras)
+				updateRoamingState(intent.extras)
 			}
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED -> {
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
 				val oldState = intent.getIntExtra(BluetoothProfile.EXTRA_PREVIOUS_STATE, -1)
 				SystemUI.printLog(
-					TAG, "ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
+					TAG,
+					"onReceive: ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
 				)
 				val device: BluetoothDevice? =
 					intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-				updateSignalState(device, newState)
+				updateConnectionState(device, newState)
 			}
 		}
 	}
@@ -147,7 +119,30 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 	/**
 	 * Notifies signal level states if it was a valid signal level
 	 */
-	private fun updateSignalLevel(signalLevel: SignalLevel) {
+	private fun updateSignalLevel(bundle: Bundle?) {
+		if (bundle == null) {
+			SystemUI.printLog(TAG, "updateSignalLevel: bundle is null. IGNORING...")
+			return
+		}
+		// Network State
+		val extraNetworkState = bundle.getInt(
+			BluetoothHeadsetClient.EXTRA_NETWORK_STATUS,
+			NetworkState.INVALID.state
+		)
+		if (extraNetworkState != NetworkState.INVALID.state) {
+			SystemUI.printLog(TAG, "updateSignalLevel: EXTRA_NETWORK_STATUS:  $extraNetworkState")
+			if (extraNetworkState == NetworkState.UNAVAILABLE.state) {
+				// Network is unavailable. Updating signal level as empty...
+				notifySignalLevelChanged(SignalLevel.EMPTY)
+				return
+			}
+		}
+		// Signal Level
+		val extraSignalLevel = bundle.getInt(
+			BluetoothHeadsetClient.EXTRA_NETWORK_SIGNAL_STRENGTH,
+			SignalLevel.INVALID.level
+		)
+		val signalLevel = SignalLevel.valueOf(extraSignalLevel)
 		if (signalLevel == SignalLevel.INVALID) {
 			SystemUI.printLog(TAG, "updateSignalLevel: Invalid signal level. IGNORING...")
 			return
@@ -157,29 +152,45 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 		notifySignalLevelChanged(signalLevel)
 	}
 
+	private fun updateRoamingState(bundle: Bundle?) {
+		if (bundle == null) {
+			SystemUI.printLog(TAG, "updateRoamingState: bundle is null. IGNORING...")
+			return
+		}
+		// Roaming State
+		val extraRoamingState = bundle.getInt(
+			BluetoothHeadsetClient.EXTRA_NETWORK_ROAMING,
+			RoamingState.INVALID.state
+		)
+		if (extraRoamingState != RoamingState.INVALID.state) {
+			SystemUI.printLog(TAG, "updateRoamingState: EXTRA_NETWORK_ROAMING:  $extraRoamingState")
+			if (extraRoamingState == RoamingState.ACTIVE_ROAMING.state) {
+				notifyRoamingStateAvailable()
+			} else if (extraRoamingState == RoamingState.NO_ROAMING.state) {
+				notifyRoamingStateUnavailable()
+			}
+		}
+	}
+
 	/**
 	 * Notifies the signal state depending on the given connection state from the
 	 * @see BluetoothDevice given
 	 */
-	private fun updateSignalState(device: BluetoothDevice?, newState: Int) {
+	private fun updateConnectionState(device: BluetoothDevice?, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
-				SystemUI.printLog(TAG, "updateSignalState - profile Connected!")
+				SystemUI.printLog(TAG, "updateConnectionState: profile Connected!")
 				if (device == null) {
-					SystemUI.printLog(TAG, "device is null. returning...")
+					SystemUI.printLog(TAG, "updateConnectionState: device is null. returning...")
 					return
 				}
 				// Check if signal information is available and immediately update.
-				val featuresBundle: Bundle =
-					bluetoothHeadsetClient?.getCurrentAgEvents(device) ?: return
-				val signalLevel = featuresBundle.getInt(
-					BluetoothHeadsetClient.EXTRA_NETWORK_SIGNAL_STRENGTH,
-					SignalLevel.INVALID.level
-				)
-				updateSignalLevel(SignalLevel.valueOf(signalLevel))
+				val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device) ?: return
+				updateSignalLevel(bundle)
+				updateRoamingState(bundle)
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
-				SystemUI.printLog(TAG, "updateSignalState - profile disconnected!")
+				SystemUI.printLog(TAG, "updateConnectionState: profile disconnected!")
 				notifySignalLevelUnavailable()
 			}
 		}
