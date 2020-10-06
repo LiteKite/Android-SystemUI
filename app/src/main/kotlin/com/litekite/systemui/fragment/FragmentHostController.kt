@@ -17,33 +17,182 @@
 package com.litekite.systemui.fragment
 
 import android.content.Context
+import android.content.res.Configuration
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentController
 import androidx.fragment.app.FragmentHostCallback
+import androidx.fragment.app.FragmentManager
+import java.io.FileDescriptor
+import java.io.PrintWriter
 
 /**
  * @author Vignesh S
  * @version 1.0, 24/09/2020
  * @since 1.0
  */
-class FragmentHostController(private val context: Context) {
+class FragmentHostController(private val context: Context, private val rootView: View) {
 
 	private val handler = Handler(Looper.getMainLooper())
+	private val callbacks: HashMap<String, ArrayList<FragmentCallback>?> = HashMap()
+	private lateinit var fragmentController: FragmentController
+
+	private val fragmentLifeCycleCallback = object : FragmentManager.FragmentLifecycleCallbacks() {
+
+		override fun onFragmentViewCreated(
+			fragmentManager: FragmentManager,
+			fragment: Fragment,
+			view: View,
+			savedInstanceState: Bundle?
+		) {
+			super.onFragmentViewCreated(fragmentManager, fragment, view, savedInstanceState)
+			fragmentViewCreated(fragment)
+		}
+
+		override fun onFragmentViewDestroyed(fragmentManager: FragmentManager, fragment: Fragment) {
+			super.onFragmentViewDestroyed(fragmentManager, fragment)
+			fragmentViewDestroyed(fragment)
+		}
+
+		override fun onFragmentDestroyed(fragmentManager: FragmentManager, fragment: Fragment) {
+			super.onFragmentDestroyed(fragmentManager, fragment)
+		}
+
+	}
 
 	init {
-		createFragmentController()
+		createFragmentController(null)
 	}
 
-	private fun createFragmentController() {
-		FragmentController.createController(HostCallbacks())
+	private fun createFragmentController(savedState: Parcelable?) {
+		fragmentController = FragmentController.createController(HostCallbacks())
+		fragmentController.attachHost(null)
+
+		getFragmentManager().registerFragmentLifecycleCallbacks(
+			fragmentLifeCycleCallback,
+			true
+		)
+
+		if (savedState != null) {
+			fragmentController.restoreSaveState(savedState)
+		}
+
+		// For now just keep all fragments in the resumed state.
+		fragmentController.dispatchCreate()
+		fragmentController.dispatchStart()
+		fragmentController.dispatchResume()
 	}
 
-	inner class HostCallbacks : FragmentHostCallback<FragmentHostController>(context, handler, 0) {
+	/**
+	 * Called when the configuration changes
+	 */
+	fun configChanged(newConfig: Configuration) {
+		fragmentController.dispatchConfigurationChanged(newConfig)
+	}
+
+	private fun getFragmentManager() = fragmentController.supportFragmentManager
+
+	fun addTagCallback(tag: String, fragmentCallback: FragmentCallback): FragmentHostController {
+		var fragmentCallbacks = callbacks[tag]
+		if (fragmentCallbacks == null) {
+			fragmentCallbacks = ArrayList()
+			callbacks[tag] = fragmentCallbacks
+		}
+		fragmentCallbacks.add(fragmentCallback)
+		val fragment = getFragmentManager().findFragmentByTag(tag)
+		if (fragment != null && fragment.view != null) {
+			fragmentCallback.onFragmentViewCreated(tag, fragment)
+		}
+		return this
+	}
+
+	fun removeTagCallback(tag: String, fragmentCallback: FragmentCallback) {
+		val fragmentCallbacks = callbacks[tag]
+		if (fragmentCallbacks != null && fragmentCallbacks.remove(fragmentCallback) &&
+			fragmentCallbacks.size == 0
+		) {
+			callbacks.remove(tag)
+		}
+	}
+
+	private fun fragmentViewCreated(fragment: Fragment) {
+		val tag = fragment.tag ?: ""
+		callbacks[tag]?.forEach { it.onFragmentViewCreated(tag, fragment) }
+	}
+
+	private fun <T : View> findViewById(id: Int): T = rootView.findViewById(id)
+
+	private fun fragmentViewDestroyed(fragment: Fragment) {
+		val tag = fragment.tag ?: ""
+		callbacks[tag]?.forEach { it.onFragmentViewDestroyed(tag, fragment) }
+	}
+
+	fun reloadFragments() {
+		// Save the old state.
+		val savedState = destroyFragmentController()
+		// Generate a new fragment host and restore its state.
+		createFragmentController(savedState)
+	}
+
+	private fun destroyFragmentController(): Parcelable? {
+		fragmentController.dispatchPause()
+		val savedState = fragmentController.saveAllState()
+		fragmentController.dispatchStop()
+		fragmentController.dispatchDestroy()
+		getFragmentManager().unregisterFragmentLifecycleCallbacks(fragmentLifeCycleCallback)
+		return savedState
+	}
+
+	private fun dump(
+		prefix: String,
+		fileDescriptor: FileDescriptor?,
+		writer: PrintWriter,
+		args: Array<out String>?
+	) {
+		TODO("Not yet implemented")
+	}
+
+	inner class HostCallbacks : FragmentHostCallback<FragmentHostController>
+		(context, handler, 0) {
 
 		override fun onGetHost(): FragmentHostController? {
 			return this@FragmentHostController
 		}
+
+		override fun onGetLayoutInflater(): LayoutInflater {
+			return LayoutInflater.from(context)
+		}
+
+		override fun onHasWindowAnimations(): Boolean {
+			return false
+		}
+
+		override fun onFindViewById(id: Int): View? {
+			return findViewById(id)
+		}
+
+		override fun onDump(
+			prefix: String,
+			fileDescriptor: FileDescriptor?,
+			writer: PrintWriter,
+			args: Array<out String>?
+		) {
+			super.onDump(prefix, fileDescriptor, writer, args)
+			dump(prefix, fileDescriptor, writer, args)
+		}
+
+	}
+
+	interface FragmentCallback {
+
+		fun onFragmentViewCreated(tag: String, fragment: Fragment)
+
+		fun onFragmentViewDestroyed(tag: String, fragment: Fragment)
 
 	}
 
