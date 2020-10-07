@@ -21,6 +21,7 @@ import android.content.Context
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.car.CarController
 import com.litekite.systemui.config.ConfigController
+import com.litekite.systemui.fragment.FragmentHostController
 import com.litekite.systemui.preference.PreferenceController
 import com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindowController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
@@ -41,6 +42,10 @@ import javax.inject.Singleton
 @InstallIn(ApplicationComponent::class)
 object SystemUIControllers {
 
+	@Provides
+	@Singleton
+	fun provideFragmentHostController(@ApplicationContext context: Context): FragmentHostController =
+		FragmentHostController(context)
 
 	@Provides
 	@Singleton
