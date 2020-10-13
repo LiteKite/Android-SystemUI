@@ -118,6 +118,10 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 		statusBarWindowController.add(statusBarWindow)
 	}
 
+	override fun getRootView(): View? {
+		return statusBarWindow
+	}
+
 	override fun onBootCompleted() {
 		super.onBootCompleted()
 		printLog(TAG, "onBootCompleted:")

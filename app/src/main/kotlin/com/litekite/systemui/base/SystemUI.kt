@@ -18,6 +18,13 @@ package com.litekite.systemui.base
 
 import android.content.Context
 import android.util.Log
+import android.view.View
+import androidx.fragment.app.FragmentManager
+import com.litekite.systemui.fragment.FragmentHostController
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -42,8 +49,34 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	}
 
+	@EntryPoint
+	@InstallIn(ApplicationComponent::class)
+	interface SystemUIEntryPoint {
+
+		fun getFragmentHostController(): FragmentHostController
+
+	}
+
+	private val fragmentHostController: FragmentHostController
 	lateinit var context: Context
 	lateinit var components: MutableMap<Class<*>, Any>
+
+	init {
+		// Hilt Dependency Entry Point
+		val entryPointAccessors = EntryPointAccessors.fromApplication(
+			context,
+			SystemUIEntryPoint::class.java
+		)
+		// Initialize Fragment Host Controller
+		fragmentHostController = entryPointAccessors.getFragmentHostController()
+	}
+
+	fun getSupportFragmentManager(): FragmentManager? {
+		getRootView()?.let {
+			return fragmentHostController.get(it).fragmentController.supportFragmentManager
+		}
+		return null
+	}
 
 	@Suppress("UNCHECKED_CAST")
 	override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T
@@ -53,6 +86,8 @@ abstract class SystemUI : SystemUIServiceProvider {
 	}
 
 	abstract fun start()
+
+	open fun getRootView(): View? = null
 
 	open fun onBootCompleted() {}
 

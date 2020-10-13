@@ -40,7 +40,7 @@ class FragmentHostProvider(private val context: Context, private val rootView: V
 
 	private val handler = Handler(Looper.getMainLooper())
 	private val callbacks: HashMap<String, ArrayList<FragmentCallback>?> = HashMap()
-	private lateinit var fragmentController: FragmentController
+	lateinit var fragmentController: FragmentController
 
 	private val fragmentLifeCycleCallback = object : FragmentManager.FragmentLifecycleCallbacks() {
 

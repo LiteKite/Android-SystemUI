@@ -131,6 +131,10 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		bottomNavBarWindowController.add(bottomNavBarWindow)
 	}
 
+	override fun getRootView(): View? {
+		return bottomNavBarWindow
+	}
+
 	private fun updateUserAvatar() {
 		bottomNavBarView.cib_user_avatar.setImageBitmap(
 			userController.getUserIcon(userController.currentForegroundUserInfo)
