@@ -22,7 +22,6 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.bluetooth.base.BluetoothHostController
@@ -97,10 +96,16 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 
 	override fun onReceive(context: Context?, intent: Intent?) {
 		SystemUI.printLog(TAG, "onReceive: action: ${intent?.action})")
-		when (intent?.action) {
+		val device: BluetoothDevice? =
+			intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+		if (device == null) {
+			SystemUI.printLog(TAG, "onReceive: device is null. returning...")
+			return
+		}
+		when (intent.action) {
 			BluetoothHeadsetClient.ACTION_AG_EVENT -> {
-				updateSignalLevel(intent.extras)
-				updateRoamingState(intent.extras)
+				updateSignalLevel(device)
+				updateRoamingState(device)
 			}
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED -> {
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
@@ -109,8 +114,6 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 					TAG,
 					"onReceive: ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
 				)
-				val device: BluetoothDevice? =
-					intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 				updateConnectionState(device, newState)
 			}
 		}
@@ -119,7 +122,9 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 	/**
 	 * Notifies signal level states if it was a valid signal level
 	 */
-	private fun updateSignalLevel(bundle: Bundle?) {
+	private fun updateSignalLevel(device: BluetoothDevice) {
+		// Check if signal information is available and immediately update.
+		val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device)
 		if (bundle == null) {
 			SystemUI.printLog(TAG, "updateSignalLevel: bundle is null. IGNORING...")
 			return
@@ -144,15 +149,17 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 		)
 		val signalLevel = SignalLevel.valueOf(extraSignalLevel)
 		if (signalLevel == SignalLevel.INVALID) {
-			SystemUI.printLog(TAG, "updateSignalLevel: Invalid signal level. IGNORING...")
+			SystemUI.printLog(TAG, "updateSignalLevel: invalid signal level. IGNORING...")
 			return
 		}
-		SystemUI.printLog(TAG, "Signal level: ${signalLevel.level}")
+		SystemUI.printLog(TAG, "updateSignalLevel: signal level: ${signalLevel.level}")
 		// Valid Signal Level
 		notifySignalLevelChanged(signalLevel)
 	}
 
-	private fun updateRoamingState(bundle: Bundle?) {
+	private fun updateRoamingState(device: BluetoothDevice) {
+		// Check if signal information is available and immediately update.
+		val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device)
 		if (bundle == null) {
 			SystemUI.printLog(TAG, "updateRoamingState: bundle is null. IGNORING...")
 			return
@@ -176,18 +183,12 @@ class SignalController constructor(context: Context) : BluetoothHostController(c
 	 * Notifies the signal state depending on the given connection state from the
 	 * @see BluetoothDevice given
 	 */
-	private fun updateConnectionState(device: BluetoothDevice?, newState: Int) {
+	private fun updateConnectionState(device: BluetoothDevice, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
 				SystemUI.printLog(TAG, "updateConnectionState: profile Connected!")
-				if (device == null) {
-					SystemUI.printLog(TAG, "updateConnectionState: device is null. returning...")
-					return
-				}
-				// Check if signal information is available and immediately update.
-				val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device) ?: return
-				updateSignalLevel(bundle)
-				updateRoamingState(bundle)
+				updateSignalLevel(device)
+				updateRoamingState(device)
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(TAG, "updateConnectionState: profile disconnected!")

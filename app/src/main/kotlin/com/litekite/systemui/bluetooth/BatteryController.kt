@@ -22,7 +22,6 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.bluetooth.base.BluetoothHostController
@@ -80,9 +79,14 @@ class BatteryController constructor(context: Context) : BluetoothHostController(
 
 	override fun onReceive(context: Context?, intent: Intent?) {
 		SystemUI.printLog(TAG, "onReceive: action: ${intent?.action})")
-		when (intent?.action) {
+		val device: BluetoothDevice? = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+		if (device == null) {
+			SystemUI.printLog(TAG, "onReceive: device is null. returning...")
+			return
+		}
+		when (intent.action) {
 			BluetoothHeadsetClient.ACTION_AG_EVENT -> {
-				updateBatteryLevel(intent.extras)
+				updateBatteryLevel(device)
 			}
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED -> {
 				val newState = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, -1)
@@ -91,8 +95,6 @@ class BatteryController constructor(context: Context) : BluetoothHostController(
 					TAG,
 					"onReceive: ACTION_CONNECTION_STATE_CHANGED: $oldState -> $newState"
 				)
-				val device: BluetoothDevice? =
-					intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 				updateConnectionState(device, newState)
 			}
 		}
@@ -101,7 +103,9 @@ class BatteryController constructor(context: Context) : BluetoothHostController(
 	/**
 	 * Notifies battery level states if it was a valid battery level
 	 */
-	private fun updateBatteryLevel(bundle: Bundle?) {
+	private fun updateBatteryLevel(device: BluetoothDevice) {
+		// Check if battery information is available and immediately update.
+		val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device)
 		if (bundle == null) {
 			SystemUI.printLog(TAG, "updateBatteryLevel: bundle is null. IGNORING...")
 			return
@@ -112,10 +116,10 @@ class BatteryController constructor(context: Context) : BluetoothHostController(
 		)
 		val batteryLevel = BatteryLevel.valueOf(extraBatteryLevel)
 		if (batteryLevel == BatteryLevel.INVALID) {
-			SystemUI.printLog(TAG, "updateBatteryLevel: Invalid battery level. IGNORING...")
+			SystemUI.printLog(TAG, "updateBatteryLevel: invalid battery level. IGNORING...")
 			return
 		}
-		SystemUI.printLog(TAG, "Battery level: ${batteryLevel.level}")
+		SystemUI.printLog(TAG, "updateBatteryLevel: battery level: ${batteryLevel.level}")
 		// Valid Battery Level
 		notifyBatteryLevelChanged(batteryLevel)
 	}
@@ -124,17 +128,11 @@ class BatteryController constructor(context: Context) : BluetoothHostController(
 	 * Notifies the battery state depending on the given connection state from the
 	 * @see BluetoothDevice given
 	 */
-	private fun updateConnectionState(device: BluetoothDevice?, newState: Int) {
+	private fun updateConnectionState(device: BluetoothDevice, newState: Int) {
 		when (newState) {
 			BluetoothProfile.STATE_CONNECTED -> {
 				SystemUI.printLog(TAG, "updateConnectionState: profile Connected!")
-				if (device == null) {
-					SystemUI.printLog(TAG, "updateConnectionState: device is null. returning...")
-					return
-				}
-				// Check if battery information is available and immediately update.
-				val bundle = bluetoothHeadsetClient?.getCurrentAgEvents(device) ?: return
-				updateBatteryLevel(bundle)
+				updateBatteryLevel(device)
 			}
 			BluetoothProfile.STATE_DISCONNECTED -> {
 				SystemUI.printLog(TAG, "updateConnectionState: profile disconnected!")

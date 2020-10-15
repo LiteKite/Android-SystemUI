@@ -51,34 +51,38 @@ class BluetoothController constructor(context: Context) : BluetoothHostControlle
 	}
 
 	override fun onReceive(context: Context?, intent: Intent?) {
-		SystemUI.printLog(TAG, "onReceive - action: ${intent?.action})")
+		SystemUI.printLog(TAG, "onReceive: action: ${intent?.action})")
 		when (intent?.action) {
 			BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED,
 			BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED -> {
 				val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 				if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-					SystemUI.printLog(TAG, "bluetooth is disabled. returning...")
+					SystemUI.printLog(TAG, "onReceive: bluetooth is disabled. returning...")
 					notifyBluetoothDisconnected()
 					return
 				}
-				// Checks whether HEADSET_CLIENT connected
-				val headsetClientDevices: List<BluetoothDevice> =
-					bluetoothHeadsetClient?.connectedDevices ?: ArrayList()
-				val headsetClientState = getConnectionState(headsetClientDevices)
-				// Checks whether A2DP_SINK connected
-				val a2dpSinkDevices: List<BluetoothDevice> =
-					bluetoothA2dpSink?.connectedDevices ?: ArrayList()
-				val a2dpSinkState = getConnectionState(a2dpSinkDevices)
-				SystemUI.printLog(TAG, "headsetClientState: $headsetClientState")
-				SystemUI.printLog(TAG, "a2dpSinkState: $a2dpSinkState")
-				if (headsetClientState == BluetoothProfile.STATE_CONNECTED
-					|| a2dpSinkState == BluetoothProfile.STATE_CONNECTED
-				) {
-					notifyBluetoothConnected()
-				} else {
-					notifyBluetoothDisconnected()
-				}
+				updateBluetoothState()
 			}
+		}
+	}
+
+	private fun updateBluetoothState() {
+		// Checks whether HEADSET_CLIENT connected
+		val headsetClientDevices: List<BluetoothDevice> =
+			bluetoothHeadsetClient?.connectedDevices ?: ArrayList()
+		val headsetClientState = getConnectionState(headsetClientDevices)
+		// Checks whether A2DP_SINK connected
+		val a2dpSinkDevices: List<BluetoothDevice> =
+			bluetoothA2dpSink?.connectedDevices ?: ArrayList()
+		val a2dpSinkState = getConnectionState(a2dpSinkDevices)
+		SystemUI.printLog(TAG, "updateBluetoothState: headsetClientState: $headsetClientState")
+		SystemUI.printLog(TAG, "updateBluetoothState: a2dpSinkState: $a2dpSinkState")
+		if (headsetClientState == BluetoothProfile.STATE_CONNECTED
+			|| a2dpSinkState == BluetoothProfile.STATE_CONNECTED
+		) {
+			notifyBluetoothConnected()
+		} else {
+			notifyBluetoothDisconnected()
 		}
 	}
 
