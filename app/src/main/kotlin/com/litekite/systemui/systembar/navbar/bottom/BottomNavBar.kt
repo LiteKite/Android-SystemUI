@@ -197,6 +197,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	override fun destroy() {
+		super.destroy()
 		printLog(TAG, "destroy:")
 		// Removes window and system ui visibility change callback
 		statusBarServiceController.removeCallback(this)

@@ -93,6 +93,10 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
 
-	abstract fun destroy()
+	open fun destroy() {
+		getRootView()?.let {
+			return fragmentHostController.destroy(it)
+		}
+	}
 
 }

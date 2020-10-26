@@ -101,8 +101,8 @@ class Power : SystemUI(), ConfigController.Callback {
 	}
 
 	override fun onConfigChanged(newConfig: Configuration) {
-		printLog(TAG, "onConfigChanged:")
 		super.onConfigChanged(newConfig)
+		printLog(TAG, "onConfigChanged:")
 		val mask = ActivityInfo.CONFIG_MCC or ActivityInfo.CONFIG_MNC
 		// Safe to modify lastConfiguration here as it's only updated by the main thread (here).
 		if (lastConfiguration.updateFrom(newConfig) and mask != 0) {
@@ -134,6 +134,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	}
 
 	override fun destroy() {
+		super.destroy()
 		printLog(TAG, "destroy:")
 		// Removes thermal event listener
 		thermalService?.unregisterThermalEventListener(thermalEventListener)

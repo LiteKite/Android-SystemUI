@@ -83,6 +83,7 @@ class SystemBars : SystemUI() {
 	}
 
 	override fun destroy() {
+		super.destroy()
 		printLog(TAG, "destroy")
 		// Destroys status bar
 		statusBar.destroy()

@@ -26,8 +26,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Holds a map of root views to FragmentHostStates and generates them as needed.
- * Also dispatches the configuration changes to all current FragmentHostStates.
+ * Holds a map of root views to FragmentHostProviders and generates them as needed.
+ * Also dispatches the configuration changes to all current FragmentHostProviders.
  *
  * @author Vignesh S
  * @version 1.0, 07/10/2020
@@ -43,7 +43,7 @@ class FragmentHostController @Inject constructor(private val context: Context) :
 
 	@Inject
 	lateinit var configController: ConfigController
-	private val fragmentHostStates: ArrayMap<View, FragmentHostState> = ArrayMap()
+	private val fragmentHostsMap: ArrayMap<View, FragmentHostProvider> = ArrayMap()
 
 	init {
 		// Listens for config changes
@@ -54,36 +54,27 @@ class FragmentHostController @Inject constructor(private val context: Context) :
 		super.onConfigChanged(newConfig)
 		SystemUI.printLog(TAG, "onConfigChanged:")
 		// Notifies config changes to all fragments
-		fragmentHostStates.values.forEach { it.configChanged(newConfig) }
+		fragmentHostsMap.values.forEach { it.configChanged(newConfig) }
 	}
 
 	fun get(view: View): FragmentHostProvider {
 		val rootView = view.rootView
-		var fragmentHostState = fragmentHostStates[rootView]
-		if (fragmentHostState == null) {
-			fragmentHostState = FragmentHostState(rootView)
-			fragmentHostStates[rootView] = fragmentHostState
+		var fragmentHostProvider: FragmentHostProvider? = fragmentHostsMap[rootView]
+		if (fragmentHostProvider == null) {
+			fragmentHostProvider = FragmentHostProvider(context, rootView)
+			fragmentHostsMap[rootView] = fragmentHostProvider
 		}
-		return fragmentHostState.fragmentHostProvider
+		return fragmentHostProvider
+	}
+
+	fun destroy(view: View) {
+		fragmentHostsMap[view]?.destroyFragmentController()
+		fragmentHostsMap.remove(view)
 	}
 
 	fun destroyAll() {
-		fragmentHostStates.values.forEach { it.destroyAll() }
-		fragmentHostStates.clear()
-	}
-
-	inner class FragmentHostState(rootView: View) {
-
-		internal val fragmentHostProvider = FragmentHostProvider(context, rootView)
-
-		internal fun configChanged(newConfig: Configuration) {
-			fragmentHostProvider.configChanged(newConfig)
-		}
-
-		internal fun destroyAll() {
-			fragmentHostProvider.destroyFragmentController()
-		}
-
+		fragmentHostsMap.values.forEach { it.destroyFragmentController() }
+		fragmentHostsMap.clear()
 	}
 
 }
