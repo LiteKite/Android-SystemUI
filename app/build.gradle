@@ -17,7 +17,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'dagger.hilt.android.plugin'
 
 // Create a variable called keystorePropertiesFile, and initialize it to your
@@ -52,7 +52,10 @@ android {
         main.java.srcDirs += "src/main/kotlin"
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-    buildFeatures.dataBinding = true
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
     lintOptions {
         baseline file("lint-baseline.xml")
         warningsAsErrors true

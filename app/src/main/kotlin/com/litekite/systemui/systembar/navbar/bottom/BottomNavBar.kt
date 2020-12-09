@@ -20,6 +20,7 @@ import android.app.ActivityManager
 import android.car.userlib.CarUserManagerHelper
 import android.content.res.Configuration
 import android.graphics.Rect
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -27,6 +28,8 @@ import androidx.core.view.forEach
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.config.ConfigController
+import com.litekite.systemui.databinding.BottomNavBarBinding
+import com.litekite.systemui.databinding.SuperBottomNavBarBinding
 import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.IntentUtil
@@ -37,7 +40,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
-import kotlinx.android.synthetic.main.bottom_nav_bar.view.*
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -74,6 +76,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	private lateinit var configController: ConfigController
 	private lateinit var taskStackController: TaskStackController
 	private lateinit var bottomNavBarWindow: FrameLayout
+	private lateinit var bottomNavBarViewBinding: BottomNavBarBinding
 	private lateinit var bottomNavBarView: ViewGroup
 
 	private val taskStackChangeCallback = object : TaskStackController.Callback {
@@ -96,6 +99,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	override fun start() {
+		super.start()
 		printLog(TAG, "start:")
 		putComponent(BottomNavBar::class.java, this)
 		// Hilt dependency entry point
@@ -125,25 +129,26 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	private fun makeBottomNavBar() {
-		bottomNavBarWindow = View.inflate(context, R.layout.super_bottom_nav_bar, null)
-				as FrameLayout
-		bottomNavBarView = bottomNavBarWindow.bottom_nav_bar_container
+		val superBottomNavBarBinding = SuperBottomNavBarBinding.inflate(LayoutInflater.from(context))
+		bottomNavBarWindow = superBottomNavBarBinding.root
+		bottomNavBarViewBinding = superBottomNavBarBinding.bottomNavBar
+		bottomNavBarView = bottomNavBarViewBinding.bottomNavBarContainer
 		bottomNavBarWindowController.add(bottomNavBarWindow)
 	}
 
-	override fun getRootView(): View? {
+	override fun getRootView(): View {
 		return bottomNavBarWindow
 	}
 
 	private fun updateUserAvatar() {
-		bottomNavBarView.cib_user_avatar.setImageBitmap(
+		bottomNavBarViewBinding.cibUserAvatar.setImageBitmap(
 			userController.getUserIcon(userController.currentForegroundUserInfo)
 		)
 	}
 
 	private fun registerListeners() {
 		// Short press event that launches user settings activity
-		bottomNavBarView.cib_user_avatar.setOnClickListener {
+		bottomNavBarViewBinding.cibUserAvatar.setOnClickListener {
 			val action = context.getString(R.string.action_user_settings)
 			IntentUtil.launchActivity(context, action)
 		}
@@ -194,6 +199,11 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
 		super.dump(fd, pw, args)
 		pw?.println("bottomNavBarView: $bottomNavBarView")
+		pw?.println("bottomNavBarWindow: $bottomNavBarWindow")
+		pw?.println("userController: $userController")
+		pw?.println("taskStackController: $taskStackController")
+		pw?.println("statusBarServiceController: $statusBarServiceController")
+		pw?.println("bottomNavBarWindowController: $bottomNavBarWindowController")
 	}
 
 	override fun destroy() {

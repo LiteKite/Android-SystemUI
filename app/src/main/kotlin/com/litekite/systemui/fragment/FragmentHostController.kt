@@ -22,6 +22,10 @@ import android.util.ArrayMap
 import android.view.View
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.config.ConfigController
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,12 +45,25 @@ class FragmentHostController @Inject constructor(private val context: Context) :
 		val TAG = FragmentHostController::class.java.simpleName
 	}
 
-	@Inject
-	lateinit var configController: ConfigController
+	@EntryPoint
+	@InstallIn(ApplicationComponent::class)
+	interface FragmentHostControllerEntryPoint {
+
+		fun getConfigController(): ConfigController
+
+	}
+
+	private val configController: ConfigController
 	private val fragmentHostsMap: ArrayMap<View, FragmentHostProvider> = ArrayMap()
 
 	init {
+		// Hilt Dependency Entry Point
+		val entryPointAccessors = EntryPointAccessors.fromApplication(
+			context,
+			FragmentHostControllerEntryPoint::class.java
+		)
 		// Listens for config changes
+		configController = entryPointAccessors.getConfigController()
 		configController.addCallback(this)
 	}
 

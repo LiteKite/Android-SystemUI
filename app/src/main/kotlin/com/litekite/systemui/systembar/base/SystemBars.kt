@@ -37,6 +37,7 @@ class SystemBars : SystemUI() {
 	private var navBarComponents: ArrayList<SystemUI> = ArrayList()
 
 	override fun start() {
+		super.start()
 		printLog(TAG, "start")
 		createStatusBarFromConfig()
 		createNavBarsFromConfig()

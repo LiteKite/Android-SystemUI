@@ -18,9 +18,14 @@ package com.litekite.systemui.car
 
 import android.car.Car
 import android.car.media.CarAudioManager
+import android.content.Context
 import android.os.RemoteException
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,15 +35,22 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class CarAudioController @Inject constructor() :
+class CarAudioController @Inject constructor(context: Context) :
 	CallbackProvider<CarAudioController.Callback> {
 
 	companion object {
 		val TAG = CarAudioController::class.java.simpleName
 	}
 
-	@Inject
-	lateinit var carController: CarController
+	@EntryPoint
+	@InstallIn(ApplicationComponent::class)
+	interface CarAudioControllerEntryPoint {
+
+		fun getCarController(): CarController
+
+	}
+
+	private val carController: CarController
 	private var carAudioManager: CarAudioManager? = null
 	override var callbacks = ArrayList<Callback>()
 
@@ -64,6 +76,13 @@ class CarAudioController @Inject constructor() :
 	}
 
 	init {
+		// Hilt Dependency Entry Point
+		val entryPointAccessors = EntryPointAccessors.fromApplication(
+			context,
+			CarAudioControllerEntryPoint::class.java
+		)
+		// Listens for config changes
+		carController = entryPointAccessors.getCarController()
 		carController.addCallback(carConnectionCallback)
 	}
 

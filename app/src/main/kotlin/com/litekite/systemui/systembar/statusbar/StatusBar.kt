@@ -19,13 +19,14 @@ package com.litekite.systemui.systembar.statusbar
 import android.app.ActivityManager
 import android.content.res.Configuration
 import android.graphics.Rect
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.view.forEach
-import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.config.ConfigController
+import com.litekite.systemui.databinding.SuperStatusBarBinding
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.taskChanged
 import com.litekite.systemui.widget.AppButtonView
@@ -34,7 +35,6 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.components.ApplicationComponent
-import kotlinx.android.synthetic.main.status_bar.view.*
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -89,6 +89,7 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 	}
 
 	override fun start() {
+		super.start()
 		printLog(TAG, "start")
 		putComponent(StatusBar::class.java, this)
 		// Hilt Dependency Entry Point
@@ -112,13 +113,13 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 	}
 
 	private fun makeStatusBarView() {
-		statusBarWindow =
-			View.inflate(context, R.layout.super_status_bar, null) as FrameLayout
-		statusBarView = statusBarWindow.status_bar_container
+		val superStatusBarBinding = SuperStatusBarBinding.inflate(LayoutInflater.from(context))
+		statusBarWindow = superStatusBarBinding.root
+		statusBarView = superStatusBarBinding.statusBar.statusBarContainer
 		statusBarWindowController.add(statusBarWindow)
 	}
 
-	override fun getRootView(): View? {
+	override fun getRootView(): View {
 		return statusBarWindow
 	}
 
@@ -166,12 +167,12 @@ class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigControl
 
 	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
 		super.dump(fd, pw, args)
-		pw?.println("statusBarWindowController: $statusBarWindowController")
-		pw?.println("statusBarServiceController: $statusBarServiceController")
+		pw?.println("statusBarView: $statusBarView")
+		pw?.println("statusBarWindow: $statusBarWindow")
 		pw?.println("configController: $configController")
 		pw?.println("TaskStackController: $TaskStackController")
-		pw?.println("statusBarWindow: $statusBarWindow")
-		pw?.println("statusBarView: $statusBarView")
+		pw?.println("statusBarWindowController: $statusBarWindowController")
+		pw?.println("statusBarServiceController: $statusBarServiceController")
 	}
 
 	override fun destroy() {

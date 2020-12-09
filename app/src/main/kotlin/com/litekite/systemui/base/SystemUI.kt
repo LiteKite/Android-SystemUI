@@ -57,11 +57,11 @@ abstract class SystemUI : SystemUIServiceProvider {
 
 	}
 
-	private val fragmentHostController: FragmentHostController
 	lateinit var context: Context
 	lateinit var components: MutableMap<Class<*>, Any>
+	private lateinit var fragmentHostController: FragmentHostController
 
-	init {
+	open fun start() {
 		// Hilt Dependency Entry Point
 		val entryPointAccessors = EntryPointAccessors.fromApplication(
 			context,
@@ -84,8 +84,6 @@ abstract class SystemUI : SystemUIServiceProvider {
 	fun <T, C : T> putComponent(interfaceType: Class<T>, component: C) {
 		components[interfaceType] = component as Any
 	}
-
-	abstract fun start()
 
 	open fun getRootView(): View? = null
 

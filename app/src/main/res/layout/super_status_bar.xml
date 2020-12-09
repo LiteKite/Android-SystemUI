@@ -18,6 +18,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/status_bar" />
+    <include
+        android:id="@+id/status_bar"
+        layout="@layout/status_bar" />
 
 </FrameLayout>

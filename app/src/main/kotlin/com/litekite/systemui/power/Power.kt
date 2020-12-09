@@ -66,6 +66,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	private val updateTempCallback = Runnable { updateTemperatureWarning() }
 
 	override fun start() {
+		super.start()
 		printLog(TAG, "start:")
 		putComponent(Power::class.java, this)
 		// Hilt Dependency Entry Point

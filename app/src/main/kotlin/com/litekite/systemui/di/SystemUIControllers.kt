@@ -53,7 +53,8 @@ object SystemUIControllers {
 
 	@Provides
 	@Singleton
-	fun provideCarAudioController() = CarAudioController()
+	fun provideCarAudioController(@ApplicationContext context: Context) =
+		CarAudioController(context)
 
 	@Provides
 	@Singleton
