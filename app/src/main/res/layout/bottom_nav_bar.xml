@@ -74,11 +74,12 @@
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="@dimen/user_avatar_img_btn_width"
         android:layout_height="@dimen/user_avatar_img_btn_height"
-        android:background="@drawable/bg_ripple_round_54"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:rippleDrawable="@drawable/bg_ripple_round_54"
         tools:src="@drawable/ic_preview_user_avatar" />
 
     <com.litekite.systemui.widget.AppButtonView

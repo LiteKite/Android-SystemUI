@@ -20,7 +20,6 @@
     <string-array name="config_systemUIServiceComponents" translatable="false">
         <item>com.litekite.systemui.power.Power</item>
         <item>com.litekite.systemui.systembar.base.SystemBars</item>
-
     </string-array>
 
     <!--Component to be used as the status bar service.  Must implement the IStatusBar
@@ -30,6 +29,10 @@
 
     <string-array name="config_navBarComponents">
         <item>com.litekite.systemui.systembar.navbar.bottom.BottomNavBar</item>
+    </string-array>
+
+    <string-array name="config_volumeBarComponents">
+        <item>com.litekite.systemui.systembar.volumebar.VolumeNavBar</item>
     </string-array>
 
     <!-- SystemUI Services (per user): The classes of the stuff to start for each user.

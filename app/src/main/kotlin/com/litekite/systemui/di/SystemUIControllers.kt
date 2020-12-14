@@ -25,6 +25,7 @@ import com.litekite.systemui.fragment.FragmentHostController
 import com.litekite.systemui.preference.PreferenceController
 import com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindowController
 import com.litekite.systemui.systembar.statusbar.StatusBarWindowController
+import com.litekite.systemui.systembar.volumebar.VolumeBarWindowController
 import com.litekite.systemui.taskstack.TaskStackController
 import dagger.Module
 import dagger.Provides
@@ -83,5 +84,10 @@ object SystemUIControllers {
 	@Singleton
 	fun provideBottomNavBarWindowController(@ApplicationContext context: Context) =
 		BottomNavBarWindowController(context)
+
+	@Provides
+	@Singleton
+	fun provideVolumeBarWindowController(@ApplicationContext context: Context) =
+		VolumeBarWindowController(context)
 
 }

@@ -21,6 +21,7 @@ import com.litekite.systemui.base.SystemUIServiceProvider
 import com.litekite.systemui.power.Power
 import com.litekite.systemui.systembar.navbar.bottom.BottomNavBar
 import com.litekite.systemui.systembar.statusbar.StatusBar
+import com.litekite.systemui.systembar.volumebar.VolumeBar
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,5 +52,10 @@ object SystemUIComponents {
 	@Singleton
 	fun provideBottomNavBar(@ApplicationContext context: Context): BottomNavBar =
 		SystemUIServiceProvider.getComponent(context, BottomNavBar::class.java)
+
+	@Provides
+	@Singleton
+	fun provideVolumeBar(@ApplicationContext context: Context): VolumeBar =
+		SystemUIServiceProvider.getComponent(context, VolumeBar::class.java)
 
 }

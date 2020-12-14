@@ -35,11 +35,13 @@ class SystemBars : SystemUI() {
 
 	private lateinit var statusBar: SystemUI
 	private var navBarComponents: ArrayList<SystemUI> = ArrayList()
+	private var volumeBarComponents: ArrayList<SystemUI> = ArrayList()
 
 	override fun start() {
 		super.start()
 		printLog(TAG, "start")
 		createStatusBarFromConfig()
+		createVolumeBarFromConfig()
 		createNavBarsFromConfig()
 	}
 
@@ -50,6 +52,8 @@ class SystemBars : SystemUI() {
 		statusBar.onBootCompleted()
 		// Notifying nav bars about boot complete event
 		navBarComponents.forEach { it.onBootCompleted() }
+		// Notifying volume bar components about boot complete event
+		volumeBarComponents.forEach { it.onBootCompleted() }
 	}
 
 	private fun createStatusBarFromConfig() {
@@ -60,6 +64,19 @@ class SystemBars : SystemUI() {
 		statusBar.components = components
 		statusBar.start()
 		printLog(TAG, "started: " + statusBar.javaClass.simpleName)
+	}
+
+	private fun createVolumeBarFromConfig() {
+		printLog(TAG, "createVolumeBarFromConfig: staring volume bar...")
+		val serviceComponents = context.resources.getStringArray(R.array.config_volumeBarComponents)
+		serviceComponents.forEach {
+			val volumeBar = Class.forName(it).newInstance() as SystemUI
+			volumeBar.context = context
+			volumeBar.context = context
+			volumeBar.components = components
+			volumeBar.start()
+			volumeBarComponents.add(volumeBar)
+		}
 	}
 
 	private fun createNavBarsFromConfig() {
@@ -81,6 +98,8 @@ class SystemBars : SystemUI() {
 		statusBar.dump(fd, pw, args)
 		// Dumping nav bars
 		navBarComponents.forEach { it.dump(fd, pw, args) }
+		// Dumping volume bar components
+		volumeBarComponents.forEach { it.dump(fd, pw, args) }
 	}
 
 	override fun destroy() {
@@ -90,6 +109,8 @@ class SystemBars : SystemUI() {
 		statusBar.destroy()
 		// Destroys nav bars
 		navBarComponents.forEach { it.destroy() }
+		// Destroys volume bar components
+		volumeBarComponents.forEach { it.destroy() }
 	}
 
 }

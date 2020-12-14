@@ -201,6 +201,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		pw?.println("bottomNavBarView: $bottomNavBarView")
 		pw?.println("bottomNavBarWindow: $bottomNavBarWindow")
 		pw?.println("userController: $userController")
+		pw?.println("configController: $configController")
 		pw?.println("taskStackController: $taskStackController")
 		pw?.println("statusBarServiceController: $statusBarServiceController")
 		pw?.println("bottomNavBarWindowController: $bottomNavBarWindowController")
