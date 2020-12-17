@@ -43,7 +43,7 @@ class VolumeBarWindowController @Inject constructor(private val context: Context
 	 */
 	fun add(volumeBarView: View) {
 		lp = WindowManager.LayoutParams(
-			WindowManager.LayoutParams.WRAP_CONTENT,
+			WindowManager.LayoutParams.MATCH_PARENT,
 			WindowManager.LayoutParams.WRAP_CONTENT,
 			WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE

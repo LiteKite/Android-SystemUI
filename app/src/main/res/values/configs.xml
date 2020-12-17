@@ -32,7 +32,7 @@
     </string-array>
 
     <string-array name="config_volumeBarComponents">
-        <item>com.litekite.systemui.systembar.volumebar.VolumeNavBar</item>
+        <item>com.litekite.systemui.systembar.volumebar.VolumeBar</item>
     </string-array>
 
     <!-- SystemUI Services (per user): The classes of the stuff to start for each user.

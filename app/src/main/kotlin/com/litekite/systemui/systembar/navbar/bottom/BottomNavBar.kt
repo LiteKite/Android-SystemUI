@@ -16,6 +16,7 @@
 
 package com.litekite.systemui.systembar.navbar.bottom
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.car.userlib.CarUserManagerHelper
 import android.content.res.Configuration
@@ -31,6 +32,7 @@ import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.databinding.BottomNavBarBinding
 import com.litekite.systemui.databinding.SuperBottomNavBarBinding
 import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
+import com.litekite.systemui.systembar.volumebar.VolumeBar
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.IntentUtil
 import com.litekite.systemui.util.taskChanged
@@ -70,14 +72,14 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 
 	}
 
-	private lateinit var userController: CarUserManagerHelper
 	private lateinit var bottomNavBarWindowController: BottomNavBarWindowController
 	private lateinit var statusBarServiceController: StatusBarServiceController
-	private lateinit var configController: ConfigController
-	private lateinit var taskStackController: TaskStackController
 	private lateinit var bottomNavBarWindow: FrameLayout
 	private lateinit var bottomNavBarViewBinding: BottomNavBarBinding
 	private lateinit var bottomNavBarView: ViewGroup
+	private lateinit var userController: CarUserManagerHelper
+	private lateinit var configController: ConfigController
+	private lateinit var taskStackController: TaskStackController
 
 	private val taskStackChangeCallback = object : TaskStackController.Callback {
 
@@ -129,7 +131,8 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	private fun makeBottomNavBar() {
-		val superBottomNavBarBinding = SuperBottomNavBarBinding.inflate(LayoutInflater.from(context))
+		val superBottomNavBarBinding =
+			SuperBottomNavBarBinding.inflate(LayoutInflater.from(context))
 		bottomNavBarWindow = superBottomNavBarBinding.root
 		bottomNavBarViewBinding = superBottomNavBarBinding.bottomNavBar
 		bottomNavBarView = bottomNavBarViewBinding.bottomNavBarContainer
@@ -146,7 +149,15 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		)
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	private fun registerListeners() {
+		// Passes touch events to the volume bar component for the motion layout
+		// to animate the volume bar based the swipe gesture
+		bottomNavBarView.setOnTouchListener { v, event ->
+			v.onTouchEvent(event)
+			getComponent(VolumeBar::class.java).getRootView().dispatchTouchEvent(event)
+			return@setOnTouchListener true
+		}
 		// Short press event that launches user settings activity
 		bottomNavBarViewBinding.cibUserAvatar.setOnClickListener {
 			val action = context.getString(R.string.action_user_settings)

@@ -25,22 +25,26 @@
         <OnSwipe
             app:dragDirection="dragUp"
             app:onTouchUp="autoComplete"
-            app:touchAnchorId="@+id/v_dummy"
-            app:touchAnchorSide="top"
-            app:touchRegionId="@+id/v_dummy" />
+            app:touchAnchorId="@+id/v_volume_bar"
+            app:touchAnchorSide="top" />
 
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
 
         <Constraint
-            android:id="@+id/v_dummy"
+            android:id="@+id/v_volume_bar"
             android:layout_width="match_parent"
-            android:layout_height="106dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="@dimen/volume_bar_expanded_height"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="parent">
+
+            <PropertySet
+                android:visibility="visible"
+                app:visibilityMode="ignore" />
+
+        </Constraint>
 
     </ConstraintSet>
 
@@ -49,13 +53,18 @@
         app:deriveConstraintsFrom="@+id/start">
 
         <Constraint
-            android:id="@+id/v_dummy"
+            android:id="@+id/v_volume_bar"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <PropertySet
+                android:visibility="gone"
+                app:visibilityMode="ignore" />
+
+        </Constraint>
 
     </ConstraintSet>
 

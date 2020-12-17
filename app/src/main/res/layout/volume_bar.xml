@@ -14,16 +14,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.litekite.systemui.widget.FlexMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/volume_bar_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="@dimen/volume_bar_expanded_height"
+    android:layout_gravity="bottom"
     app:layoutDescription="@xml/volume_bar_scene">
 
     <View
-        android:id="@+id/v_dummy"
+        android:id="@+id/v_volume_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="@dimen/volume_bar_expanded_height"
+        android:background="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</com.litekite.systemui.widget.FlexMotionLayout>
