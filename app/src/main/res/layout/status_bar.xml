@@ -14,45 +14,65 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.litekite.systemui.widget.FlexMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/status_bar_container"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/status_bar_height"
-    android:background="@color/black">
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:maxHeight="@dimen/status_bar_expanded_height"
+    android:minHeight="@dimen/status_bar_height"
+    app:layoutDescription="@xml/status_bar_scene">
 
-    <com.litekite.systemui.widget.KeyButtonView
-        android:id="@+id/kbv_back"
-        style="@style/KeyButtonView"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/bg_ripple_round_34"
-        android:paddingStart="@dimen/back_key_btn_padding_start"
-        android:paddingEnd="@dimen/back_key_btn_padding_end"
-        android:src="@drawable/ic_back"
-        app:keyCode="@integer/keycode_back"
+    <View
+        android:id="@+id/status_bar_expanded"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_expanded_height"
+        android:background="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.litekite.systemui.widget.Clock
-        android:id="@+id/clock"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textAppearance="@style/TextAppearance.StatusBar.Clock"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.litekite.systemui.systembar.statusbar.StatusBarIconContainer
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingStart="0dp"
-        android:paddingEnd="@dimen/status_bar_container_padding_end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/status_bar_collapsed"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/status_bar_height"
+        android:background="@color/black">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.litekite.systemui.widget.KeyButtonView
+            android:id="@+id/kbv_back"
+            style="@style/KeyButtonView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_ripple_round_34"
+            android:paddingStart="@dimen/back_key_btn_padding_start"
+            android:paddingEnd="@dimen/back_key_btn_padding_end"
+            android:src="@drawable/ic_back"
+            app:keyCode="@integer/keycode_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.litekite.systemui.widget.Clock
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/TextAppearance.StatusBar.Clock"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.litekite.systemui.systembar.statusbar.StatusBarIconContainer
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/status_bar_container_padding_end"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.litekite.systemui.widget.FlexMotionLayout>

@@ -120,9 +120,9 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // Room
-    implementation 'androidx.room:room-runtime:2.2.5'
-    implementation "androidx.room:room-ktx:2.2.5"
-    kapt 'androidx.room:room-compiler:2.2.5'
+    implementation 'androidx.room:room-runtime:2.2.6'
+    implementation "androidx.room:room-ktx:2.2.6"
+    kapt 'androidx.room:room-compiler:2.2.6'
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
@@ -139,7 +139,7 @@ dependencies {
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
 
     // Test helpers for Room
-    testImplementation 'androidx.room:room-testing:2.2.5'
+    testImplementation 'androidx.room:room-testing:2.2.6'
 
     // Hilt - Instrumentation test helpers
     androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"

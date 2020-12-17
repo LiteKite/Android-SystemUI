@@ -18,6 +18,7 @@
 
     <!--Status Bar-->
     <dimen name="status_bar_height">76dp</dimen>
+    <dimen name="status_bar_expanded_height">300dp</dimen>
 
     <!--Key Button View-->
     <dimen name="quick_step_touch_slop">24dp</dimen>

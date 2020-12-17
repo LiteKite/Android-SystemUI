@@ -18,24 +18,22 @@ package com.litekite.systemui.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.litekite.systemui.R
 
 /**
- * FlexMotionLayout that modifies height of the parent container
+ * HideNSeekMotionLayout that modifies visibility of the parent container
  * based on the motion animation
  *
  * @author Vignesh S
  * @version 1.0, 17/12/2020
  * @since 1.0
  */
-class FlexMotionLayout @JvmOverloads constructor(
+class HideNSeekMotionLayout @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : MotionLayout(context, attrs, defStyleAttr) {
-
-	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
 	private val transitionListener = object : TransitionListener {
 		override fun onTransitionStarted(
@@ -43,10 +41,7 @@ class FlexMotionLayout @JvmOverloads constructor(
 			startId: Int,
 			endId: Int
 		) {
-			(parent as? ViewGroup)?.apply {
-				layoutParams.height = maxHeight
-				windowManager.updateViewLayout(this, layoutParams)
-			}
+			(parent as? ViewGroup)?.visibility = View.VISIBLE
 		}
 
 		override fun onTransitionChange(
@@ -62,10 +57,7 @@ class FlexMotionLayout @JvmOverloads constructor(
 			currentId: Int
 		) {
 			if (currentId == R.id.start) {
-				(parent as? ViewGroup)?.apply {
-					layoutParams.height = minHeight
-					windowManager.updateViewLayout(this, layoutParams)
-				}
+				(parent as? ViewGroup)?.visibility = View.GONE
 			}
 		}
 

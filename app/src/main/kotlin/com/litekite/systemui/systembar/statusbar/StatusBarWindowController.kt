@@ -22,7 +22,6 @@ import android.os.Binder
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
-import com.litekite.systemui.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,7 +38,6 @@ class StatusBarWindowController @Inject constructor(private val context: Context
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 	private lateinit var lp: WindowManager.LayoutParams
 	private lateinit var statusBarView: View
-	private var barHeight: Int = context.resources.getDimensionPixelSize(R.dimen.status_bar_height)
 
 	/**
 	 * Adds the status bar view to the window manager.
@@ -49,7 +47,7 @@ class StatusBarWindowController @Inject constructor(private val context: Context
 	fun add(statusBarView: View) {
 		lp = WindowManager.LayoutParams(
 			WindowManager.LayoutParams.MATCH_PARENT,
-			barHeight,
+			WindowManager.LayoutParams.WRAP_CONTENT,
 			WindowManager.LayoutParams.TYPE_STATUS_BAR,
 			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
 					or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL

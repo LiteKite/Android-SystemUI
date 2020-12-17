@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<com.litekite.systemui.widget.FlexMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.litekite.systemui.widget.HideNSeekMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/volume_bar_container"
     android:layout_width="match_parent"
@@ -23,7 +23,7 @@
     app:layoutDescription="@xml/volume_bar_scene">
 
     <View
-        android:id="@+id/v_volume_bar"
+        android:id="@+id/v_volume_bar_expanded"
         android:layout_width="match_parent"
         android:layout_height="@dimen/volume_bar_expanded_height"
         android:background="@color/blue"
@@ -31,4 +31,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-</com.litekite.systemui.widget.FlexMotionLayout>
+</com.litekite.systemui.widget.HideNSeekMotionLayout>
