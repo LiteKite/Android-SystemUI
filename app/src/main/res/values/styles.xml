@@ -39,4 +39,13 @@
         <item name="android:background">@drawable/bg_ripple_round_48</item>
     </style>
 
+    <style name="SeekBarStyle" parent="Widget.AppCompat.SeekBar">
+        <item name="android:splitTrack">false</item>
+        <item name="android:indeterminateDrawable">@drawable/seek_bar_track</item>
+        <item name="android:progressDrawable">@drawable/seek_bar_track</item>
+        <item name="android:thumb">@drawable/seek_bar_thumb_anim</item>
+        <item name="android:paddingStart">@dimen/seek_bar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/seek_bar_horizontal_padding</item>
+    </style>
+
 </resources>

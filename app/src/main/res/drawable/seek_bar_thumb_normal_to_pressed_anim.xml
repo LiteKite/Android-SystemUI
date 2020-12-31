@@ -14,11 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
-
-    <string name="app_name">SystemUI</string>
-
-    <!--Volume Groups-->
-    <string name="media">Media</string>
-
-</resources>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/seek_bar_thumb_pressed">
+    <target
+        android:name="thumb"
+        android:animation="@animator/anim_seek_bar_thumb_normal_to_pressed" />
+</animated-vector>

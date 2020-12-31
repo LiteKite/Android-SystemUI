@@ -14,11 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<resources>
-
-    <string name="app_name">SystemUI</string>
-
-    <!--Volume Groups-->
-    <string name="media">Media</string>
-
-</resources>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners
+        android:topLeftRadius="@dimen/volume_bar_expanded_bg_shape_corner_radius"
+        android:topRightRadius="@dimen/volume_bar_expanded_bg_shape_corner_radius" />
+    <solid android:color="@color/black_80" />
+</shape>

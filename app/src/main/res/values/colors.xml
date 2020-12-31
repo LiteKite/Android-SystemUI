@@ -17,9 +17,12 @@
 <resources>
 
     <color name="white">#FFFFFF</color>
+    <color name="white_60">#60FFFFFF</color>
     <color name="white_40">#40FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="black_80">#323232</color>
     <color name="red">#F44336</color>
     <color name="blue">#0080FF</color>
+    <color name="blue_40">#89c4ff</color>
 
 </resources>

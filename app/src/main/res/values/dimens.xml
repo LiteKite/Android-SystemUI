@@ -52,6 +52,25 @@
 
     <!--Volume Bar-->
     <dimen name="volume_bar_expanded_height">300dp</dimen>
+    <dimen name="volume_bar_expanded_bg_shape_corner_radius">48dp</dimen>
+    <dimen name="volume_bar_expanded_seek_bar_top_margin">85dp</dimen>
+    <dimen name="volume_bar_expanded_tv_volume_group_name_horizontal_margin">
+        @dimen/volume_bar_expanded_bg_shape_corner_radius
+    </dimen>
+    <dimen name="volume_bar_expanded_tv_volume_group_level_horizontal_margin">
+        @dimen/volume_bar_expanded_bg_shape_corner_radius
+    </dimen>
+    <dimen name="volume_bar_expanded_tv_volume_group_level_margin_bottom">105dp</dimen>
+
+    <!--Seek Bar-->
+    <dimen name="seek_bar_horizontal_padding">
+        @dimen/volume_bar_expanded_bg_shape_corner_radius
+    </dimen>
+    <dimen name="seek_bar_track_radius">4dp</dimen>
+    <dimen name="seek_bar_track_height">8dp</dimen>
+    <dimen name="seek_bar_thumb_width">30dp</dimen>
+    <dimen name="seek_bar_thumb_height">30dp</dimen>
+    <dimen name="seek_bar_thumb_horizontal_inset">16dp</dimen>
 
     <!--Ripple Backgrounds-->
     <dimen name="bg_ripple_round_34">34dp</dimen>
