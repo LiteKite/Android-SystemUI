@@ -150,7 +150,7 @@ class FragmentHostProvider(private val context: Context, private val rootView: V
 	inner class HostCallbacks : FragmentHostCallback<FragmentHostProvider>
 		(context, handler, 0) {
 
-		override fun onGetHost(): FragmentHostProvider? {
+		override fun onGetHost(): FragmentHostProvider {
 			return this@FragmentHostProvider
 		}
 
@@ -162,7 +162,7 @@ class FragmentHostProvider(private val context: Context, private val rootView: V
 			return false
 		}
 
-		override fun onFindViewById(id: Int): View? {
+		override fun onFindViewById(id: Int): View {
 			return findViewById(id)
 		}
 

@@ -289,9 +289,9 @@
 
     <!-- Self permission for internal broadcasts. -->
     <permission
-        android:name="com.android.systemui.permission.SELF"
+        android:name="com.litekite.systemui.permission.SELF"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.android.systemui.permission.SELF" />
+    <uses-permission android:name="com.litekite.systemui.permission.SELF" />
 
     <permission
         android:name="com.android.systemui.permission.PLUGIN"
@@ -430,13 +430,15 @@
 
         <service
             android:name=".service.SystemUIService"
+            android:enabled="true"
             android:exported="true"
-            android:permission="com.android.systemui.permission.SELF" />
+            android:permission="com.litekite.systemui.permission.SELF" />
 
         <service
             android:name=".service.SystemUISecondaryUserService"
+            android:enabled="true"
             android:exported="true"
-            android:permission="com.android.systemui.permission.SELF" />
+            android:permission="com.litekite.systemui.permission.SELF" />
 
     </application>
 
