@@ -50,6 +50,10 @@ class PreferenceController @Inject constructor(private val context: Context) {
 		return preferences.getInt(key, 0)
 	}
 
+	fun getLong(key: String): Long {
+		return preferences.getLong(key, 0)
+	}
+
 	fun getFloat(key: String): Float {
 		return preferences.getFloat(key, 0F)
 	}
@@ -70,6 +74,13 @@ class PreferenceController @Inject constructor(private val context: Context) {
 
 	fun store(key: String, value: Int) {
 		editor.putInt(key, value).apply()
+	}
+
+	fun store(key: String, value: Long) {
+		editor.putLong(
+			key,
+			value
+		).apply()
 	}
 
 	fun store(key: String, value: Float) {
