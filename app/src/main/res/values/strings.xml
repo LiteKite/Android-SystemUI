@@ -18,6 +18,9 @@
 
     <string name="app_name">SystemUI</string>
 
+    <!--Volume Bar-->
+    <string name="default_volume_level">0</string>
+
     <!--Volume Groups-->
     <string name="media">Media</string>
 

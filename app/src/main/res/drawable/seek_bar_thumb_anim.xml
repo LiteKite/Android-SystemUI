@@ -21,13 +21,13 @@
         android:state_enabled="false" />
 
     <item
-        android:id="@+id/normal"
-        android:drawable="@drawable/seek_bar_thumb_normal" />
-
-    <item
         android:id="@+id/pressed"
         android:drawable="@drawable/seek_bar_thumb_pressed"
         android:state_pressed="true" />
+
+    <item
+        android:id="@+id/normal"
+        android:drawable="@drawable/seek_bar_thumb_normal" />
 
     <transition
         android:drawable="@drawable/seek_bar_thumb_normal_to_pressed_anim"

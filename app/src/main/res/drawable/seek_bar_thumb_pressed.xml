@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:name="seekbar_thumb_pressed_to_unpressed"
+    android:name="seek_bar_thumb_pressed"
     android:width="@dimen/seek_bar_thumb_width"
     android:height="@dimen/seek_bar_thumb_height"
     android:opticalInsetLeft="@dimen/seek_bar_thumb_horizontal_inset"
