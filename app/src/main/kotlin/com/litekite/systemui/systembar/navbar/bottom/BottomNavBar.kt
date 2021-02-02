@@ -41,7 +41,7 @@ import com.litekite.systemui.widget.KeyButtonView
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -57,7 +57,7 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 	}
 
 	@EntryPoint
-	@InstallIn(ApplicationComponent::class)
+	@InstallIn(SingletonComponent::class)
 	interface BottomNavBarEntryPoint {
 
 		fun getBottomNavBarWindowController(): BottomNavBarWindowController

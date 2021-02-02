@@ -26,7 +26,7 @@ import com.litekite.systemui.config.ConfigController
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -46,7 +46,7 @@ class Power : SystemUI(), ConfigController.Callback {
 	}
 
 	@EntryPoint
-	@InstallIn(ApplicationComponent::class)
+	@InstallIn(SingletonComponent::class)
 	interface PowerEntryPoint {
 
 		fun getConfigController(): ConfigController

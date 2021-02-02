@@ -25,7 +25,7 @@ import com.litekite.systemui.config.ConfigController
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,7 +46,7 @@ class FragmentHostController @Inject constructor(private val context: Context) :
 	}
 
 	@EntryPoint
-	@InstallIn(ApplicationComponent::class)
+	@InstallIn(SingletonComponent::class)
 	interface FragmentHostControllerEntryPoint {
 
 		fun getConfigController(): ConfigController

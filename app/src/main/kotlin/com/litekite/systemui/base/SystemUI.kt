@@ -24,7 +24,7 @@ import com.litekite.systemui.fragment.FragmentHostController
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -50,7 +50,7 @@ abstract class SystemUI : SystemUIServiceProvider {
 	}
 
 	@EntryPoint
-	@InstallIn(ApplicationComponent::class)
+	@InstallIn(SingletonComponent::class)
 	interface SystemUIEntryPoint {
 
 		fun getFragmentHostController(): FragmentHostController

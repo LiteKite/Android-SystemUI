@@ -29,7 +29,7 @@ import com.litekite.systemui.databinding.VolumeBarBinding
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.components.SingletonComponent
 import java.io.FileDescriptor
 import java.io.PrintWriter
 
@@ -45,7 +45,7 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 	}
 
 	@EntryPoint
-	@InstallIn(ApplicationComponent::class)
+	@InstallIn(SingletonComponent::class)
 	interface VolumeBarEntryPoint {
 
 		fun getVolumeBarWindowController(): VolumeBarWindowController

@@ -30,8 +30,8 @@ import com.litekite.systemui.taskstack.TaskStackController
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
@@ -40,7 +40,7 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object SystemUIControllers {
 
 	@Provides
