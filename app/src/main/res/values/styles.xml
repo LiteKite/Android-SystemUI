@@ -19,7 +19,7 @@
     <!-- Base application theme. -->
     <style name="Theme.SystemUI" parent="@android:style/Theme.DeviceDefault">
         <!-- Specifies that a theme has a light background with dark text on top.  -->
-        <item name="isLightTheme">false</item>
+        <item name="android:isLightTheme">false</item>
     </style>
 
     <style name="KeyButtonView" parent="Widget.AppCompat.ImageButton">
@@ -29,7 +29,7 @@
     </style>
 
     <style name="TextAppearance.StatusBar.Clock" parent="TextAppearance.MaterialComponents.Headline3">
-        <item name="singleLine">true</item>
+        <item name="android:singleLine">true</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -41,6 +41,7 @@
 
     <style name="SeekBarStyle" parent="Widget.AppCompat.SeekBar">
         <item name="android:splitTrack">false</item>
+        <item name="android:background">@drawable/bg_ripple_round_42</item>
         <item name="android:indeterminateDrawable">@drawable/seek_bar_track</item>
         <item name="android:progressDrawable">@drawable/seek_bar_track</item>
         <item name="android:thumb">@drawable/seek_bar_thumb_anim</item>

@@ -45,7 +45,11 @@ class TaskStackController @Inject constructor() :
 
 		override fun onTaskStackChanged() {
 			super.onTaskStackChanged()
-			val runningTask = activityManagerWrapper.runningTask
+			val runningTask: ActivityManager.RunningTaskInfo? = activityManagerWrapper.runningTask
+			if (runningTask == null) {
+				SystemUI.printLog(TAG, "onTaskStackChanged: runningTask: $runningTask")
+				return
+			}
 			val topActivity = runningTask.topActivity
 			SystemUI.printLog(TAG, "onTaskStackChanged: ${topActivity.flattenToShortString()}")
 			val activityType = WindowConfiguration.activityTypeToString(

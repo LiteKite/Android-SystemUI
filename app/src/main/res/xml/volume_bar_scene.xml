@@ -25,7 +25,7 @@
         <OnSwipe
             app:dragDirection="dragUp"
             app:onTouchUp="autoComplete"
-            app:touchAnchorId="@+id/v_volume_bar_expanded"
+            app:touchAnchorId="@+id/cl_volume_bar_expanded"
             app:touchAnchorSide="top" />
 
     </Transition>
@@ -33,7 +33,7 @@
     <ConstraintSet android:id="@+id/start">
 
         <Constraint
-            android:id="@+id/v_volume_bar_expanded"
+            android:id="@+id/cl_volume_bar_expanded"
             android:layout_width="match_parent"
             android:layout_height="@dimen/volume_bar_expanded_height"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +53,7 @@
         app:deriveConstraintsFrom="@+id/start">
 
         <Constraint
-            android:id="@+id/v_volume_bar_expanded"
+            android:id="@+id/cl_volume_bar_expanded"
             android:layout_width="match_parent"
             android:layout_height="@dimen/volume_bar_expanded_height"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -22,51 +22,53 @@
     android:layout_gravity="bottom"
     app:layoutDescription="@xml/volume_bar_scene">
 
-    <View
-        android:id="@+id/v_volume_bar_expanded"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_volume_bar_expanded"
         android:layout_width="match_parent"
         android:layout_height="@dimen/volume_bar_expanded_height"
         android:background="@drawable/bg_volume_bar_expanded"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_volume_group_name"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/volume_bar_expanded_tv_volume_group_name_horizontal_margin"
-        android:gravity="bottom"
-        android:text="@string/media"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/sb_volume"
-        app:layout_constraintStart_toStartOf="@id/v_volume_bar_expanded"
-        app:layout_constraintTop_toTopOf="@id/v_volume_bar_expanded"
-        app:layout_constraintVertical_chainStyle="packed" />
+        <TextView
+            android:id="@+id/tv_volume_group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/volume_bar_expanded_tv_volume_group_name_horizontal_margin"
+            android:gravity="bottom"
+            android:text="@string/media"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/sb_volume"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-    <com.litekite.widget.SmoothSeekBar
-        android:id="@+id/sb_volume"
-        style="@style/SeekBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_volume_group_level"
-        app:layout_constraintEnd_toEndOf="@id/v_volume_bar_expanded"
-        app:layout_constraintStart_toStartOf="@id/v_volume_bar_expanded"
-        app:layout_constraintTop_toBottomOf="@+id/tv_volume_group_name" />
+        <com.litekite.widget.SmoothSeekBar
+            android:id="@+id/sb_volume"
+            style="@style/SeekBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_volume_group_level"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_volume_group_name" />
 
-    <TextView
-        android:id="@+id/tv_volume_group_level"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/volume_bar_expanded_tv_volume_group_level_horizontal_margin"
-        android:gravity="top"
-        android:text="@string/default_volume_level"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/v_volume_bar_expanded"
-        app:layout_constraintEnd_toEndOf="@id/v_volume_bar_expanded"
-        app:layout_constraintTop_toBottomOf="@+id/sb_volume" />
+        <TextView
+            android:id="@+id/tv_volume_group_level"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/volume_bar_expanded_tv_volume_group_level_horizontal_margin"
+            android:gravity="top"
+            android:text="@string/default_volume_level"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sb_volume" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.litekite.systemui.widget.HideNSeekMotionLayout>

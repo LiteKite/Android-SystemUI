@@ -72,6 +72,7 @@
 
     <!--Ripple Backgrounds-->
     <dimen name="bg_ripple_round_34">34dp</dimen>
+    <dimen name="bg_ripple_round_42">42dp</dimen>
     <dimen name="bg_ripple_round_48">48dp</dimen>
     <dimen name="bg_ripple_round_54">54dp</dimen>
 
