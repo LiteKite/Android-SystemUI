@@ -35,6 +35,8 @@ class HideNSeekMotionLayout @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : MotionLayout(context, attrs, defStyleAttr) {
 
+	private var attached: Boolean = false
+
 	private val transitionListener = object : TransitionListener {
 		override fun onTransitionStarted(
 			motionLayout: MotionLayout?,
@@ -72,12 +74,18 @@ class HideNSeekMotionLayout @JvmOverloads constructor(
 
 	override fun onAttachedToWindow() {
 		super.onAttachedToWindow()
-		addTransitionListener(transitionListener)
+		if (!attached) {
+			attached = true
+			addTransitionListener(transitionListener)
+		}
 	}
 
 	override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
-		removeTransitionListener(transitionListener)
+		if (attached) {
+			removeTransitionListener(transitionListener)
+			attached = false
+		}
 	}
 
 }

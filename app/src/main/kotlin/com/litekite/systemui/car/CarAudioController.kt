@@ -106,40 +106,43 @@ class CarAudioController @Inject constructor(context: Context) :
 		}
 	}
 
-	fun getGroupVolume(groupId: Int) {
+	fun getGroupVolume(groupId: Int): Int {
 		if (!carController.isConnected) {
 			SystemUI.printLog(TAG, "getGroupVolume: Car is not connected")
-			return
+			return 0
 		}
 		try {
-			carAudioManager?.getGroupVolume(groupId)
+			return carAudioManager?.getGroupVolume(groupId) ?: 0
 		} catch (e: RuntimeException) {
 			SystemUI.printLog(TAG, "getGroupVolume - RuntimeException: $e")
 		}
+		return 0
 	}
 
-	fun getGroupMaxVolume(groupId: Int) {
+	fun getGroupMaxVolume(groupId: Int): Int {
 		if (!carController.isConnected) {
 			SystemUI.printLog(TAG, "getGroupMaxVolume: Car is not connected")
-			return
+			return 0
 		}
 		try {
-			carAudioManager?.getGroupMaxVolume(groupId)
+			return carAudioManager?.getGroupMaxVolume(groupId) ?: 0
 		} catch (e: RemoteException) {
 			SystemUI.printLog(TAG, "getGroupMaxVolume - RuntimeException: $e")
 		}
+		return 0
 	}
 
-	fun getGroupMinVolume(groupId: Int) {
+	fun getGroupMinVolume(groupId: Int): Int {
 		if (!carController.isConnected) {
 			SystemUI.printLog(TAG, "getGroupMinVolume: Car is not connected")
-			return
+			return 0
 		}
 		try {
-			carAudioManager?.getGroupMinVolume(groupId)
+			return carAudioManager?.getGroupMinVolume(groupId) ?: 0
 		} catch (e: RuntimeException) {
 			SystemUI.printLog(TAG, "getGroupMinVolume - RuntimeException: $e")
 		}
+		return 0
 	}
 
 	private fun registerCarVolumeCallback() {

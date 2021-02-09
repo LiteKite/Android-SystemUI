@@ -35,6 +35,7 @@ class FlexMotionLayout @JvmOverloads constructor(
 	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : MotionLayout(context, attrs, defStyleAttr) {
 
+	private var attached: Boolean = false
 	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
 	private val transitionListener = object : TransitionListener {
@@ -80,12 +81,18 @@ class FlexMotionLayout @JvmOverloads constructor(
 
 	override fun onAttachedToWindow() {
 		super.onAttachedToWindow()
-		addTransitionListener(transitionListener)
+		if (!attached) {
+			attached = true
+			addTransitionListener(transitionListener)
+		}
 	}
 
 	override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
-		removeTransitionListener(transitionListener)
+		if (attached) {
+			removeTransitionListener(transitionListener)
+			attached = false
+		}
 	}
 
 }

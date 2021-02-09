@@ -52,8 +52,6 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 
 		fun getConfigController(): ConfigController
 
-		fun getCarAudioController(): CarAudioController
-
 	}
 
 	private lateinit var volumeBarWindowController: VolumeBarWindowController

@@ -22,8 +22,8 @@
     android:layout_gravity="bottom"
     app:layoutDescription="@xml/volume_bar_scene">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_volume_bar_expanded"
+    <com.litekite.systemui.systembar.volumebar.VolumeBarExpandedView
+        android:id="@+id/v_volume_bar_expanded"
         android:layout_width="match_parent"
         android:layout_height="@dimen/volume_bar_expanded_height"
         android:background="@drawable/bg_volume_bar_expanded"
@@ -69,6 +69,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sb_volume" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.litekite.systemui.systembar.volumebar.VolumeBarExpandedView>
 
 </com.litekite.systemui.widget.HideNSeekMotionLayout>
