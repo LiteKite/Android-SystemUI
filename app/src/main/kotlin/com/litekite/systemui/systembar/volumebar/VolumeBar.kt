@@ -22,7 +22,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.litekite.systemui.base.SystemUI
-import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.databinding.SuperVolumeBarBinding
 import com.litekite.systemui.databinding.VolumeBarBinding
@@ -56,7 +55,6 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 
 	private lateinit var volumeBarWindowController: VolumeBarWindowController
 	private lateinit var configController: ConfigController
-	private lateinit var carAudioController: CarAudioController
 	private lateinit var volumeBarWindow: FrameLayout
 	private lateinit var volumeBarViewBinding: VolumeBarBinding
 	private lateinit var volumeBarView: MotionLayout
@@ -121,7 +119,6 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 		pw?.println("volumeBarView: $volumeBarView")
 		pw?.println("volumeBarWindow: $volumeBarWindow")
 		pw?.println("configController: $configController")
-		pw?.println("carAudioController: $carAudioController")
 		pw?.println("volumeBarWindowController: $volumeBarWindowController")
 	}
 

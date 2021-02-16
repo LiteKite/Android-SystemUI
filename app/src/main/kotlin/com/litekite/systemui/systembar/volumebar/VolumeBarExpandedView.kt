@@ -1,12 +1,28 @@
+/*
+ * Copyright 2020 LiteKite Startup. All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.litekite.systemui.systembar.volumebar
 
 import android.content.Context
-import android.media.AudioAttributes
 import android.media.AudioManager
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.car.CarAudioController
 import com.litekite.systemui.databinding.VolumeBarBinding
@@ -39,12 +55,45 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 	private var attached: Boolean = false
 	private lateinit var volumeBarBinding: VolumeBarBinding
 	private lateinit var carAudioController: CarAudioController
+	private var userInteractingWithSeekBar: Boolean = false
+
+	private val carAudioControllerCallback = object : CarAudioController.Callback {
+
+		override fun onCarAudioManagerCreated() {
+			SystemUI.printLog(TAG, "onCarAudioManagerCreated:")
+			updateVolume()
+		}
+
+		override fun onGroupVolumeChanged(groupId: Int) {
+			SystemUI.printLog(TAG, "onGroupVolumeChanged: groupId: $groupId")
+		}
+
+		override fun onActiveGroupChanged(groupId: Int) {
+			SystemUI.printLog(TAG, "onActiveGroupChanged: groupId: $groupId")
+			updateVolume()
+		}
+
+	}
 
 	private val seekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
 
+		private var userTrackingGroupId = carAudioController.activeGroupId
+
 		override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+			if (!fromUser) {
+				SystemUI.printLog(TAG, "onProgressChanged: not from user. Ignoring...")
+				return
+			}
+			if (userTrackingGroupId != carAudioController.activeGroupId) {
+				SystemUI.printLog(
+					TAG,
+					"""onProgressChanged: user tracking group id does not match with the current 
+						|active group id. Ignoring...""".trimMargin()
+				)
+				return
+			}
 			carAudioController.setGroupVolume(
-				AudioAttributes.USAGE_UNKNOWN,
+				userTrackingGroupId,
 				progress,
 				AudioManager.FLAG_PLAY_SOUND
 			)
@@ -52,11 +101,14 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 		}
 
 		override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
+			userInteractingWithSeekBar = true
+			userTrackingGroupId = carAudioController.activeGroupId
 		}
 
 		override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
+			userInteractingWithSeekBar = false
+			userTrackingGroupId = carAudioController.activeGroupId
+			updateVolume()
 		}
 
 	}
@@ -68,6 +120,7 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 			VolumeBarExpandedEntryPoint::class.java
 		)
 		carAudioController = entryPointAccessors.getCarAudioController()
+		carAudioController.addCallback(carAudioControllerCallback)
 	}
 
 	override fun onFinishInflate() {
@@ -82,21 +135,37 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 			attached = true
 			// volume bar view binding
 			volumeBarBinding = VolumeBarBinding.bind(parent as ViewGroup)
-			volumeBarBinding.sbVolume.min =
-				carAudioController.getGroupMinVolume(AudioAttributes.USAGE_UNKNOWN)
-			volumeBarBinding.sbVolume.max =
-				carAudioController.getGroupMaxVolume(AudioAttributes.USAGE_UNKNOWN)
-			val currentVolume = carAudioController.getGroupVolume(AudioAttributes.USAGE_UNKNOWN)
-			volumeBarBinding.sbVolume.progress = currentVolume
 			volumeBarBinding.sbVolume.setOnSeekBarChangeListener(seekBarChangeListener)
-			volumeBarBinding.tvVolumeGroupLevel.text = currentVolume.toString()
+			updateVolume()
 		}
+	}
+
+	private fun updateVolume() {
+		if (userInteractingWithSeekBar) {
+			SystemUI.printLog(TAG, "updateVolume: user interacting with volume. Ignoring...")
+			return
+		}
+		// Min volume limit
+		volumeBarBinding.sbVolume.min =
+			carAudioController.getGroupMinVolume(carAudioController.activeGroupId)
+		// Max volume limit
+		volumeBarBinding.sbVolume.max =
+			carAudioController.getGroupMaxVolume(carAudioController.activeGroupId)
+		// current active volume
+		val currentVolume = carAudioController.getGroupVolume(carAudioController.activeGroupId)
+		volumeBarBinding.sbVolume.progress = currentVolume
+		// updates current volume group name
+		val volumeGroups = context.resources.getStringArray(R.array.config_volume_groups)
+		volumeBarBinding.tvVolumeGroupName.text = volumeGroups[carAudioController.activeGroupId]
+		// updates current volume group level
+		volumeBarBinding.tvVolumeGroupLevel.text = currentVolume.toString()
 	}
 
 	override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
 		SystemUI.printLog(TAG, "onDetachedFromWindow:")
 		if (attached) {
+			carAudioController.removeCallback(carAudioControllerCallback)
 			volumeBarBinding.sbVolume.setOnSeekBarChangeListener(null)
 			attached = false
 		}

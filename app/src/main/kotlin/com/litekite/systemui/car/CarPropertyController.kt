@@ -20,6 +20,7 @@ import android.car.Car
 import android.car.VehicleAreaType
 import android.car.hardware.CarPropertyValue
 import android.car.hardware.property.CarPropertyManager
+import android.os.RemoteException
 import com.litekite.systemui.base.SystemUI
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
@@ -121,8 +122,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
 		try {
 			val propertyValue = deferred.await()
 			carPropertyCallback.onGetEvent(propertyValue)
-		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "fetch - RuntimeException: $e")
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "fetch - RemoteException: $e")
 		}
 	}
 
@@ -142,8 +143,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
 				VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL,
 				value
 			)
-		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "set - RuntimeException: $e")
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "set - RemoteException: $e")
 		}
 	}
 

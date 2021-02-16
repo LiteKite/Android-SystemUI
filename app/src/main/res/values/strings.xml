@@ -23,5 +23,7 @@
 
     <!--Volume Groups-->
     <string name="media">Media</string>
+    <string name="alarm">Alarm</string>
+    <string name="Ringer">Ringer</string>
 
 </resources>

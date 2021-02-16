@@ -19,13 +19,20 @@ package com.litekite.systemui.car
 import android.car.Car
 import android.car.media.CarAudioManager
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioPlaybackConfiguration
+import android.media.IAudioService
+import android.media.IPlaybackConfigDispatcher
 import android.os.RemoteException
+import android.os.ServiceManager
+import android.telephony.TelephonyManager
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
+import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,20 +57,29 @@ class CarAudioController @Inject constructor(context: Context) :
 
 	}
 
+	var activeGroupId: Int = 0
+
+	private val audioService =
+		IAudioService.Stub.asInterface(ServiceManager.getService(Context.AUDIO_SERVICE))
+	private val telephonyManager =
+		context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 	private val carController: CarController
 	private var carAudioManager: CarAudioManager? = null
+
 	override var callbacks = ArrayList<Callback>()
 
-	private val carConnectionCallback = object :
-		CarController.Callback {
+	private val carConnectionCallback = object : CarController.Callback {
+
 		override fun onConnectionChanged(isConnected: Boolean) {
 			if (isConnected) {
 				createCarAudioManager()
 			}
 		}
+
 	}
 
 	private val carVolumeCallback = object : CarAudioManager.CarVolumeCallback() {
+
 		override fun onMasterMuteChanged(zoneId: Int, flags: Int) {
 			super.onMasterMuteChanged(zoneId, flags)
 			SystemUI.printLog(TAG, "onMasterMuteChanged:")
@@ -71,8 +87,22 @@ class CarAudioController @Inject constructor(context: Context) :
 
 		override fun onGroupVolumeChanged(zoneId: Int, groupId: Int, flags: Int) {
 			super.onGroupVolumeChanged(zoneId, groupId, flags)
-			notifyGroupVolumeChanged()
+			notifyGroupVolumeChanged(groupId)
 		}
+
+	}
+
+	private val playbackConfigDispatcher = object : IPlaybackConfigDispatcher.Stub() {
+
+		override fun dispatchPlaybackConfigChange(
+			configs: List<AudioPlaybackConfiguration>?,
+			flush: Boolean
+		) {
+			SystemUI.printLog(TAG, "dispatchPlaybackConfigChange:")
+			activeGroupId = getVolumeGroupIdForUsage(getSuggestedAudioUsage())
+			notifyActiveGroupChanged(activeGroupId)
+		}
+
 	}
 
 	init {
@@ -81,9 +111,11 @@ class CarAudioController @Inject constructor(context: Context) :
 			context,
 			CarAudioControllerEntryPoint::class.java
 		)
-		// Listens for config changes
+		// Listens for car service connection changes
 		carController = entryPointAccessors.getCarController()
 		carController.addCallback(carConnectionCallback)
+		// Listens for audio service playback changes
+		registerPlaybackCallback()
 	}
 
 	private fun createCarAudioManager() {
@@ -91,7 +123,67 @@ class CarAudioController @Inject constructor(context: Context) :
 		carAudioManager?.let {
 			notifyCarAudioManagerCreated()
 			registerCarVolumeCallback()
+			SystemUI.printLog(
+				TAG,
+				"createCarAudioManager: volume group count: ${getVolumeGroupCount()}"
+			)
 		}
+	}
+
+	private fun registerPlaybackCallback() {
+		try {
+			audioService.registerPlaybackCallback(playbackConfigDispatcher)
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "registerPlaybackCallback - RemoteException: $e")
+		}
+	}
+
+	private fun getVolumeGroupCount(): Int {
+		if (!carController.isConnected) {
+			SystemUI.printLog(TAG, "getVolumeGroupCount: Car is not connected")
+			return 0
+		}
+		try {
+			return carAudioManager?.getVolumeGroupCount(CarAudioManager.PRIMARY_AUDIO_ZONE) ?: 0
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "getVolumeGroupCount - RemoteException: $e")
+		}
+		return 0
+	}
+
+	private fun getSuggestedAudioUsage(): Int {
+		when (telephonyManager.callState) {
+			TelephonyManager.CALL_STATE_RINGING -> {
+				return AudioAttributes.USAGE_NOTIFICATION_RINGTONE
+			}
+			TelephonyManager.CALL_STATE_OFFHOOK -> {
+				return AudioAttributes.USAGE_VOICE_COMMUNICATION
+			}
+			else -> {
+				val configs = audioService.activePlaybackConfigurations
+					.stream()
+					.filter(AudioPlaybackConfiguration::isActive)
+					.collect(Collectors.toList())
+				if (configs.isNullOrEmpty()) {
+					SystemUI.printLog(TAG, "getSuggestedAudioUsage: playback config not found.")
+					return AudioAttributes.USAGE_UNKNOWN
+				}
+				return configs[configs.size - 1].audioAttributes.usage
+			}
+		}
+	}
+
+	fun getVolumeGroupIdForUsage(usage: Int): Int {
+		if (!carController.isConnected) {
+			SystemUI.printLog(TAG, "getVolumeGroupIdForUsage: Car is not connected")
+			return AudioAttributes.USAGE_UNKNOWN
+		}
+		try {
+			return carAudioManager?.getVolumeGroupIdForUsage(usage) ?: AudioAttributes.USAGE_UNKNOWN
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "getVolumeGroupIdForUsage - RemoteException: $e")
+		}
+		return AudioAttributes.USAGE_UNKNOWN
 	}
 
 	fun setGroupVolume(groupId: Int, volumeLevel: Int, flags: Int) {
@@ -101,8 +193,8 @@ class CarAudioController @Inject constructor(context: Context) :
 		}
 		try {
 			carAudioManager?.setGroupVolume(groupId, volumeLevel, flags)
-		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "setGroupVolume - RuntimeException: $e")
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "setGroupVolume - RemoteException: $e")
 		}
 	}
 
@@ -113,8 +205,8 @@ class CarAudioController @Inject constructor(context: Context) :
 		}
 		try {
 			return carAudioManager?.getGroupVolume(groupId) ?: 0
-		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "getGroupVolume - RuntimeException: $e")
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "getGroupVolume - RemoteException: $e")
 		}
 		return 0
 	}
@@ -127,7 +219,7 @@ class CarAudioController @Inject constructor(context: Context) :
 		try {
 			return carAudioManager?.getGroupMaxVolume(groupId) ?: 0
 		} catch (e: RemoteException) {
-			SystemUI.printLog(TAG, "getGroupMaxVolume - RuntimeException: $e")
+			SystemUI.printLog(TAG, "getGroupMaxVolume - RemoteException: $e")
 		}
 		return 0
 	}
@@ -139,8 +231,8 @@ class CarAudioController @Inject constructor(context: Context) :
 		}
 		try {
 			return carAudioManager?.getGroupMinVolume(groupId) ?: 0
-		} catch (e: RuntimeException) {
-			SystemUI.printLog(TAG, "getGroupMinVolume - RuntimeException: $e")
+		} catch (e: RemoteException) {
+			SystemUI.printLog(TAG, "getGroupMinVolume - RemoteException: $e")
 		}
 		return 0
 	}
@@ -169,15 +261,21 @@ class CarAudioController @Inject constructor(context: Context) :
 		callbacks.forEach { it.onCarAudioManagerCreated() }
 	}
 
-	private fun notifyGroupVolumeChanged() {
-		callbacks.forEach { it.onGroupVolumeChanged() }
+	private fun notifyGroupVolumeChanged(groupId: Int) {
+		callbacks.forEach { it.onGroupVolumeChanged(groupId) }
+	}
+
+	private fun notifyActiveGroupChanged(groupId: Int) {
+		callbacks.forEach { it.onActiveGroupChanged(groupId) }
 	}
 
 	interface Callback {
 
 		fun onCarAudioManagerCreated()
 
-		fun onGroupVolumeChanged()
+		fun onGroupVolumeChanged(groupId: Int)
+
+		fun onActiveGroupChanged(groupId: Int)
 
 	}
 

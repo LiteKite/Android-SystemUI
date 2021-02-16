@@ -76,6 +76,13 @@
         <item>@drawable/ic_signal_5</item>
     </array>
 
+    <!--Volume groups-->
+    <string-array name="config_volume_groups">
+        <item>@string/media</item>
+        <item>@string/alarm</item>
+        <item>@string/Ringer</item>
+    </string-array>
+
     <!--Launcher app components-->
     <string name="pkg_launcher">com.android.car.carlauncher</string>
     <string name="component_launcher">com.android.car.carlauncher/.CarLauncher</string>
