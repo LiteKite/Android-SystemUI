@@ -16,8 +16,10 @@
 
 package com.litekite.systemui.systembar.volumebar
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.FrameLayout
 import androidx.constraintlayout.motion.widget.MotionLayout
@@ -75,6 +77,8 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 		// Listens for config changes
 		configController = entryPointAccessors.getConfigController()
 		configController.addCallback(this)
+		// Registers event listeners
+		registerListeners()
 	}
 
 	private fun makeVolumeBar() {
@@ -83,6 +87,20 @@ class VolumeBar : SystemUI(), ConfigController.Callback {
 		volumeBarViewBinding = superVolumeBarBinding.volumeBar
 		volumeBarView = volumeBarViewBinding.volumeBarContainer
 		volumeBarWindowController.add(volumeBarWindow)
+	}
+
+	@SuppressLint("ClickableViewAccessibility")
+	private fun registerListeners() {
+		// Passes the touch events to the volume motion view and it watches outside touch
+		// events and closes the volume motion view by making the transition back to its start
+		// position.
+		volumeBarWindow.setOnTouchListener { v, event ->
+			v.onTouchEvent(event)
+			if (event.action == MotionEvent.ACTION_OUTSIDE) {
+				volumeBarView.transitionToStart()
+			}
+			return@setOnTouchListener true
+		}
 	}
 
 	override fun getRootView(): View {
