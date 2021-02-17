@@ -49,4 +49,35 @@
         <item name="android:paddingEnd">@dimen/seek_bar_horizontal_padding</item>
     </style>
 
+    <!--Animation styles.-->
+    <style name="TopInOutAnim">
+        <item name="android:windowEnterAnimation">@anim/dock_top_in</item>
+        <item name="android:windowExitAnimation">@anim/dock_top_out</item>
+    </style>
+
+    <style name="BottomInOutAnim">
+        <item name="android:windowEnterAnimation">@anim/dock_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dock_bottom_out</item>
+    </style>
+
+    <style name="StartInOutAnim">
+        <item name="android:windowEnterAnimation">@anim/dock_start_in</item>
+        <item name="android:windowExitAnimation">@anim/dock_start_out</item>
+    </style>
+
+    <style name="EndInOutAnim">
+        <item name="android:windowEnterAnimation">@anim/dock_end_in</item>
+        <item name="android:windowExitAnimation">@anim/dock_end_out</item>
+    </style>
+
+    <style name="CenterInOutAnim">
+        <item name="android:windowEnterAnimation">@anim/dock_center_in</item>
+        <item name="android:windowExitAnimation">@anim/dock_center_out</item>
+    </style>
+
+    <style name="FadeInOutAnim">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
 </resources>

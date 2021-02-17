@@ -63,6 +63,7 @@ class BottomNavBarWindowController @Inject constructor(private val context: Cont
 		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 		lp.title = "BottomNavBar"
 		lp.packageName = context.packageName
+		lp.windowAnimations = R.style.BottomInOutAnim
 		this.bottomNavBarView = bottomNavBarView
 		windowManager.addView(this.bottomNavBarView, lp)
 	}

@@ -22,6 +22,7 @@ import android.os.Binder
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import com.litekite.systemui.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -61,6 +62,7 @@ class StatusBarWindowController @Inject constructor(private val context: Context
 		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 		lp.title = "StatusBar"
 		lp.packageName = context.packageName
+		lp.windowAnimations = R.style.TopInOutAnim
 		this.statusBarView = statusBarView
 		windowManager.addView(this.statusBarView, lp)
 	}

@@ -46,7 +46,11 @@ class CarAudioController @Inject constructor(context: Context) :
 	CallbackProvider<CarAudioController.Callback> {
 
 	companion object {
+
 		val TAG = CarAudioController::class.java.simpleName
+
+		var activeGroupId: Int = 0
+
 	}
 
 	@EntryPoint
@@ -56,8 +60,6 @@ class CarAudioController @Inject constructor(context: Context) :
 		fun getCarController(): CarController
 
 	}
-
-	var activeGroupId: Int = 0
 
 	private val audioService =
 		IAudioService.Stub.asInterface(ServiceManager.getService(Context.AUDIO_SERVICE))

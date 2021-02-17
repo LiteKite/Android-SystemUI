@@ -77,14 +77,14 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 
 	private val seekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
 
-		private var userTrackingGroupId = carAudioController.activeGroupId
+		private var userTrackingGroupId = CarAudioController.activeGroupId
 
 		override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 			if (!fromUser) {
 				SystemUI.printLog(TAG, "onProgressChanged: not from user. Ignoring...")
 				return
 			}
-			if (userTrackingGroupId != carAudioController.activeGroupId) {
+			if (userTrackingGroupId != CarAudioController.activeGroupId) {
 				SystemUI.printLog(
 					TAG,
 					"""onProgressChanged: user tracking group id does not match with the current 
@@ -102,12 +102,12 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 
 		override fun onStartTrackingTouch(seekBar: SeekBar?) {
 			userInteractingWithSeekBar = true
-			userTrackingGroupId = carAudioController.activeGroupId
+			userTrackingGroupId = CarAudioController.activeGroupId
 		}
 
 		override fun onStopTrackingTouch(seekBar: SeekBar?) {
 			userInteractingWithSeekBar = false
-			userTrackingGroupId = carAudioController.activeGroupId
+			userTrackingGroupId = CarAudioController.activeGroupId
 			updateVolume()
 		}
 
@@ -147,16 +147,16 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 		}
 		// Min volume limit
 		volumeBarBinding.sbVolume.min =
-			carAudioController.getGroupMinVolume(carAudioController.activeGroupId)
+			carAudioController.getGroupMinVolume(CarAudioController.activeGroupId)
 		// Max volume limit
 		volumeBarBinding.sbVolume.max =
-			carAudioController.getGroupMaxVolume(carAudioController.activeGroupId)
+			carAudioController.getGroupMaxVolume(CarAudioController.activeGroupId)
 		// current active volume
-		val currentVolume = carAudioController.getGroupVolume(carAudioController.activeGroupId)
+		val currentVolume = carAudioController.getGroupVolume(CarAudioController.activeGroupId)
 		volumeBarBinding.sbVolume.progress = currentVolume
 		// updates current volume group name
 		val volumeGroups = context.resources.getStringArray(R.array.config_volume_groups)
-		volumeBarBinding.tvVolumeGroupName.text = volumeGroups[carAudioController.activeGroupId]
+		volumeBarBinding.tvVolumeGroupName.text = volumeGroups[CarAudioController.activeGroupId]
 		// updates current volume group level
 		volumeBarBinding.tvVolumeGroupLevel.text = currentVolume.toString()
 	}
