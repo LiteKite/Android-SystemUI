@@ -114,13 +114,15 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 	}
 
 	init {
-		// Hilt dependency entry point
-		val entryPointAccessors = EntryPointAccessors.fromApplication(
-			context,
-			VolumeBarExpandedEntryPoint::class.java
-		)
-		carAudioController = entryPointAccessors.getCarAudioController()
-		carAudioController.addCallback(carAudioControllerCallback)
+		if (!isInEditMode) {
+			// Hilt dependency entry point
+			val entryPointAccessors = EntryPointAccessors.fromApplication(
+				context,
+				VolumeBarExpandedEntryPoint::class.java
+			)
+			carAudioController = entryPointAccessors.getCarAudioController()
+			carAudioController.addCallback(carAudioControllerCallback)
+		}
 	}
 
 	override fun onFinishInflate() {
@@ -131,7 +133,7 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 	override fun onAttachedToWindow() {
 		super.onAttachedToWindow()
 		SystemUI.printLog(TAG, "onAttachedToWindow:")
-		if (!attached) {
+		if (!attached && !isInEditMode) {
 			attached = true
 			// volume bar view binding
 			volumeBarBinding = VolumeBarBinding.bind(parent as ViewGroup)
@@ -164,7 +166,7 @@ class VolumeBarExpandedView @JvmOverloads constructor(
 	override fun onDetachedFromWindow() {
 		super.onDetachedFromWindow()
 		SystemUI.printLog(TAG, "onDetachedFromWindow:")
-		if (attached) {
+		if (attached && !isInEditMode) {
 			carAudioController.removeCallback(carAudioControllerCallback)
 			volumeBarBinding.sbVolume.setOnSeekBarChangeListener(null)
 			attached = false
