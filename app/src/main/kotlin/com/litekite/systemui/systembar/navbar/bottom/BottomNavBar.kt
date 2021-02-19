@@ -154,9 +154,8 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 		// Passes touch events to the volume bar component for the motion layout
 		// to animate the volume bar based the swipe gesture
 		bottomNavBarView.setOnTouchListener { v, event ->
-			v.onTouchEvent(event)
 			getComponent(VolumeBar::class.java).getRootView().dispatchTouchEvent(event)
-			return@setOnTouchListener true
+			return@setOnTouchListener v.onTouchEvent(event)
 		}
 		// Short press event that launches user settings activity
 		bottomNavBarViewBinding.cibUserAvatar.setOnClickListener {
