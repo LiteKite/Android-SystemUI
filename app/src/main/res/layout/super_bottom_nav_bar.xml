@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -22,4 +22,4 @@
         android:id="@+id/bottom_nav_bar"
         layout="@layout/bottom_nav_bar" />
 
-</FrameLayout>
+</com.litekite.systemui.systembar.navbar.bottom.BottomNavBarWindow>

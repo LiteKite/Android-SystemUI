@@ -16,8 +16,8 @@
 
 package com.litekite.systemui.systembar.volumebar
 
-import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
@@ -25,6 +25,11 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import com.litekite.systemui.R
 import com.litekite.systemui.base.SystemUI
 import com.litekite.systemui.databinding.SuperVolumeBarBinding
+import com.litekite.systemui.systembar.navbar.bottom.BottomNavBar
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
 /**
  * @author Vignesh S
@@ -41,7 +46,16 @@ class VolumeBarWindow @JvmOverloads constructor(
 		private const val COLLAPSE_VOLUME_BAR_DELAY = 3000L
 	}
 
+	@EntryPoint
+	@InstallIn(SingletonComponent::class)
+	interface VolumeBarWindowEntryPoint {
+
+		fun getBottomNavBar(): BottomNavBar
+
+	}
+
 	private var attached: Boolean = false
+	private val bottomNavBarRect = Rect()
 	private lateinit var superVolumeBarBinding: SuperVolumeBarBinding
 
 	private val transitionListener = object : MotionLayout.TransitionListener {
@@ -79,6 +93,9 @@ class VolumeBarWindow @JvmOverloads constructor(
 		}
 	}
 
+	/**
+	 * Delays collapsing volume bar view upon no user interaction.
+	 */
 	private val collapseVolumeBar = Runnable {
 		superVolumeBarBinding.volumeBar.volumeBarContainer.transitionToStart()
 	}
@@ -98,7 +115,12 @@ class VolumeBarWindow @JvmOverloads constructor(
 		}
 	}
 
-	override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
+	private fun getEntryPointAccessor() = EntryPointAccessors.fromApplication(
+		context,
+		VolumeBarWindowEntryPoint::class.java
+	)
+
+	override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
 		when (ev?.action) {
 			MotionEvent.ACTION_DOWN,
 			MotionEvent.ACTION_MOVE -> {
@@ -106,20 +128,35 @@ class VolumeBarWindow @JvmOverloads constructor(
 			}
 			MotionEvent.ACTION_UP,
 			MotionEvent.ACTION_CANCEL -> {
+				getEntryPointAccessor().getBottomNavBar().getRootView().getHitRect(bottomNavBarRect)
+				// Collapses volume bar motion view if touch event ended or cancelled that
+				// intersects with the bottom nav bar view.
+				if (bottomNavBarRect.contains(ev.x.toInt(), ev.y.toInt())) {
+					handler.removeCallbacks(collapseVolumeBar)
+					superVolumeBarBinding.volumeBar.volumeBarContainer.transitionToStart()
+				}
+				handler.removeCallbacks(collapseVolumeBar)
 				handler.postDelayed(collapseVolumeBar, COLLAPSE_VOLUME_BAR_DELAY)
 			}
+			MotionEvent.ACTION_OUTSIDE -> {
+				// Watches outside touch events and closes the volume motion view by making
+				// the transition back to its start position.
+				handler.removeCallbacks(collapseVolumeBar)
+				superVolumeBarBinding.volumeBar.volumeBarContainer.transitionToStart()
+			}
 		}
-		return super.onInterceptTouchEvent(ev)
+		return super.dispatchTouchEvent(ev)
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
-	override fun onTouchEvent(event: MotionEvent?): Boolean {
-		// Watches outside touch events and closes the volume motion view by making the transition
-		// back to its start position.
-		if (event?.action == MotionEvent.ACTION_OUTSIDE) {
-			superVolumeBarBinding.volumeBar.volumeBarContainer.transitionToStart()
+	override fun onDetachedFromWindow() {
+		SystemUI.printLog(TAG, "onDetachedFromWindow:")
+		super.onDetachedFromWindow()
+		if (attached) {
+			superVolumeBarBinding.volumeBar.volumeBarContainer.removeTransitionListener(
+				transitionListener
+			)
+			attached = false
 		}
-		return super.onTouchEvent(event)
 	}
 
 }

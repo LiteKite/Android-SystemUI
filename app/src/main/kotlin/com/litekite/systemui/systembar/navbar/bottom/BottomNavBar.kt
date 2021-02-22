@@ -32,7 +32,6 @@ import com.litekite.systemui.config.ConfigController
 import com.litekite.systemui.databinding.BottomNavBarBinding
 import com.litekite.systemui.databinding.SuperBottomNavBarBinding
 import com.litekite.systemui.systembar.statusbar.StatusBarServiceController
-import com.litekite.systemui.systembar.volumebar.VolumeBar
 import com.litekite.systemui.taskstack.TaskStackController
 import com.litekite.systemui.util.IntentUtil
 import com.litekite.systemui.util.taskChanged
@@ -151,12 +150,6 @@ class BottomNavBar : SystemUI(), StatusBarServiceController.Callback, ConfigCont
 
 	@SuppressLint("ClickableViewAccessibility")
 	private fun registerListeners() {
-		// Passes touch events to the volume bar component for the motion layout
-		// to animate the volume bar based the swipe gesture
-		bottomNavBarView.setOnTouchListener { v, event ->
-			getComponent(VolumeBar::class.java).getRootView().dispatchTouchEvent(event)
-			return@setOnTouchListener v.onTouchEvent(event)
-		}
 		// Short press event that launches user settings activity
 		bottomNavBarViewBinding.cibUserAvatar.setOnClickListener {
 			val action = context.getString(R.string.action_user_settings)
