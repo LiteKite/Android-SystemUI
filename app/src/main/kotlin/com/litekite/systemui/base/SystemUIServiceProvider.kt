@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.base
 
 import android.content.Context
@@ -29,23 +28,21 @@ import com.litekite.systemui.app.SystemUIApp
  */
 interface SystemUIServiceProvider {
 
-	companion object {
+    companion object {
 
-		fun <T> getComponent(context: Context, interfaceType: Class<T>): T =
-			(context.applicationContext as SystemUIServiceProvider).getComponent(interfaceType)
+        fun <T> getComponent(context: Context, interfaceType: Class<T>): T =
+            (context.applicationContext as SystemUIServiceProvider).getComponent(interfaceType)
 
-		fun startSystemUIServices(context: Context) =
-			(context.applicationContext as SystemUIApp).startSystemUIServices()
+        fun startSystemUIServices(context: Context) =
+            (context.applicationContext as SystemUIApp).startSystemUIServices()
 
-		fun startSystemUISecondaryUserServices(context: Context) {
-			(context.applicationContext as SystemUIApp).startSystemUISecondaryUserServices()
-		}
+        fun startSystemUISecondaryUserServices(context: Context) {
+            (context.applicationContext as SystemUIApp).startSystemUISecondaryUserServices()
+        }
 
-		fun getSystemUIServices(context: Context): List<SystemUI> =
-			(context.applicationContext as SystemUIApp).services
+        fun getSystemUIServices(context: Context): List<SystemUI> =
+            (context.applicationContext as SystemUIApp).services
+    }
 
-	}
-
-	fun <T> getComponent(interfaceType: Class<T>): T
-
+    fun <T> getComponent(interfaceType: Class<T>): T
 }

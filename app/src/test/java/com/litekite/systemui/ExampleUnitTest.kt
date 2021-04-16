@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui
 
 import org.junit.Assert.assertEquals
@@ -29,8 +28,8 @@ import org.junit.Test
  * @since 1.0
  */
 class ExampleUnitTest {
-	@Test
-	fun addition_isCorrect() {
-		assertEquals(4, 2 + 2)
-	}
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2)
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.widget
 
 import android.content.Context
@@ -30,43 +29,42 @@ import com.litekite.systemui.util.IntentUtil
  * @since 1.0
  */
 class AppButtonView @JvmOverloads constructor(
-	context: Context,
-	attrs: AttributeSet? = null,
-	defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : AppCompatImageButton(context, attrs, defStyleAttr), View.OnClickListener {
 
-	companion object {
-		val TAG = AppButtonView::class.java.simpleName
-	}
+    companion object {
+        val TAG = AppButtonView::class.java.simpleName
+    }
 
-	val action: String
-	val pkg: String
-	val component: String
+    val action: String
+    val pkg: String
+    val component: String
 
-	init {
-		val ta = context.obtainStyledAttributes(
-			attrs,
-			R.styleable.AppButtonView,
-			defStyleAttr,
-			0
-		)
-		action = ta.getString(R.styleable.AppButtonView_action) ?: Intent.ACTION_MAIN
-		pkg = ta.getString(R.styleable.AppButtonView_pkg) ?: ""
-		component = ta.getString(R.styleable.AppButtonView_component) ?: ""
-		ta.recycle()
-		forceHasOverlappingRendering(false)
-	}
+    init {
+        val ta = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.AppButtonView,
+            defStyleAttr,
+            0
+        )
+        action = ta.getString(R.styleable.AppButtonView_action) ?: Intent.ACTION_MAIN
+        pkg = ta.getString(R.styleable.AppButtonView_pkg) ?: ""
+        component = ta.getString(R.styleable.AppButtonView_component) ?: ""
+        ta.recycle()
+        forceHasOverlappingRendering(false)
+    }
 
-	override fun onFinishInflate() {
-		super.onFinishInflate()
-		// Registers short press events
-		setOnClickListener(this)
-	}
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        // Registers short press events
+        setOnClickListener(this)
+    }
 
-	override fun onClick(v: View?) {
-		if (v != null) {
-			IntentUtil.launchActivity(context, action, pkg, component)
-		}
-	}
-
+    override fun onClick(v: View?) {
+        if (v != null) {
+            IntentUtil.launchActivity(context, action, pkg, component)
+        }
+    }
 }

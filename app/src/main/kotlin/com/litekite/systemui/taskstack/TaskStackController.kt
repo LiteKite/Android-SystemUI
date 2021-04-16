@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.taskstack
 
 import android.app.ActivityManager
@@ -32,59 +31,56 @@ import javax.inject.Singleton
  */
 @Singleton
 class TaskStackController @Inject constructor() :
-	CallbackProvider<TaskStackController.Callback> {
+    CallbackProvider<TaskStackController.Callback> {
 
-	companion object {
-		val TAG = TaskStackController::class.java.simpleName
-	}
+    companion object {
+        val TAG = TaskStackController::class.java.simpleName
+    }
 
-	private val activityManagerWrapper = ActivityManagerWrapper.getInstance()
-	override val callbacks: ArrayList<Callback> = ArrayList()
+    private val activityManagerWrapper = ActivityManagerWrapper.getInstance()
+    override val callbacks: ArrayList<Callback> = ArrayList()
 
-	private val taskStackChangeListener = object : TaskStackChangeListener() {
+    private val taskStackChangeListener = object : TaskStackChangeListener() {
 
-		override fun onTaskStackChanged() {
-			super.onTaskStackChanged()
-			val runningTask: ActivityManager.RunningTaskInfo? = activityManagerWrapper.runningTask
-			if (runningTask == null) {
-				SystemUI.printLog(TAG, "onTaskStackChanged: runningTask: $runningTask")
-				return
-			}
-			val topActivity = runningTask.topActivity
-			SystemUI.printLog(TAG, "onTaskStackChanged: ${topActivity.flattenToShortString()}")
-			val activityType = WindowConfiguration.activityTypeToString(
-				runningTask.configuration.windowConfiguration.activityType
-			)
-			SystemUI.printLog(TAG, "activityType: $activityType")
-			notifyTaskStackChanged(runningTask)
-		}
+        override fun onTaskStackChanged() {
+            super.onTaskStackChanged()
+            val runningTask: ActivityManager.RunningTaskInfo? = activityManagerWrapper.runningTask
+            if (runningTask == null) {
+                SystemUI.printLog(TAG, "onTaskStackChanged: runningTask: $runningTask")
+                return
+            }
+            val topActivity = runningTask.topActivity
+            SystemUI.printLog(TAG, "onTaskStackChanged: ${topActivity.flattenToShortString()}")
+            val activityType = WindowConfiguration.activityTypeToString(
+                runningTask.configuration.windowConfiguration.activityType
+            )
+            SystemUI.printLog(TAG, "activityType: $activityType")
+            notifyTaskStackChanged(runningTask)
+        }
 
-		override fun onTaskDisplayChanged(taskId: Int, newDisplayId: Int) {
-			super.onTaskDisplayChanged(taskId, newDisplayId)
-			SystemUI.printLog(TAG, "onTaskDisplayChanged:")
-		}
+        override fun onTaskDisplayChanged(taskId: Int, newDisplayId: Int) {
+            super.onTaskDisplayChanged(taskId, newDisplayId)
+            SystemUI.printLog(TAG, "onTaskDisplayChanged:")
+        }
+    }
 
-	}
+    init {
+        registerListener()
+    }
 
-	init {
-		registerListener()
-	}
+    private fun registerListener() {
+        activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
+    }
 
-	private fun registerListener() {
-		activityManagerWrapper.registerTaskStackListener(taskStackChangeListener)
-	}
+    private fun notifyTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
+        callbacks.forEach { it.onTaskStackChanged(runningTaskInfo) }
+    }
 
-	private fun notifyTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
-		callbacks.forEach { it.onTaskStackChanged(runningTaskInfo) }
-	}
+    /**
+     * A listener that will be notified whenever a change in activity task stack.
+     */
+    interface Callback {
 
-	/**
-	 * A listener that will be notified whenever a change in activity task stack.
-	 */
-	interface Callback {
-
-		fun onTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo)
-
-	}
-
+        fun onTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo)
+    }
 }

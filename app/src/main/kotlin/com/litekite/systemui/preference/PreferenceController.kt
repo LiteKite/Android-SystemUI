@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.preference
 
 import android.content.Context
@@ -35,78 +34,77 @@ import javax.inject.Singleton
 @Singleton
 class PreferenceController @Inject constructor(private val context: Context) {
 
-	companion object {
-		const val PREFERENCES_SYSTEM_UI = "preferences_system_ui"
-	}
+    companion object {
+        const val PREFERENCES_SYSTEM_UI = "preferences_system_ui"
+    }
 
-	private val preferences = getPreferences()
-	private val editor = getEditor()
+    private val preferences = getPreferences()
+    private val editor = getEditor()
 
-	fun getBoolean(key: String): Boolean {
-		return preferences.getBoolean(key, false)
-	}
+    fun getBoolean(key: String): Boolean {
+        return preferences.getBoolean(key, false)
+    }
 
-	fun getInt(key: String): Int {
-		return preferences.getInt(key, 0)
-	}
+    fun getInt(key: String): Int {
+        return preferences.getInt(key, 0)
+    }
 
-	fun getLong(key: String): Long {
-		return preferences.getLong(key, 0)
-	}
+    fun getLong(key: String): Long {
+        return preferences.getLong(key, 0)
+    }
 
-	fun getFloat(key: String): Float {
-		return preferences.getFloat(key, 0F)
-	}
+    fun getFloat(key: String): Float {
+        return preferences.getFloat(key, 0F)
+    }
 
-	fun getDouble(key: String): Double {
-		return java.lang.Double.longBitsToDouble(
-			preferences.getLong(key, 0)
-		)
-	}
+    fun getDouble(key: String): Double {
+        return java.lang.Double.longBitsToDouble(
+            preferences.getLong(key, 0)
+        )
+    }
 
-	fun getString(key: String): String {
-		return preferences.getString(key, "") ?: ""
-	}
+    fun getString(key: String): String {
+        return preferences.getString(key, "") ?: ""
+    }
 
-	fun store(key: String, value: Boolean) {
-		editor.putBoolean(key, value).apply()
-	}
+    fun store(key: String, value: Boolean) {
+        editor.putBoolean(key, value).apply()
+    }
 
-	fun store(key: String, value: Int) {
-		editor.putInt(key, value).apply()
-	}
+    fun store(key: String, value: Int) {
+        editor.putInt(key, value).apply()
+    }
 
-	fun store(key: String, value: Long) {
-		editor.putLong(
-			key,
-			value
-		).apply()
-	}
+    fun store(key: String, value: Long) {
+        editor.putLong(
+            key,
+            value
+        ).apply()
+    }
 
-	fun store(key: String, value: Float) {
-		editor.putFloat(key, value).apply()
-	}
+    fun store(key: String, value: Float) {
+        editor.putFloat(key, value).apply()
+    }
 
-	fun store(key: String, value: Double) {
-		editor.putLong(
-			key,
-			java.lang.Double.doubleToRawLongBits((value))
-		).apply()
-	}
+    fun store(key: String, value: Double) {
+        editor.putLong(
+            key,
+            java.lang.Double.doubleToRawLongBits((value))
+        ).apply()
+    }
 
-	fun store(key: String, value: String) {
-		editor.putString(key, value).apply()
-	}
+    fun store(key: String, value: String) {
+        editor.putString(key, value).apply()
+    }
 
-	private fun getEditor(): SharedPreferences.Editor {
-		return preferences.edit()
-	}
+    private fun getEditor(): SharedPreferences.Editor {
+        return preferences.edit()
+    }
 
-	private fun getPreferences(): SharedPreferences {
-		return context.createDeviceProtectedStorageContext().getSharedPreferences(
-			PREFERENCES_SYSTEM_UI,
-			Context.MODE_PRIVATE
-		)
-	}
-
+    private fun getPreferences(): SharedPreferences {
+        return context.createDeviceProtectedStorageContext().getSharedPreferences(
+            PREFERENCES_SYSTEM_UI,
+            Context.MODE_PRIVATE
+        )
+    }
 }

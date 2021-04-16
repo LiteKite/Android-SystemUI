@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -33,10 +32,10 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
-	@Test
-	fun useAppContext() {
-		// Context of the app under test.
-		val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-		assertEquals("com.litekite.systemui", appContext.packageName)
-	}
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("com.litekite.systemui", appContext.packageName)
+    }
 }

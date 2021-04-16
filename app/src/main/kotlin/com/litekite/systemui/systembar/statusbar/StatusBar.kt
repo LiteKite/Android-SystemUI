@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.statusbar
 
 import android.app.ActivityManager
@@ -45,147 +44,144 @@ import java.io.PrintWriter
  */
 class StatusBar : SystemUI(), StatusBarServiceController.Callback, ConfigController.Callback {
 
-	companion object {
-		val TAG = StatusBar::class.java.simpleName
-	}
+    companion object {
+        val TAG = StatusBar::class.java.simpleName
+    }
 
-	@EntryPoint
-	@InstallIn(SingletonComponent::class)
-	interface StatusBarEntryPoint {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface StatusBarEntryPoint {
 
-		fun getStatusBarWindowController(): StatusBarWindowController
+        fun getStatusBarWindowController(): StatusBarWindowController
 
-		fun getStatusBarServiceController(): StatusBarServiceController
+        fun getStatusBarServiceController(): StatusBarServiceController
 
-		fun getConfigController(): ConfigController
+        fun getConfigController(): ConfigController
 
-		fun getTaskStackController(): TaskStackController
+        fun getTaskStackController(): TaskStackController
+    }
 
-	}
+    private lateinit var statusBarWindowController: StatusBarWindowController
+    private lateinit var statusBarServiceController: StatusBarServiceController
+    private lateinit var configController: ConfigController
+    private lateinit var taskStackController: TaskStackController
+    private lateinit var statusBarWindow: FrameLayout
+    private lateinit var statusBarView: ViewGroup
 
-	private lateinit var statusBarWindowController: StatusBarWindowController
-	private lateinit var statusBarServiceController: StatusBarServiceController
-	private lateinit var configController: ConfigController
-	private lateinit var taskStackController: TaskStackController
-	private lateinit var statusBarWindow: FrameLayout
-	private lateinit var statusBarView: ViewGroup
+    private val taskStackChangeCallback = object : TaskStackController.Callback {
 
-	private val taskStackChangeCallback = object : TaskStackController.Callback {
+        override fun onTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
+            printLog(
+                TAG,
+                "onTaskStackChanged: ${runningTaskInfo.topActivity.flattenToShortString()}"
+            )
+            statusBarView.forEach { v ->
+                if (v is AppButtonView) {
+                    v.taskChanged(runningTaskInfo)
+                } else if (v is KeyButtonView) {
+                    v.taskChanged(runningTaskInfo)
+                }
+            }
+        }
+    }
 
-		override fun onTaskStackChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
-			printLog(
-				TAG,
-				"onTaskStackChanged: ${runningTaskInfo.topActivity.flattenToShortString()}"
-			)
-			statusBarView.forEach { v ->
-				if (v is AppButtonView) {
-					v.taskChanged(runningTaskInfo)
-				} else if (v is KeyButtonView) {
-					v.taskChanged(runningTaskInfo)
-				}
-			}
-		}
+    override fun start() {
+        super.start()
+        printLog(TAG, "start")
+        putComponent(StatusBar::class.java, this)
+        // Hilt Dependency Entry Point
+        val entryPointAccessors = EntryPointAccessors.fromApplication(
+            context,
+            StatusBarEntryPoint::class.java
+        )
+        // Initiates the status bar window controller
+        statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
+        // Creates status bar window view
+        makeStatusBarView()
+        // Listens for window and system ui visibility changes
+        statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
+        statusBarServiceController.addCallback(this)
+        // Listens for config changes
+        configController = entryPointAccessors.getConfigController()
+        configController.addCallback(this)
+        // Listens for app task stack changes
+        taskStackController = entryPointAccessors.getTaskStackController()
+        taskStackController.addCallback(taskStackChangeCallback)
+    }
 
-	}
+    private fun makeStatusBarView() {
+        val superStatusBarBinding = SuperStatusBarBinding.inflate(LayoutInflater.from(context))
+        statusBarWindow = superStatusBarBinding.root
+        statusBarView = superStatusBarBinding.statusBar.statusBarContainer
+        statusBarWindowController.add(statusBarWindow)
+    }
 
-	override fun start() {
-		super.start()
-		printLog(TAG, "start")
-		putComponent(StatusBar::class.java, this)
-		// Hilt Dependency Entry Point
-		val entryPointAccessors = EntryPointAccessors.fromApplication(
-			context,
-			StatusBarEntryPoint::class.java
-		)
-		// Initiates the status bar window controller
-		statusBarWindowController = entryPointAccessors.getStatusBarWindowController()
-		// Creates status bar window view
-		makeStatusBarView()
-		// Listens for window and system ui visibility changes
-		statusBarServiceController = entryPointAccessors.getStatusBarServiceController()
-		statusBarServiceController.addCallback(this)
-		// Listens for config changes
-		configController = entryPointAccessors.getConfigController()
-		configController.addCallback(this)
-		// Listens for app task stack changes
-		taskStackController = entryPointAccessors.getTaskStackController()
-		taskStackController.addCallback(taskStackChangeCallback)
-	}
+    override fun getRootView(): View {
+        return statusBarWindow
+    }
 
-	private fun makeStatusBarView() {
-		val superStatusBarBinding = SuperStatusBarBinding.inflate(LayoutInflater.from(context))
-		statusBarWindow = superStatusBarBinding.root
-		statusBarView = superStatusBarBinding.statusBar.statusBarContainer
-		statusBarWindowController.add(statusBarWindow)
-	}
+    override fun onBootCompleted() {
+        super.onBootCompleted()
+        printLog(TAG, "onBootCompleted:")
+    }
 
-	override fun getRootView(): View {
-		return statusBarWindow
-	}
+    override fun onConfigChanged(newConfig: Configuration) {
+        super.onConfigChanged(newConfig)
+        printLog(TAG, "onConfigChanged:")
+    }
 
-	override fun onBootCompleted() {
-		super.onBootCompleted()
-		printLog(TAG, "onBootCompleted:")
-	}
+    override fun onDensityOrFontScaleChanged() {
+        super.onDensityOrFontScaleChanged()
+        printLog(TAG, "onDensityOrFontScaleChanged:")
+    }
 
-	override fun onConfigChanged(newConfig: Configuration) {
-		super.onConfigChanged(newConfig)
-		printLog(TAG, "onConfigChanged:")
-	}
+    override fun onLocaleChanged() {
+        super.onLocaleChanged()
+        printLog(TAG, "onLocaleChanged:")
+    }
 
-	override fun onDensityOrFontScaleChanged() {
-		super.onDensityOrFontScaleChanged()
-		printLog(TAG, "onDensityOrFontScaleChanged:")
-	}
+    override fun onOverlayChanged() {
+        super.onOverlayChanged()
+        printLog(TAG, "onOverlayChanged:")
+    }
 
-	override fun onLocaleChanged() {
-		super.onLocaleChanged()
-		printLog(TAG, "onLocaleChanged:")
-	}
+    override fun setWindowState(displayId: Int, window: Int, state: Int) {
+        printLog(TAG, "setWindowState:")
+    }
 
-	override fun onOverlayChanged() {
-		super.onOverlayChanged()
-		printLog(TAG, "onOverlayChanged:")
-	}
+    override fun setSystemUiVisibility(
+        displayId: Int,
+        vis: Int,
+        fullscreenStackVis: Int,
+        dockedStackVis: Int,
+        mask: Int,
+        fullscreenBounds: Rect?,
+        dockedBounds: Rect?,
+        navBarColorManagedByIme: Boolean
+    ) {
+        printLog(TAG, "setSystemUiVisibility:")
+    }
 
-	override fun setWindowState(displayId: Int, window: Int, state: Int) {
-		printLog(TAG, "setWindowState:")
-	}
+    override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+        super.dump(fd, pw, args)
+        pw?.println("statusBarView: $statusBarView")
+        pw?.println("statusBarWindow: $statusBarWindow")
+        pw?.println("configController: $configController")
+        pw?.println("TaskStackController: $TaskStackController")
+        pw?.println("statusBarWindowController: $statusBarWindowController")
+        pw?.println("statusBarServiceController: $statusBarServiceController")
+    }
 
-	override fun setSystemUiVisibility(
-		displayId: Int,
-		vis: Int,
-		fullscreenStackVis: Int,
-		dockedStackVis: Int,
-		mask: Int,
-		fullscreenBounds: Rect?,
-		dockedBounds: Rect?,
-		navBarColorManagedByIme: Boolean
-	) {
-		printLog(TAG, "setSystemUiVisibility:")
-	}
-
-	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		super.dump(fd, pw, args)
-		pw?.println("statusBarView: $statusBarView")
-		pw?.println("statusBarWindow: $statusBarWindow")
-		pw?.println("configController: $configController")
-		pw?.println("TaskStackController: $TaskStackController")
-		pw?.println("statusBarWindowController: $statusBarWindowController")
-		pw?.println("statusBarServiceController: $statusBarServiceController")
-	}
-
-	override fun destroy() {
-		super.destroy()
-		printLog(TAG, "destroy:")
-		// Removes window and system ui visibility change callback
-		statusBarServiceController.removeCallback(this)
-		// Removes config change callback
-		configController.removeCallback(this)
-		// Removes app task stack change callback
-		taskStackController.removeCallback(taskStackChangeCallback)
-		// Removes status bar window view
-		statusBarWindowController.remove()
-	}
-
+    override fun destroy() {
+        super.destroy()
+        printLog(TAG, "destroy:")
+        // Removes window and system ui visibility change callback
+        statusBarServiceController.removeCallback(this)
+        // Removes config change callback
+        configController.removeCallback(this)
+        // Removes app task stack change callback
+        taskStackController.removeCallback(taskStackChangeCallback)
+        // Removes status bar window view
+        statusBarWindowController.remove()
+    }
 }

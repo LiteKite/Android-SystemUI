@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.base
 
 /**
@@ -23,14 +22,13 @@ package com.litekite.systemui.base
  */
 interface CallbackProvider<T> {
 
-	val callbacks: ArrayList<T>
+    val callbacks: ArrayList<T>
 
-	fun addCallback(cb: T) {
-		callbacks.add(cb)
-	}
+    fun addCallback(cb: T) {
+        callbacks.add(cb)
+    }
 
-	fun removeCallback(cb: T) {
-		callbacks.remove(cb)
-	}
-
+    fun removeCallback(cb: T) {
+        callbacks.remove(cb)
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.base
 
 import android.content.Context
@@ -35,66 +34,63 @@ import java.io.PrintWriter
  */
 abstract class SystemUI : SystemUIServiceProvider {
 
-	companion object {
+    companion object {
 
-		/**
-		 * Logs messages for Debugging Purposes.
-		 *
-		 * @param tag     TAG is a class name in which the log come from.
-		 * @param message Type of a Log Message.
-		 */
-		fun printLog(tag: String, message: String) {
-			Log.d(tag, message)
-		}
+        /**
+         * Logs messages for Debugging Purposes.
+         *
+         * @param tag     TAG is a class name in which the log come from.
+         * @param message Type of a Log Message.
+         */
+        fun printLog(tag: String, message: String) {
+            Log.d(tag, message)
+        }
+    }
 
-	}
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface SystemUIEntryPoint {
 
-	@EntryPoint
-	@InstallIn(SingletonComponent::class)
-	interface SystemUIEntryPoint {
+        fun getFragmentHostController(): FragmentHostController
+    }
 
-		fun getFragmentHostController(): FragmentHostController
+    lateinit var context: Context
+    lateinit var components: MutableMap<Class<*>, Any>
+    private lateinit var fragmentHostController: FragmentHostController
 
-	}
+    open fun start() {
+        // Hilt Dependency Entry Point
+        val entryPointAccessors = EntryPointAccessors.fromApplication(
+            context,
+            SystemUIEntryPoint::class.java
+        )
+        // Initialize Fragment Host Controller
+        fragmentHostController = entryPointAccessors.getFragmentHostController()
+    }
 
-	lateinit var context: Context
-	lateinit var components: MutableMap<Class<*>, Any>
-	private lateinit var fragmentHostController: FragmentHostController
+    fun getSupportFragmentManager(): FragmentManager? {
+        getRootView()?.let {
+            return fragmentHostController.get(it).fragmentController.supportFragmentManager
+        }
+        return null
+    }
 
-	open fun start() {
-		// Hilt Dependency Entry Point
-		val entryPointAccessors = EntryPointAccessors.fromApplication(
-			context,
-			SystemUIEntryPoint::class.java
-		)
-		// Initialize Fragment Host Controller
-		fragmentHostController = entryPointAccessors.getFragmentHostController()
-	}
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T
 
-	fun getSupportFragmentManager(): FragmentManager? {
-		getRootView()?.let {
-			return fragmentHostController.get(it).fragmentController.supportFragmentManager
-		}
-		return null
-	}
+    fun <T, C : T> putComponent(interfaceType: Class<T>, component: C) {
+        components[interfaceType] = component as Any
+    }
 
-	@Suppress("UNCHECKED_CAST")
-	override fun <T> getComponent(interfaceType: Class<T>): T = components[interfaceType] as T
+    open fun getRootView(): View? = null
 
-	fun <T, C : T> putComponent(interfaceType: Class<T>, component: C) {
-		components[interfaceType] = component as Any
-	}
+    open fun onBootCompleted() {}
 
-	open fun getRootView(): View? = null
+    open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
 
-	open fun onBootCompleted() {}
-
-	open fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {}
-
-	open fun destroy() {
-		getRootView()?.let {
-			return fragmentHostController.destroy(it)
-		}
-	}
-
+    open fun destroy() {
+        getRootView()?.let {
+            return fragmentHostController.destroy(it)
+        }
+    }
 }

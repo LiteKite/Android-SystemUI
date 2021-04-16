@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.base
 
 import com.litekite.systemui.R
@@ -29,88 +28,87 @@ import java.io.PrintWriter
 @Suppress("UNUSED")
 class SystemBars : SystemUI() {
 
-	companion object {
-		val TAG = SystemBars::class.java.simpleName
-	}
+    companion object {
+        val TAG = SystemBars::class.java.simpleName
+    }
 
-	private lateinit var statusBar: SystemUI
-	private var navBarComponents: ArrayList<SystemUI> = ArrayList()
-	private var volumeBarComponents: ArrayList<SystemUI> = ArrayList()
+    private lateinit var statusBar: SystemUI
+    private var navBarComponents: ArrayList<SystemUI> = ArrayList()
+    private var volumeBarComponents: ArrayList<SystemUI> = ArrayList()
 
-	override fun start() {
-		super.start()
-		printLog(TAG, "start")
-		createStatusBarFromConfig()
-		createVolumeBarFromConfig()
-		createNavBarsFromConfig()
-	}
+    override fun start() {
+        super.start()
+        printLog(TAG, "start")
+        createStatusBarFromConfig()
+        createVolumeBarFromConfig()
+        createNavBarsFromConfig()
+    }
 
-	override fun onBootCompleted() {
-		super.onBootCompleted()
-		printLog(TAG, "onBootCompleted:")
-		// Notifying status bar about boot complete event
-		statusBar.onBootCompleted()
-		// Notifying nav bars about boot complete event
-		navBarComponents.forEach { it.onBootCompleted() }
-		// Notifying volume bar components about boot complete event
-		volumeBarComponents.forEach { it.onBootCompleted() }
-	}
+    override fun onBootCompleted() {
+        super.onBootCompleted()
+        printLog(TAG, "onBootCompleted:")
+        // Notifying status bar about boot complete event
+        statusBar.onBootCompleted()
+        // Notifying nav bars about boot complete event
+        navBarComponents.forEach { it.onBootCompleted() }
+        // Notifying volume bar components about boot complete event
+        volumeBarComponents.forEach { it.onBootCompleted() }
+    }
 
-	private fun createStatusBarFromConfig() {
-		printLog(TAG, "createStatusBarFromConfig: staring status bar...")
-		val serviceComponent = context.resources.getString(R.string.config_statusBarComponent)
-		statusBar = Class.forName(serviceComponent).newInstance() as SystemUI
-		statusBar.context = context
-		statusBar.components = components
-		statusBar.start()
-		printLog(TAG, "started: " + statusBar.javaClass.simpleName)
-	}
+    private fun createStatusBarFromConfig() {
+        printLog(TAG, "createStatusBarFromConfig: staring status bar...")
+        val serviceComponent = context.resources.getString(R.string.config_statusBarComponent)
+        statusBar = Class.forName(serviceComponent).newInstance() as SystemUI
+        statusBar.context = context
+        statusBar.components = components
+        statusBar.start()
+        printLog(TAG, "started: " + statusBar.javaClass.simpleName)
+    }
 
-	private fun createVolumeBarFromConfig() {
-		printLog(TAG, "createVolumeBarFromConfig: staring volume bar...")
-		val serviceComponents = context.resources.getStringArray(R.array.config_volumeBarComponents)
-		serviceComponents.forEach {
-			val volumeBar = Class.forName(it).newInstance() as SystemUI
-			volumeBar.context = context
-			volumeBar.context = context
-			volumeBar.components = components
-			volumeBar.start()
-			volumeBarComponents.add(volumeBar)
-		}
-	}
+    private fun createVolumeBarFromConfig() {
+        printLog(TAG, "createVolumeBarFromConfig: staring volume bar...")
+        val serviceComponents = context.resources.getStringArray(R.array.config_volumeBarComponents)
+        serviceComponents.forEach {
+            val volumeBar = Class.forName(it).newInstance() as SystemUI
+            volumeBar.context = context
+            volumeBar.context = context
+            volumeBar.components = components
+            volumeBar.start()
+            volumeBarComponents.add(volumeBar)
+        }
+    }
 
-	private fun createNavBarsFromConfig() {
-		printLog(TAG, "createNavBarsFromConfig: staring nav bars...")
-		val serviceComponents = context.resources.getStringArray(R.array.config_navBarComponents)
-		serviceComponents.forEach {
-			val navBar = Class.forName(it).newInstance() as SystemUI
-			navBar.context = context
-			navBar.context = context
-			navBar.components = components
-			navBar.start()
-			navBarComponents.add(navBar)
-		}
-	}
+    private fun createNavBarsFromConfig() {
+        printLog(TAG, "createNavBarsFromConfig: staring nav bars...")
+        val serviceComponents = context.resources.getStringArray(R.array.config_navBarComponents)
+        serviceComponents.forEach {
+            val navBar = Class.forName(it).newInstance() as SystemUI
+            navBar.context = context
+            navBar.context = context
+            navBar.components = components
+            navBar.start()
+            navBarComponents.add(navBar)
+        }
+    }
 
-	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		super.dump(fd, pw, args)
-		// Dumping status bar
-		statusBar.dump(fd, pw, args)
-		// Dumping nav bars
-		navBarComponents.forEach { it.dump(fd, pw, args) }
-		// Dumping volume bar components
-		volumeBarComponents.forEach { it.dump(fd, pw, args) }
-	}
+    override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+        super.dump(fd, pw, args)
+        // Dumping status bar
+        statusBar.dump(fd, pw, args)
+        // Dumping nav bars
+        navBarComponents.forEach { it.dump(fd, pw, args) }
+        // Dumping volume bar components
+        volumeBarComponents.forEach { it.dump(fd, pw, args) }
+    }
 
-	override fun destroy() {
-		super.destroy()
-		printLog(TAG, "destroy")
-		// Destroys status bar
-		statusBar.destroy()
-		// Destroys nav bars
-		navBarComponents.forEach { it.destroy() }
-		// Destroys volume bar components
-		volumeBarComponents.forEach { it.destroy() }
-	}
-
+    override fun destroy() {
+        super.destroy()
+        printLog(TAG, "destroy")
+        // Destroys status bar
+        statusBar.destroy()
+        // Destroys nav bars
+        navBarComponents.forEach { it.destroy() }
+        // Destroys volume bar components
+        volumeBarComponents.forEach { it.destroy() }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.config
 
 import android.content.Context
@@ -30,51 +29,51 @@ import javax.inject.Singleton
  */
 @Singleton
 class ConfigController @Inject constructor(context: Context) :
-	CallbackProvider<ConfigController.Callback> {
+    CallbackProvider<ConfigController.Callback> {
 
-	private val inCarMode: Boolean
-	private var lastConfig: Configuration = context.resources.configuration
-	private var uiMode: Int
-	override val callbacks: ArrayList<Callback> = ArrayList()
+    private val inCarMode: Boolean
+    private var lastConfig: Configuration = context.resources.configuration
+    private var uiMode: Int
+    override val callbacks: ArrayList<Callback> = ArrayList()
 
-	init {
-		inCarMode = ((lastConfig.uiMode and Configuration.UI_MODE_TYPE_MASK)
-				== Configuration.UI_MODE_TYPE_CAR)
-		uiMode = lastConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-	}
+    init {
+        inCarMode = (
+            (lastConfig.uiMode and Configuration.UI_MODE_TYPE_MASK)
+                == Configuration.UI_MODE_TYPE_CAR
+            )
+        uiMode = lastConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    }
 
-	fun configChanged(newConfig: Configuration) {
-		// Configuration change
-		callbacks.forEach { it.onConfigChanged(newConfig) }
-		// Density or font scale change
-		val newUiMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
-		if (lastConfig.densityDpi != newConfig.densityDpi
-			|| lastConfig.fontScale != newConfig.fontScale
-			|| (inCarMode && uiMode != newUiMode)
-		) {
-			callbacks.forEach { it.onDensityOrFontScaleChanged() }
-			uiMode = newUiMode
-		}
-		// Locale change
-		if (lastConfig.locales != newConfig.locales) {
-			callbacks.forEach { it.onLocaleChanged() }
-		}
-		// Overlay change
-		if ((lastConfig.updateFrom(newConfig) and ActivityInfo.CONFIG_ASSETS_PATHS) != 0) {
-			callbacks.forEach { it.onOverlayChanged() }
-		}
-	}
+    fun configChanged(newConfig: Configuration) {
+        // Configuration change
+        callbacks.forEach { it.onConfigChanged(newConfig) }
+        // Density or font scale change
+        val newUiMode = newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (lastConfig.densityDpi != newConfig.densityDpi ||
+            lastConfig.fontScale != newConfig.fontScale ||
+            (inCarMode && uiMode != newUiMode)
+        ) {
+            callbacks.forEach { it.onDensityOrFontScaleChanged() }
+            uiMode = newUiMode
+        }
+        // Locale change
+        if (lastConfig.locales != newConfig.locales) {
+            callbacks.forEach { it.onLocaleChanged() }
+        }
+        // Overlay change
+        if ((lastConfig.updateFrom(newConfig) and ActivityInfo.CONFIG_ASSETS_PATHS) != 0) {
+            callbacks.forEach { it.onOverlayChanged() }
+        }
+    }
 
-	interface Callback {
+    interface Callback {
 
-		fun onConfigChanged(newConfig: Configuration) {}
+        fun onConfigChanged(newConfig: Configuration) {}
 
-		fun onDensityOrFontScaleChanged() {}
+        fun onDensityOrFontScaleChanged() {}
 
-		fun onLocaleChanged() {}
+        fun onLocaleChanged() {}
 
-		fun onOverlayChanged() {}
-
-	}
-
+        fun onOverlayChanged() {}
+    }
 }

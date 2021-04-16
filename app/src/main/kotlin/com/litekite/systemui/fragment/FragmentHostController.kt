@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.fragment
 
 import android.content.Context
@@ -39,59 +38,57 @@ import javax.inject.Singleton
  */
 @Singleton
 class FragmentHostController @Inject constructor(private val context: Context) :
-	ConfigController.Callback {
+    ConfigController.Callback {
 
-	companion object {
-		val TAG = FragmentHostController::class.java.simpleName
-	}
+    companion object {
+        val TAG = FragmentHostController::class.java.simpleName
+    }
 
-	@EntryPoint
-	@InstallIn(SingletonComponent::class)
-	interface FragmentHostControllerEntryPoint {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface FragmentHostControllerEntryPoint {
 
-		fun getConfigController(): ConfigController
+        fun getConfigController(): ConfigController
+    }
 
-	}
+    private val configController: ConfigController
+    private val fragmentHostsMap: ArrayMap<View, FragmentHostProvider> = ArrayMap()
 
-	private val configController: ConfigController
-	private val fragmentHostsMap: ArrayMap<View, FragmentHostProvider> = ArrayMap()
+    init {
+        // Hilt Dependency Entry Point
+        val entryPointAccessors = EntryPointAccessors.fromApplication(
+            context,
+            FragmentHostControllerEntryPoint::class.java
+        )
+        // Listens for config changes
+        configController = entryPointAccessors.getConfigController()
+        configController.addCallback(this)
+    }
 
-	init {
-		// Hilt Dependency Entry Point
-		val entryPointAccessors = EntryPointAccessors.fromApplication(
-			context,
-			FragmentHostControllerEntryPoint::class.java
-		)
-		// Listens for config changes
-		configController = entryPointAccessors.getConfigController()
-		configController.addCallback(this)
-	}
+    override fun onConfigChanged(newConfig: Configuration) {
+        super.onConfigChanged(newConfig)
+        SystemUI.printLog(TAG, "onConfigChanged:")
+        // Notifies config changes to all fragments
+        fragmentHostsMap.values.forEach { it.configChanged(newConfig) }
+    }
 
-	override fun onConfigChanged(newConfig: Configuration) {
-		super.onConfigChanged(newConfig)
-		SystemUI.printLog(TAG, "onConfigChanged:")
-		// Notifies config changes to all fragments
-		fragmentHostsMap.values.forEach { it.configChanged(newConfig) }
-	}
+    fun get(view: View): FragmentHostProvider {
+        val rootView = view.rootView
+        var fragmentHostProvider: FragmentHostProvider? = fragmentHostsMap[rootView]
+        if (fragmentHostProvider == null) {
+            fragmentHostProvider = FragmentHostProvider(context, rootView)
+            fragmentHostsMap[rootView] = fragmentHostProvider
+        }
+        return fragmentHostProvider
+    }
 
-	fun get(view: View): FragmentHostProvider {
-		val rootView = view.rootView
-		var fragmentHostProvider: FragmentHostProvider? = fragmentHostsMap[rootView]
-		if (fragmentHostProvider == null) {
-			fragmentHostProvider = FragmentHostProvider(context, rootView)
-			fragmentHostsMap[rootView] = fragmentHostProvider
-		}
-		return fragmentHostProvider
-	}
+    fun destroy(view: View) {
+        fragmentHostsMap[view]?.destroyFragmentController()
+        fragmentHostsMap.remove(view)
+    }
 
-	fun destroy(view: View) {
-		fragmentHostsMap[view]?.destroyFragmentController()
-		fragmentHostsMap.remove(view)
-	}
-
-	fun destroyAll() {
-		fragmentHostsMap.values.forEach { it.destroyFragmentController() }
-		fragmentHostsMap.clear()
-	}
-
+    fun destroyAll() {
+        fragmentHostsMap.values.forEach { it.destroyFragmentController() }
+        fragmentHostsMap.clear()
+    }
 }

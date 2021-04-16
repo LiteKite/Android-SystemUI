@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.navbar.bottom
 
 import android.content.Context
@@ -36,43 +35,42 @@ import javax.inject.Singleton
 @Singleton
 class BottomNavBarWindowController @Inject constructor(private val context: Context) {
 
-	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-	private lateinit var lp: WindowManager.LayoutParams
-	private lateinit var bottomNavBarView: View
-	private var barHeight = context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private lateinit var lp: WindowManager.LayoutParams
+    private lateinit var bottomNavBarView: View
+    private var barHeight = context.resources.getDimensionPixelSize(R.dimen.bottom_nav_bar_height)
 
-	/**
-	 * Adds the bottom nav bar view to the window manager.
-	 *
-	 * @param bottomNavBarView The view to add.
-	 */
-	fun add(bottomNavBarView: View) {
-		lp = WindowManager.LayoutParams(
-			WindowManager.LayoutParams.MATCH_PARENT,
-			barHeight,
-			WindowManager.LayoutParams.TYPE_NAVIGATION_BAR,
-			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-					or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-					or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
-					or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-					or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
-			PixelFormat.TRANSLUCENT
-		)
-		lp.token = Binder()
-		lp.gravity = Gravity.BOTTOM
-		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-		lp.title = "BottomNavBar"
-		lp.packageName = context.packageName
-		lp.windowAnimations = R.style.BottomInOutAnim
-		this.bottomNavBarView = bottomNavBarView
-		windowManager.addView(this.bottomNavBarView, lp)
-	}
+    /**
+     * Adds the bottom nav bar view to the window manager.
+     *
+     * @param bottomNavBarView The view to add.
+     */
+    fun add(bottomNavBarView: View) {
+        lp = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            barHeight,
+            WindowManager.LayoutParams.TYPE_NAVIGATION_BAR,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
+            PixelFormat.TRANSLUCENT
+        )
+        lp.token = Binder()
+        lp.gravity = Gravity.BOTTOM
+        lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        lp.title = "BottomNavBar"
+        lp.packageName = context.packageName
+        lp.windowAnimations = R.style.BottomInOutAnim
+        this.bottomNavBarView = bottomNavBarView
+        windowManager.addView(this.bottomNavBarView, lp)
+    }
 
-	/**
-	 * Removes the bottom nav bar view from the window manager.
-	 */
-	fun remove() {
-		windowManager.removeViewImmediate(bottomNavBarView)
-	}
-
+    /**
+     * Removes the bottom nav bar view from the window manager.
+     */
+    fun remove() {
+        windowManager.removeViewImmediate(bottomNavBarView)
+    }
 }

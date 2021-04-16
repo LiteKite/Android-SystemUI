@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.service
 
 import android.app.Service
@@ -31,46 +30,44 @@ import java.io.PrintWriter
  */
 class SystemUISecondaryUserService : Service() {
 
-	companion object {
+    companion object {
 
-		val TAG = SystemUISecondaryUserService::class.java.simpleName
+        val TAG = SystemUISecondaryUserService::class.java.simpleName
+    }
 
-	}
+    override fun onCreate() {
+        super.onCreate()
+        SystemUIServiceProvider.startSystemUISecondaryUserServices(applicationContext)
+    }
 
-	override fun onCreate() {
-		super.onCreate()
-		SystemUIServiceProvider.startSystemUISecondaryUserServices(applicationContext)
-	}
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return START_STICKY
+    }
 
-	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		return START_STICKY
-	}
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
 
-	override fun onBind(intent: Intent?): IBinder? {
-		return null
-	}
+    override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+        val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
+        if (args == null || args.isEmpty()) {
+            services.forEach {
+                pw?.println("dumping service: " + it.javaClass.name)
+                it.dump(fd, pw, args)
+            }
+        } else {
+            val svc = args[0]
+            services.forEach {
+                val name = it.javaClass.name
+                if (name.endsWith(svc)) it.dump(fd, pw, args)
+            }
+        }
+    }
 
-	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
-		if (args == null || args.isEmpty()) {
-			services.forEach {
-				pw?.println("dumping service: " + it.javaClass.name)
-				it.dump(fd, pw, args)
-			}
-		} else {
-			val svc = args[0]
-			services.forEach {
-				val name = it.javaClass.name
-				if (name.endsWith(svc)) it.dump(fd, pw, args)
-			}
-		}
-	}
-
-	override fun onDestroy() {
-		SystemUI.printLog(TAG, "onDestroy:")
-		val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
-		services.forEach { it.destroy() }
-		super.onDestroy()
-	}
-
+    override fun onDestroy() {
+        SystemUI.printLog(TAG, "onDestroy:")
+        val services = SystemUIServiceProvider.getSystemUIServices(applicationContext)
+        services.forEach { it.destroy() }
+        super.onDestroy()
+    }
 }

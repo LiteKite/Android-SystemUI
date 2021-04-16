@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.widget
 
 import android.content.Context
@@ -32,67 +31,68 @@ import com.litekite.systemui.R
  * @since 1.0
  */
 class FlexMotionLayout @JvmOverloads constructor(
-	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : MotionLayout(context, attrs, defStyleAttr) {
 
-	private var attached: Boolean = false
-	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private var attached: Boolean = false
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-	private val transitionListener = object : TransitionListener {
-		override fun onTransitionStarted(
-			motionLayout: MotionLayout?,
-			startId: Int,
-			endId: Int
-		) {
-			(parent as? ViewGroup)?.apply {
-				layoutParams.height = maxHeight
-				windowManager.updateViewLayout(this, layoutParams)
-			}
-		}
+    private val transitionListener = object : TransitionListener {
+        override fun onTransitionStarted(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Int
+        ) {
+            (parent as? ViewGroup)?.apply {
+                layoutParams.height = maxHeight
+                windowManager.updateViewLayout(this, layoutParams)
+            }
+        }
 
-		override fun onTransitionChange(
-			motionLayout: MotionLayout?,
-			startId: Int,
-			endId: Int,
-			progress: Float
-		) {
-		}
+        override fun onTransitionChange(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Int,
+            progress: Float
+        ) {
+        }
 
-		override fun onTransitionCompleted(
-			motionLayout: MotionLayout?,
-			currentId: Int
-		) {
-			if (currentId == R.id.start) {
-				(parent as? ViewGroup)?.apply {
-					layoutParams.height = minHeight
-					windowManager.updateViewLayout(this, layoutParams)
-				}
-			}
-		}
+        override fun onTransitionCompleted(
+            motionLayout: MotionLayout?,
+            currentId: Int
+        ) {
+            if (currentId == R.id.start) {
+                (parent as? ViewGroup)?.apply {
+                    layoutParams.height = minHeight
+                    windowManager.updateViewLayout(this, layoutParams)
+                }
+            }
+        }
 
-		override fun onTransitionTrigger(
-			motionLayout: MotionLayout?,
-			startId: Int,
-			endId: Boolean,
-			progress: Float
-		) {
-		}
-	}
+        override fun onTransitionTrigger(
+            motionLayout: MotionLayout?,
+            startId: Int,
+            endId: Boolean,
+            progress: Float
+        ) {
+        }
+    }
 
-	override fun onAttachedToWindow() {
-		super.onAttachedToWindow()
-		if (!attached) {
-			attached = true
-			addTransitionListener(transitionListener)
-		}
-	}
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (!attached) {
+            attached = true
+            addTransitionListener(transitionListener)
+        }
+    }
 
-	override fun onDetachedFromWindow() {
-		super.onDetachedFromWindow()
-		if (attached) {
-			removeTransitionListener(transitionListener)
-			attached = false
-		}
-	}
-
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        if (attached) {
+            removeTransitionListener(transitionListener)
+            attached = false
+        }
+    }
 }

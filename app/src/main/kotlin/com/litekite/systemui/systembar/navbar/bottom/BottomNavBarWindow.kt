@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.navbar.bottom
 
 import android.content.Context
@@ -32,33 +31,33 @@ import dagger.hilt.components.SingletonComponent
  * @since 1.0
  */
 class BottomNavBarWindow @JvmOverloads constructor(
-	context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-	companion object {
-		val TAG = BottomNavBarWindow::class.java.simpleName
-	}
+    companion object {
+        val TAG = BottomNavBarWindow::class.java.simpleName
+    }
 
-	@EntryPoint
-	@InstallIn(SingletonComponent::class)
-	interface BottomNavBarWindowEntryPoint {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface BottomNavBarWindowEntryPoint {
 
-		fun getVolumeBar(): VolumeBar
+        fun getVolumeBar(): VolumeBar
+    }
 
-	}
+    private fun getEntryPointAccessor() = EntryPointAccessors.fromApplication(
+        context,
+        BottomNavBarWindowEntryPoint::class.java
+    )
 
-	private fun getEntryPointAccessor() = EntryPointAccessors.fromApplication(
-		context,
-		BottomNavBarWindowEntryPoint::class.java
-	)
-
-	override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-		// Passes touch events to the volume bar component for the motion layout
-		// to animate the volume bar based the swipe gesture
-		if (ev?.action != MotionEvent.ACTION_OUTSIDE) {
-			getEntryPointAccessor().getVolumeBar().getRootView().dispatchTouchEvent(ev)
-		}
-		return super.dispatchTouchEvent(ev)
-	}
-
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        // Passes touch events to the volume bar component for the motion layout
+        // to animate the volume bar based the swipe gesture
+        if (ev?.action != MotionEvent.ACTION_OUTSIDE) {
+            getEntryPointAccessor().getVolumeBar().getRootView().dispatchTouchEvent(ev)
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 }

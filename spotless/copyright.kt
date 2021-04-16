@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 LiteKite Startup. All rights reserved.
+ * Copyright $YEAR LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.litekite.systemui.util
-
-import android.app.ActivityManager
-import com.litekite.systemui.widget.AppButtonView
-
-fun AppButtonView.taskChanged(runningTaskInfo: ActivityManager.RunningTaskInfo) {
-    // Highlights view when its app activity in foreground
-    val topActivity = runningTaskInfo.topActivity
-    this.isActivated = (
-        this.pkg == topActivity.packageName ||
-            this.component == topActivity.flattenToShortString()
-        )
-}

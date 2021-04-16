@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.volumebar
 
 import android.content.res.Configuration
@@ -39,96 +38,94 @@ import java.io.PrintWriter
  */
 class VolumeBar : SystemUI(), ConfigController.Callback {
 
-	companion object {
-		val TAG = VolumeBar::class.java.simpleName
-	}
+    companion object {
+        val TAG = VolumeBar::class.java.simpleName
+    }
 
-	@EntryPoint
-	@InstallIn(SingletonComponent::class)
-	interface VolumeBarEntryPoint {
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface VolumeBarEntryPoint {
 
-		fun getVolumeBarWindowController(): VolumeBarWindowController
+        fun getVolumeBarWindowController(): VolumeBarWindowController
 
-		fun getConfigController(): ConfigController
+        fun getConfigController(): ConfigController
+    }
 
-	}
+    private lateinit var volumeBarWindowController: VolumeBarWindowController
+    private lateinit var configController: ConfigController
+    private lateinit var volumeBarWindow: FrameLayout
+    private lateinit var volumeBarViewBinding: VolumeBarBinding
+    private lateinit var volumeBarView: MotionLayout
 
-	private lateinit var volumeBarWindowController: VolumeBarWindowController
-	private lateinit var configController: ConfigController
-	private lateinit var volumeBarWindow: FrameLayout
-	private lateinit var volumeBarViewBinding: VolumeBarBinding
-	private lateinit var volumeBarView: MotionLayout
+    override fun start() {
+        super.start()
+        printLog(TAG, "start:")
+        putComponent(VolumeBar::class.java, this)
+        // Hilt dependency entry point
+        val entryPointAccessors = EntryPointAccessors.fromApplication(
+            context,
+            VolumeBarEntryPoint::class.java
+        )
+        // Initiates the volume bar window controller
+        volumeBarWindowController = entryPointAccessors.getVolumeBarWindowController()
+        // Creates volume navigation bar view
+        makeVolumeBar()
+        // Listens for config changes
+        configController = entryPointAccessors.getConfigController()
+        configController.addCallback(this)
+    }
 
-	override fun start() {
-		super.start()
-		printLog(TAG, "start:")
-		putComponent(VolumeBar::class.java, this)
-		// Hilt dependency entry point
-		val entryPointAccessors = EntryPointAccessors.fromApplication(
-			context,
-			VolumeBarEntryPoint::class.java
-		)
-		// Initiates the volume bar window controller
-		volumeBarWindowController = entryPointAccessors.getVolumeBarWindowController()
-		// Creates volume navigation bar view
-		makeVolumeBar()
-		// Listens for config changes
-		configController = entryPointAccessors.getConfigController()
-		configController.addCallback(this)
-	}
+    private fun makeVolumeBar() {
+        val superVolumeBarBinding = SuperVolumeBarBinding.inflate(LayoutInflater.from(context))
+        volumeBarWindow = superVolumeBarBinding.root
+        volumeBarViewBinding = superVolumeBarBinding.volumeBar
+        volumeBarView = volumeBarViewBinding.volumeBarContainer
+        volumeBarWindowController.add(volumeBarWindow)
+    }
 
-	private fun makeVolumeBar() {
-		val superVolumeBarBinding = SuperVolumeBarBinding.inflate(LayoutInflater.from(context))
-		volumeBarWindow = superVolumeBarBinding.root
-		volumeBarViewBinding = superVolumeBarBinding.volumeBar
-		volumeBarView = volumeBarViewBinding.volumeBarContainer
-		volumeBarWindowController.add(volumeBarWindow)
-	}
+    override fun getRootView(): View {
+        return volumeBarWindow
+    }
 
-	override fun getRootView(): View {
-		return volumeBarWindow
-	}
+    override fun onBootCompleted() {
+        super.onBootCompleted()
+        printLog(TAG, "onBootCompleted:")
+    }
 
-	override fun onBootCompleted() {
-		super.onBootCompleted()
-		printLog(TAG, "onBootCompleted:")
-	}
+    override fun onConfigChanged(newConfig: Configuration) {
+        super.onConfigChanged(newConfig)
+        printLog(TAG, "onConfigChanged:")
+    }
 
-	override fun onConfigChanged(newConfig: Configuration) {
-		super.onConfigChanged(newConfig)
-		printLog(TAG, "onConfigChanged:")
-	}
+    override fun onDensityOrFontScaleChanged() {
+        super.onDensityOrFontScaleChanged()
+        printLog(TAG, "onDensityOrFontScaleChanged:")
+    }
 
-	override fun onDensityOrFontScaleChanged() {
-		super.onDensityOrFontScaleChanged()
-		printLog(TAG, "onDensityOrFontScaleChanged:")
-	}
+    override fun onLocaleChanged() {
+        super.onLocaleChanged()
+        printLog(TAG, "onLocaleChanged:")
+    }
 
-	override fun onLocaleChanged() {
-		super.onLocaleChanged()
-		printLog(TAG, "onLocaleChanged:")
-	}
+    override fun onOverlayChanged() {
+        super.onOverlayChanged()
+        printLog(TAG, "onOverlayChanged:")
+    }
 
-	override fun onOverlayChanged() {
-		super.onOverlayChanged()
-		printLog(TAG, "onOverlayChanged:")
-	}
+    override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
+        super.dump(fd, pw, args)
+        pw?.println("volumeBarView: $volumeBarView")
+        pw?.println("volumeBarWindow: $volumeBarWindow")
+        pw?.println("configController: $configController")
+        pw?.println("volumeBarWindowController: $volumeBarWindowController")
+    }
 
-	override fun dump(fd: FileDescriptor?, pw: PrintWriter?, args: Array<out String>?) {
-		super.dump(fd, pw, args)
-		pw?.println("volumeBarView: $volumeBarView")
-		pw?.println("volumeBarWindow: $volumeBarWindow")
-		pw?.println("configController: $configController")
-		pw?.println("volumeBarWindowController: $volumeBarWindowController")
-	}
-
-	override fun destroy() {
-		super.destroy()
-		printLog(TAG, "destroy:")
-		// Removes config change callback
-		configController.removeCallback(this)
-		// Removes volume bar window view
-		volumeBarWindowController.remove()
-	}
-
+    override fun destroy() {
+        super.destroy()
+        printLog(TAG, "destroy:")
+        // Removes config change callback
+        configController.removeCallback(this)
+        // Removes volume bar window view
+        volumeBarWindowController.remove()
+    }
 }

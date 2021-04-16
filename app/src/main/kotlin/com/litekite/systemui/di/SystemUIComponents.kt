@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.di
 
 import android.content.Context
@@ -38,24 +37,23 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object SystemUIComponents {
 
-	@Provides
-	@Singleton
-	fun providePower(@ApplicationContext context: Context): Power =
-		SystemUIServiceProvider.getComponent(context, Power::class.java)
+    @Provides
+    @Singleton
+    fun providePower(@ApplicationContext context: Context): Power =
+        SystemUIServiceProvider.getComponent(context, Power::class.java)
 
-	@Provides
-	@Singleton
-	fun provideStatusBar(@ApplicationContext context: Context): StatusBar =
-		SystemUIServiceProvider.getComponent(context, StatusBar::class.java)
+    @Provides
+    @Singleton
+    fun provideStatusBar(@ApplicationContext context: Context): StatusBar =
+        SystemUIServiceProvider.getComponent(context, StatusBar::class.java)
 
-	@Provides
-	@Singleton
-	fun provideBottomNavBar(@ApplicationContext context: Context): BottomNavBar =
-		SystemUIServiceProvider.getComponent(context, BottomNavBar::class.java)
+    @Provides
+    @Singleton
+    fun provideBottomNavBar(@ApplicationContext context: Context): BottomNavBar =
+        SystemUIServiceProvider.getComponent(context, BottomNavBar::class.java)
 
-	@Provides
-	@Singleton
-	fun provideVolumeBar(@ApplicationContext context: Context): VolumeBar =
-		SystemUIServiceProvider.getComponent(context, VolumeBar::class.java)
-
+    @Provides
+    @Singleton
+    fun provideVolumeBar(@ApplicationContext context: Context): VolumeBar =
+        SystemUIServiceProvider.getComponent(context, VolumeBar::class.java)
 }

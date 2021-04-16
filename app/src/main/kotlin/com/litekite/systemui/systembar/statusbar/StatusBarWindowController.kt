@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.systembar.statusbar
 
 import android.content.Context
@@ -36,42 +35,41 @@ import javax.inject.Singleton
 @Singleton
 class StatusBarWindowController @Inject constructor(private val context: Context) {
 
-	private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-	private lateinit var lp: WindowManager.LayoutParams
-	private lateinit var statusBarView: View
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private lateinit var lp: WindowManager.LayoutParams
+    private lateinit var statusBarView: View
 
-	/**
-	 * Adds the status bar view to the window manager.
-	 *
-	 * @param statusBarView The view to add.
-	 */
-	fun add(statusBarView: View) {
-		lp = WindowManager.LayoutParams(
-			WindowManager.LayoutParams.MATCH_PARENT,
-			WindowManager.LayoutParams.WRAP_CONTENT,
-			WindowManager.LayoutParams.TYPE_STATUS_BAR,
-			WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-					or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-					or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
-					or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-					or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
-			PixelFormat.TRANSLUCENT
-		)
-		lp.token = Binder()
-		lp.gravity = Gravity.TOP
-		lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-		lp.title = "StatusBar"
-		lp.packageName = context.packageName
-		lp.windowAnimations = R.style.TopInOutAnim
-		this.statusBarView = statusBarView
-		windowManager.addView(this.statusBarView, lp)
-	}
+    /**
+     * Adds the status bar view to the window manager.
+     *
+     * @param statusBarView The view to add.
+     */
+    fun add(statusBarView: View) {
+        lp = WindowManager.LayoutParams(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.TYPE_STATUS_BAR,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                or WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS,
+            PixelFormat.TRANSLUCENT
+        )
+        lp.token = Binder()
+        lp.gravity = Gravity.TOP
+        lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        lp.title = "StatusBar"
+        lp.packageName = context.packageName
+        lp.windowAnimations = R.style.TopInOutAnim
+        this.statusBarView = statusBarView
+        windowManager.addView(this.statusBarView, lp)
+    }
 
-	/**
-	 * Removes the status bar view from the window manager.
-	 */
-	fun remove() {
-		windowManager.removeViewImmediate(statusBarView)
-	}
-
+    /**
+     * Removes the status bar view from the window manager.
+     */
+    fun remove() {
+        windowManager.removeViewImmediate(statusBarView)
+    }
 }

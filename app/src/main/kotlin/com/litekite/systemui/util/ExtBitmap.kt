@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.util
 
 import android.content.Context
@@ -32,22 +31,22 @@ import androidx.renderscript.ScriptIntrinsicBlur
  */
 @Suppress("UNUSED")
 fun Bitmap.blur(context: Context, radius: Float = 25F): Bitmap? {
-	val bitmap = Bitmap.createBitmap(
-		this.width,
-		this.height,
-		Bitmap.Config.ARGB_8888
-	)
-	val rs = RenderScript.create(context)
-	val allocIn = Allocation.createFromBitmap(rs, this)
-	val allocOut = Allocation.createFromBitmap(rs, bitmap)
-	val blur = ScriptIntrinsicBlur.create(
-		rs,
-		Element.U8_4(rs)
-	)
-	blur.setInput(allocIn)
-	blur.setRadius(radius)
-	blur.forEach(allocOut)
-	allocOut.copyTo(bitmap)
-	rs.destroy()
-	return bitmap
+    val bitmap = Bitmap.createBitmap(
+        this.width,
+        this.height,
+        Bitmap.Config.ARGB_8888
+    )
+    val rs = RenderScript.create(context)
+    val allocIn = Allocation.createFromBitmap(rs, this)
+    val allocOut = Allocation.createFromBitmap(rs, bitmap)
+    val blur = ScriptIntrinsicBlur.create(
+        rs,
+        Element.U8_4(rs)
+    )
+    blur.setInput(allocIn)
+    blur.setRadius(radius)
+    blur.forEach(allocOut)
+    allocOut.copyTo(bitmap)
+    rs.destroy()
+    return bitmap
 }

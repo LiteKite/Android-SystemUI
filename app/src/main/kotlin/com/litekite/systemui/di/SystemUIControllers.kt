@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 LiteKite Startup. All rights reserved.
+ * Copyright 2021 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.litekite.systemui.di
 
 import android.car.userlib.CarUserManagerHelper
@@ -43,51 +42,50 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object SystemUIControllers {
 
-	@Provides
-	@Singleton
-	fun provideFragmentHostController(@ApplicationContext context: Context): FragmentHostController =
-		FragmentHostController(context)
+    @Provides
+    @Singleton
+    fun provideFragmentHostController(@ApplicationContext context: Context): FragmentHostController =
+        FragmentHostController(context)
 
-	@Provides
-	@Singleton
-	fun provideTaskStackController(): TaskStackController = TaskStackController()
+    @Provides
+    @Singleton
+    fun provideTaskStackController(): TaskStackController = TaskStackController()
 
-	@Provides
-	@Singleton
-	fun provideCarAudioController(@ApplicationContext context: Context) =
-		CarAudioController(context)
+    @Provides
+    @Singleton
+    fun provideCarAudioController(@ApplicationContext context: Context) =
+        CarAudioController(context)
 
-	@Provides
-	@Singleton
-	fun provideCarController(@ApplicationContext context: Context) = CarController(context)
+    @Provides
+    @Singleton
+    fun provideCarController(@ApplicationContext context: Context) = CarController(context)
 
-	@Provides
-	@Singleton
-	fun provideUserController(@ApplicationContext context: Context) = CarUserManagerHelper(context)
+    @Provides
+    @Singleton
+    fun provideUserController(@ApplicationContext context: Context) = CarUserManagerHelper(context)
 
-	@Provides
-	@Singleton
-	fun providePreferenceController(@ApplicationContext context: Context) =
-		PreferenceController(context)
+    @Provides
+    @Singleton
+    fun providePreferenceController(@ApplicationContext context: Context) =
+        PreferenceController(context)
 
-	@Provides
-	@Singleton
-	fun provideConfigController(@ApplicationContext context: Context): ConfigController =
-		ConfigController(context)
+    @Provides
+    @Singleton
+    fun provideConfigController(@ApplicationContext context: Context): ConfigController =
+        ConfigController(context)
 
-	@Provides
-	@Singleton
-	fun provideStatusBarWindowController(@ApplicationContext context: Context) =
-		StatusBarWindowController(context)
+    @Provides
+    @Singleton
+    fun provideStatusBarWindowController(@ApplicationContext context: Context) =
+        StatusBarWindowController(context)
 
-	@Provides
-	@Singleton
-	fun provideBottomNavBarWindowController(@ApplicationContext context: Context) =
-		BottomNavBarWindowController(context)
+    @Provides
+    @Singleton
+    fun provideBottomNavBarWindowController(@ApplicationContext context: Context) =
+        BottomNavBarWindowController(context)
 
-	@Provides
-	@Singleton
-	fun provideVolumeBarWindowController(@ApplicationContext context: Context) =
-		VolumeBarWindowController(context)
-
+    @Provides
+    @Singleton
+    fun provideVolumeBarWindowController(@ApplicationContext context: Context) =
+        VolumeBarWindowController(context)
 }
