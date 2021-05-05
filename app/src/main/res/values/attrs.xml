@@ -27,9 +27,6 @@
         <!--Should this button play sound effects, default true-->
         <attr name="playSound" format="boolean" />
 
-        <!--Content description for accessibility-->
-        <attr name="android:contentDescription" />
-
     </declare-styleable>
 
     <declare-styleable name="Clock">

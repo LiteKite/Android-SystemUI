@@ -414,7 +414,7 @@
 
     <application
         android:name=".app.SystemUIApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:allowClearUserData="false"
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:defaultToDeviceProtectedStorage="true"

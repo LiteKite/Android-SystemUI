@@ -16,11 +16,9 @@
 package com.litekite.systemui.widget
 
 import android.content.Context
-import android.content.res.Configuration
 import android.hardware.input.InputManager
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.HapticFeedbackConstants
 import android.view.InputDevice
 import android.view.KeyCharacterMap
@@ -61,7 +59,6 @@ class KeyButtonView @JvmOverloads constructor(
     private var downTime: Long = 0
     private val supportsLongPress: Boolean
     private val playSounds: Boolean
-    private var contentDescriptionRes: Int = 0
 
     private val performLongPress = Runnable {
         if (isPressed) {
@@ -83,10 +80,6 @@ class KeyButtonView @JvmOverloads constructor(
         code = ta.getInteger(R.styleable.KeyButtonView_keyCode, 0)
         supportsLongPress = ta.getBoolean(R.styleable.KeyButtonView_keyRepeat, false)
         playSounds = ta.getBoolean(R.styleable.KeyButtonView_playSound, false)
-        val value = TypedValue()
-        if (ta.getValue(R.styleable.KeyButtonView_android_contentDescription, value)) {
-            contentDescriptionRes = value.resourceId
-        }
         ta.recycle()
         isClickable = true
         forceHasOverlappingRendering(false)
@@ -98,13 +91,6 @@ class KeyButtonView @JvmOverloads constructor(
         setOnClickListener(this)
         // Registers long press events
         setOnLongClickListener(this)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        if (contentDescriptionRes != 0) {
-            contentDescription = context.getString(contentDescriptionRes)
-        }
     }
 
     override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo?) {
