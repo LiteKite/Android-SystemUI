@@ -38,7 +38,7 @@
 
 1) Android AOSP (Android Open Source Platform) SystemUI for Phone Variant: https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/packages/SystemUI/
 
-2) Android AOSP (Android Open Source Platform) SystemUI Car Variant (AAOS - Android Automotive OS): https://android.googlesource.com/platform/packages/apps/Car/SystemUI/
+2) Android AOSP (Android Open Source Platform) SystemUI for Car Variant (AAOS - Android Automotive OS): https://android.googlesource.com/platform/packages/apps/Car/SystemUI/
 
 ## Support
 
