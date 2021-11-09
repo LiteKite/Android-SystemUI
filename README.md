@@ -28,7 +28,7 @@
 
 ## Project Details:
 
-1) This project is based on the Android Open Source Platform (AOSP) and uses Gradle Build System to build SystemUI APK.
+1) This project is based on the Android Open Source Platform (AOSP) and uses Gradle Build System and Android Studio to build SystemUI APK.
 
 2) It targets Android 10 (Q) and it supports only basic features out of the Standard SystemUI Project. It is recommended to ensure compatibility before using it in production.
 
