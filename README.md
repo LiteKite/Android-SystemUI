@@ -18,12 +18,6 @@
 
 <b><i>A custom SystemUI Android Application that has screen decoration windows like Status Bar, Navigation Bar, Volume Bar, etc that are persistent and always visible across all the other system level and third-party applications.</i></b>
 
-<b><i>This project is based on the Android Open Source Platform (AOSP) and uses Gradle Build System to build SystemUI APK.</i></b>
-
-<b><i>This project targets Android 10 (Q) and it supports only basic features out of the Standard SystemUI Project. It is recommended to ensure compatibility before using it in production.</i></b>
-
-<b><i>This project uses custom built android sdk and emulator to access hidden framework apis. Please refer the below repository for more details about building sdk and emulator from AOSP: https://github.com/LiteKite/Android-CustomSDK</i></b>
-
 ##
 
 <br>
@@ -31,6 +25,14 @@
 <p align="center">
     <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_status_and_nav_bar.png" alt="App Icon" width="60%" />
 </p>
+
+## Project Details:
+
+1) This project is based on the Android Open Source Platform (AOSP) and uses Gradle Build System to build SystemUI APK.
+
+2) It targets Android 10 (Q) and it supports only basic features out of the Standard SystemUI Project. It is recommended to ensure compatibility before using it in production.
+
+3) It uses custom built android sdk and emulator to access hidden framework apis. Please refer the below repository for more details about building sdk and emulator from AOSP: https://github.com/LiteKite/Android-CustomSDK
 
 ## References:
 
@@ -40,9 +42,9 @@
 
 ## Support
 
-If you've found an error in this project, please file an issue: https://github.com/LiteKite/Android-SystemUI/issues
+1) If you've found an error in this project, please file an issue: https://github.com/LiteKite/Android-SystemUI/issues
 
-Patches are encouraged, and may be submitted by forking this project and submitting a pull request through GitHub.
+2) Patches are encouraged, and may be submitted by forking this project and submitting a pull request through GitHub.
 
 ##
 
