@@ -1,3 +1,5 @@
+<br>
+
 <p align="center">
     <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/party-popper.png" alt="Party Popper Emoji" width="55" />
     <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/drum.png" alt="Drum moji" width="40" hspace="12" />
@@ -23,8 +25,10 @@
 <br>
 
 <p align="center">
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_status_and_nav_bar.png" alt="App Icon" width="60%" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_demo.gif" alt="App Icon" width="60%" />
 </p>
+
+<br>
 
 ## Project Details:
 
