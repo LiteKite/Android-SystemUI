@@ -13,7 +13,7 @@
 <br>
 
 <p align="center">
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="130" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/main/app/src/main/ic_launcher-web.png" alt="App Icon" width="120" />
 </p>
 
 ##
@@ -25,7 +25,7 @@
 <br>
 
 <p align="center">
-    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_demo.gif" alt="App Icon" width="60%" />
+    <img src="https://github.com/svignesh93/Android-SystemUI/blob/assets/assets/system_ui_demo.gif" alt="App Icon" width="50%" />
 </p>
 
 <br>
@@ -37,6 +37,8 @@
 2) It targets Android 10 (Q) and it supports only basic features out of the Standard SystemUI Project. It is recommended to ensure compatibility before using it in production.
 
 3) It uses custom built android sdk and emulator to access hidden framework apis. Please refer the below repository for more details about building sdk and emulator from AOSP: https://github.com/LiteKite/Android-CustomSDK
+
+4) For more details about building AOSP Source: https://github.com/LiteKite/Android-AOSP
 
 ## References:
 
