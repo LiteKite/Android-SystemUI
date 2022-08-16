@@ -35,7 +35,7 @@ android {
     defaultConfig {
         applicationId "com.litekite.systemui"
         minSdkVersion 28
-        //noinspection OldTargetApi
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -194,5 +194,4 @@ task deploy(dependsOn: [clean, assemble]) {
             commandLine "adb", "reboot"
         }
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 LiteKite Startup. All rights reserved.
+ * Copyright 2021-2022 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package com.litekite.systemui.car
 import android.car.Car
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import com.litekite.systemui.base.CallbackProvider
 import com.litekite.systemui.base.SystemUI
 import javax.inject.Inject
@@ -29,16 +30,19 @@ import javax.inject.Singleton
  * @since 1.0
  */
 @Singleton
-class CarController @Inject constructor(private val context: Context) :
-    CallbackProvider<CarController.Callback> {
+class CarController @Inject constructor(
+    private val context: Context
+) : CallbackProvider<CarController.Callback> {
 
     companion object {
-        val TAG = CarController::class.java.simpleName
+        val TAG: String = CarController::class.java.simpleName
     }
 
-    private val handler: Handler = Handler()
-    private lateinit var car: Car
     var isConnected: Boolean = false
+
+    private lateinit var car: Car
+    private val handler: Handler = Handler(Looper.getMainLooper())
+
     override var callbacks = ArrayList<Callback>()
 
     private val carServiceLifecycleListener = Car.CarServiceLifecycleListener { car, isConnected ->

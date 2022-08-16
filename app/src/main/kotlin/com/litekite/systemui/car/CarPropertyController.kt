@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 LiteKite Startup. All rights reserved.
+ * Copyright 2021-2022 LiteKite Startup. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,21 +26,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 /**
  * @author Vignesh S
  * @version 1.0, 05/03/2020
  * @since 1.0
  */
-abstract class CarPropertyController constructor(private val carController: CarController) :
-    CoroutineScope {
+abstract class CarPropertyController constructor(
+    private val carController: CarController,
+    private val mainScope: CoroutineScope = CoroutineScope(Dispatchers.Main),
+    private val ioScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+) {
 
     companion object {
-        val TAG = CarPropertyController::class.java.simpleName
+        val TAG: String = CarPropertyController::class.java.simpleName
     }
-
-    override val coroutineContext: CoroutineContext = Dispatchers.Main
 
     private var carPropertyManager: CarPropertyManager? = null
 
@@ -79,7 +79,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
         }
     }
 
-    init {
+    protected open fun create() {
+        SystemUI.printLog(TAG, "create:")
         carController.addCallback(carConnectionCallback)
     }
 
@@ -90,6 +91,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
         }
     }
 
+    protected abstract fun onCarPropertyManagerCreated()
+
     fun isCarPropertyValueAvailable(propertyValue: CarPropertyValue<*>?): Boolean {
         if (propertyValue == null) {
             SystemUI.printLog(TAG, "isCarPropertyValueAvailable: propertyValue is null")
@@ -98,8 +101,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
         if (propertyValue.status != CarPropertyValue.STATUS_AVAILABLE) {
             SystemUI.printLog(
                 TAG,
-                "isCarPropertyValueAvailable: not available for Property Id:" +
-                    " ${propertyValue.propertyId} Status: ${propertyValue.status}"
+                """isCarPropertyValueAvailable: not available for Property Id:
+                    | ${propertyValue.propertyId} Status: ${propertyValue.status}""".trimMargin()
             )
             return false
         }
@@ -111,11 +114,11 @@ abstract class CarPropertyController constructor(private val carController: CarC
             SystemUI.printLog(TAG, "fetchCarProperty: Car is not connected")
             return
         }
-        properties.forEach { launch { fetch(it) } }
+        properties.forEach { mainScope.launch { fetch(it) } }
     }
 
-    private suspend fun fetch(property: Int) = withContext(Dispatchers.Main) {
-        val deferred = async(Dispatchers.IO) {
+    private suspend fun fetch(property: Int) = withContext(mainScope.coroutineContext) {
+        val deferred = async(ioScope.coroutineContext) {
             carPropertyManager?.getProperty<Any>(
                 property,
                 VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
@@ -129,15 +132,17 @@ abstract class CarPropertyController constructor(private val carController: CarC
         }
     }
 
+    protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<*>?)
+
     fun setCarProperty(propertyId: Int, value: Any) {
         if (!carController.isConnected) {
             SystemUI.printLog(TAG, "setCarProperty: Car is not connected")
             return
         }
-        launch { set(propertyId, value) }
+        mainScope.launch { set(propertyId, value) }
     }
 
-    private suspend fun set(propertyId: Int, value: Any) = withContext(Dispatchers.IO) {
+    private suspend fun set(propertyId: Int, value: Any) = withContext(ioScope.coroutineContext) {
         try {
             carPropertyManager?.setProperty(
                 Any::class.java,
@@ -164,6 +169,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
         }
     }
 
+    protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
+
     fun unregisterCarPropertyCallback(properties: IntArray) {
         if (!carController.isConnected) {
             SystemUI.printLog(TAG, "unregisterCarPropertyCallback: Car is not connected")
@@ -177,11 +184,8 @@ abstract class CarPropertyController constructor(private val carController: CarC
         }
     }
 
-    protected abstract fun onCarPropertyManagerCreated()
-
-    protected abstract fun onCarPropertyGetEvent(propertyValue: CarPropertyValue<*>?)
-
-    protected abstract fun onCarPropertyChangeEvent(propertyValue: CarPropertyValue<*>?)
-
-    protected abstract fun destroy()
+    protected open fun destroy() {
+        SystemUI.printLog(TAG, "destroy:")
+        carController.removeCallback(carConnectionCallback)
+    }
 }
